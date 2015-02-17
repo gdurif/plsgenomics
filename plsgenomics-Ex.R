@@ -609,6 +609,40 @@ variable.selection(leukemia$X,leukemia$Y,nvar=50)
 
 
 
+
+cleanEx()
+nameEx("rirls.spls")
+### * rirls.spls
+
+flush(stderr()); flush(stdout())
+
+### Name: rirls.spls
+### Title: Ridge Iteratively Reweighted Least Squares followed by 
+###   Adaptive Sparse PLS regression for binary response
+### Aliases: rirls.spls
+### Keywords: multivariate
+
+### ** Examples
+
+# load plsgenomics library
+library(plsgenomics)
+
+# load leukemia data
+data(leukemia)
+
+# Classify observations 1,2,3 (test set) using observations 4 to 38 (training set), with 2 PLS components
+pls.lda(Xtrain=leukemia$X[-(1:3),],Ytrain=leukemia$Y[-(1:3)],Xtest=leukemia$X[1:3,],ncomp=2,nruncv=0)
+
+# Classify observations 1,2,3 (test set) using observations 4 to 38 (training set), with the best number of components as determined by cross-validation
+pls.lda(Xtrain=leukemia$X[-(1:3),],Ytrain=leukemia$Y[-(1:3)],Xtest=leukemia$X[1:3,],ncomp=1:4,nruncv=20)
+
+
+
+
+
+
+
+
 ### * <FOOTER>
 ###
 cat("Time elapsed: ", proc.time() - get("ptime", pos = 'CheckExEnv'),"\n")
