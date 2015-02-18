@@ -3,12 +3,12 @@ Version: 1.3
 Date: 2011-04-08
 Title: PLS analyses for genomics
 Author: Anne-Laure Boulesteix <boulesteix@ibe.med.uni-muenchen.de>,
-        Ghislain Durif <ghislain.durif@univ-lyon1.fr>
+        Ghislain Durif <ghislain.durif@univ-lyon1.fr>,
         Sophie Lambert-Lacroix <Sophie.Lambert@imag.fr>, Julie Peyre
         <Julie.Peyre@imag.fr>, and Korbinian Strimmer
         <strimmer@uni-leipzig.de>.
-Maintainer: Anne-Laure Boulesteix <boulesteix@ibe.med.uni-muenchen.de>
-Depends: R (>= 2.10), MASS, boot
+Maintainer: Ghislain Durif <ghislain.durif@univ-lyon1.fr>
+Depends: R (>= 2.10), MASS, boot, parallel
 Suggests:
 Encoding: latin1
 Description: This package provides routines for PLS-based genomic
