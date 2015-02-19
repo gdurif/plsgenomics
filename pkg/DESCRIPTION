@@ -8,7 +8,7 @@ Author: Anne-Laure Boulesteix <boulesteix@ibe.med.uni-muenchen.de>,
         <Julie.Peyre@imag.fr>, and Korbinian Strimmer
         <strimmer@uni-leipzig.de>.
 Maintainer: Ghislain Durif <ghislain.durif@univ-lyon1.fr>
-Depends: R (>= 2.10), MASS, boot, parallel
+Depends: R (>= 3.0), MASS, boot, parallel
 Suggests:
 Encoding: latin1
 Description: This package provides routines for PLS-based genomic
