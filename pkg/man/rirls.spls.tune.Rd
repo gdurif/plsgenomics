@@ -42,7 +42,11 @@
 	since standardizing is performed by the function \code{rirls.spls} as a preliminary step
 	before the algorithm is run. 
 	
-	The procedure is described in Durif et al. (2015).
+	The procedure is described in Durif et al. (2015). The K-fold cross-validation can be summarize as follow: 
+	the train set is partitioned into K folds, for each value of hyper-parameters the model is fit K times, using 
+	each fold to compute the prediction error rate, and fitting the model on the remaining observations.
+	The cross-validation procedure returns the optimal hyper-parameters values, meaning the one that minimize
+	the prediction error rate average over all the folds.
 	
 	This procedures uses the \code{mclapply} from the \code{parallel} package, available on GNU/Linux and MacOS.
 	User using Microsoft Windows can refer to the README file in the source to be able to use a mclapply type
