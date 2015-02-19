@@ -1,21 +1,21 @@
 ###### testing rirls.spls.tune
 
 # sources
-source("R/sample.bin.R")
-source("R/spls.adapt.R")
-source("R/spls.adapt.aux.R")
-source("R/ust.adapt.R")
-source("R/ust.R")
-source("R/wpls.R")
+source("pkg/R/sample.bin.R")
+source("pkg/R/spls.adapt.R")
+source("pkg/R/spls.adapt.aux.R")
+source("pkg/R/ust.adapt.R")
+source("pkg/R/ust.R")
+source("pkg/R/wpls.R")
 
 home = Sys.getenv("HOME")
-source(paste0(home, "/source_code/plsgenomics/R/wirrls.R"))
+source(paste0(home, "/source_code/plsgenomics/pkg/R/wirrls.R"))
 
 library(parallel)
 library(boot)
 
-source("R/rirls.spls.R")
-source("R/rirls.spls.tune.R")
+source("pkg/R/rirls.spls.R")
+source("pkg/R/rirls.spls.tune.R")
 
 # sample
 n = 100

@@ -1,20 +1,20 @@
 ###### testing rirls.spls
 
 # sources
-source("R/sample.bin.R")
-source("R/spls.adapt.R")
-source("R/spls.adapt.aux.R")
-source("R/ust.adapt.R")
-source("R/ust.R")
-source("R/wpls.R")
+source("pkg/R/sample.bin.R")
+source("pkg/R/spls.adapt.R")
+source("pkg/R/spls.adapt.aux.R")
+source("pkg/R/ust.adapt.R")
+source("pkg/R/ust.R")
+source("pkg/R/wpls.R")
 
 home = Sys.getenv("HOME")
-source(paste0(home, "/source_code/plsgenomics/R/wirrls.R"))
+source(paste0(home, "/source_code/plsgenomics/pkg/R/wirrls.R"))
 
 library(parallel)
 library(boot)
 
-source("R/rirls.spls.R")
+source("pkg/R/rirls.spls.R")
 
 # sample
 n = 100
@@ -61,7 +61,7 @@ plot(model2$Coefficients)
 ##### testing aux version
 ###########################################################
 
-source("R/rirls.spls.aux.R")
+source("pkg/R/rirls.spls.aux.R")
 
 Xtrain <- X[1:80,]
 Ytrain <- as.matrix(Y[1:80,])
