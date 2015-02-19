@@ -44,6 +44,10 @@
 	
 	The procedure is described in Durif et al. (2015).
 	
+	This procedures uses the \code{mclapply} from the \code{parallel} package, available on GNU/Linux and MacOS.
+	User using Microsoft Windows can refer to the README file in the source to be able to use a mclapply type
+	function.
+	
 }
 
 \value{
