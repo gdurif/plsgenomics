@@ -50,6 +50,16 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 		stop("Message from rirls.spls.tune: maxIter is not of valid type")
 	}
 	
+	# ncores
+	if ((!is.numeric(ncores)) || (round(ncores)-ncores!=0) || (ncores<1)) {
+		stop("Message from rirls.spls.tune: ncores is not of valid type")
+	}
+	
+	# nfolds
+	if ((!is.numeric(nfolds)) || (round(nfolds)-nfolds!=0) || (nfolds<1)) {
+		stop("Message from rirls.spls.tune: nfolds is not of valid type")
+	}
+	
 	
 	#####################################################################
 	#### Cross-validation: computation on each fold over the entire grid
@@ -265,7 +275,7 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 		
 	} else {
 		
-		return( list(lambda.ridge.opt = cv.grid$lambda.ridge[which.min(cv.grid$error)], lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], conv.per=conv.per) )
+		return( list(lambda.ridge.opt = cv.grid$lambda.ridge[which.min(cv.grid$error)], lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], conv.per=conv.per, cv.grid=NULL) )
 		
 	}
 	
