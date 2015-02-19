@@ -35,12 +35,6 @@ spls.adapt.tune <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	q = ncol(Y)
 	one <- matrix(1,nrow=1,ncol=n)
 	
-	## the train set is partitioned into nfolds part, each observation is assigned into a fold
-	fold.obs <- sort(rep(1:nfolds, length.out = n))
-	
-	## hyper-parameter grid
-	grid <- expand.grid(lambda.l1=lambda.l1.range, ncomp=ncomp.range, KEEP.OUT.ATTRS=FALSE)
-	
 	#####################################################################
 	#### Tests on type input
 	#####################################################################
@@ -64,9 +58,26 @@ spls.adapt.tune <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 		stop("Message from spls.adapt: if the centering is weighted, the weighting matrix V should be provided")
 	}
 	
+	# ncores
+	if ((!is.numeric(ncores)) || (round(ncores)-ncores!=0) || (ncores<1)) {
+		stop("Message from rirls.spls.tune: ncores is not of valid type")
+	}
+	
+	# nfolds
+	if ((!is.numeric(nfolds)) || (round(nfolds)-nfolds!=0) || (nfolds<1)) {
+		stop("Message from rirls.spls.tune: nfolds is not of valid type")
+	}
+	
+	
 	#####################################################################
 	#### Cross-validation: computation on each fold over the entire grid
 	#####################################################################
+	
+	## the train set is partitioned into nfolds part, each observation is assigned into a fold
+	fold.obs <- sort(rep(1:nfolds, length.out = n))
+	
+	## hyper-parameter grid
+	grid <- expand.grid(lambda.l1=lambda.l1.range, ncomp=ncomp.range, KEEP.OUT.ATTRS=FALSE)
 	
 	cv.grid.allfolds <- matrix( unlist( mclapply(1:nfolds, function(k) {
 		

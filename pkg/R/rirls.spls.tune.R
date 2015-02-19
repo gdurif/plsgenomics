@@ -35,11 +35,6 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 	q = ncol(Y)
 	one <- matrix(1,nrow=1,ncol=n)
 	
-	## the train set is partitioned into nfolds part, each observation is assigned into a fold
-	fold.obs = sort(rep(1:nfolds, length.out = n))
-	
-	## hyper-parameter grid
-	grid = expand.grid(lambda.ridge=lambda.ridge.range, lambda.l1=lambda.l1.range, ncomp=ncomp.range, KEEP.OUT.ATTRS=FALSE)
 	
 	#####################################################################
 	#### Tests on type input
@@ -64,6 +59,12 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 	#####################################################################
 	#### Cross-validation: computation on each fold over the entire grid
 	#####################################################################
+	
+	## the train set is partitioned into nfolds part, each observation is assigned into a fold
+	fold.obs = sort(rep(1:nfolds, length.out = n))
+	
+	## hyper-parameter grid
+	grid = expand.grid(lambda.ridge=lambda.ridge.range, lambda.l1=lambda.l1.range, ncomp=ncomp.range, KEEP.OUT.ATTRS=FALSE)
 	
 	cv.grid.allfolds = matrix( unlist( mclapply(1:nfolds, function(k) {
 		
