@@ -1,6 +1,6 @@
 ### spls.adapt.tune.R  (2014-10)
 ###
-###    Tuning parameters (ncomp, lambda.l1) for Adaptive Sparse PLS regression for continuous response, by K-fold cross-validation
+###    Tuning parameters (ncomp, lambda.l1) for adaptive sparse PLS regression for continuous response, by K-fold cross-validation
 ###
 ### Copyright 2014-10 Ghislain DURIF
 ###
@@ -294,7 +294,7 @@ spls.adapt.tune <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 		
 	} else {
 		
-		return( list(lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)]) )
+		return( list(lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], cv.grid=NULL) )
 		
 	}
 	
