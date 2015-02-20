@@ -1,6 +1,6 @@
 ### sample.cont.R  (2014-10)
 ###
-###    Generates design matrix X with correlated block of covariates and a binary random reponse depening on X through logit model
+###    Generates design matrix X with correlated block of covariates and a continuous random reponse depening on X through gaussian linear model
 ###
 ### Copyright 2014-10 Ghislain DURIF
 ###
@@ -22,7 +22,7 @@
 ### MA 02111-1307, USA
 
 
-sample.cont = function(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, mean.F=0, sigma.F, sigma.E, seed=NULL) {
+sample.cont = function(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, sigma.E, seed=NULL) {
 	
 	### input
 	# n : sample size
@@ -41,8 +41,8 @@ sample.cont = function(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H
 		stop("Message from sample.cont: n, p, kstar, lstar must be integer")
 	}
 	
-	if((!is.numeric(mean.H)) || (!is.numeric(sigma.H)) || (!is.numeric(mean.F)) || (!is.numeric(sigma.F)) || (!is.numeric(sigma.E)) ) {
-		stop("Message from sample.cont: mean.H, sigma.H, mean.F, sigma.F, sigma.E are not of valid type")
+	if((!is.numeric(mean.H)) || (!is.numeric(sigma.H)) || (!is.numeric(sigma.F)) || (!is.numeric(sigma.E)) ) {
+		stop("Message from sample.cont: mean.H, sigma.H, sigma.F, sigma.E are not of valid type")
 	}
 	
 	if((sigma.H<0) || (sigma.F<0) || (sigma.E<0)) {
@@ -96,7 +96,7 @@ sample.cont = function(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H
 	
 	X <- sapply(1:p, function(j) {
 		
-		F <- rnorm(n, mean=mean.F, sd=sigma.F) # noise of column j
+		F <- rnorm(n, mean=0, sd=sigma.F) # noise of column j
 		
 		return(get(paste0("H", block.partition[j]), inherits=TRUE) + F) # on utilise Hj suivant l'intervalle trouve
 		
@@ -129,6 +129,6 @@ sample.cont = function(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H
 	# sel: index of variables used to generate Y
 	# nosel: index of unused variables
 	
-	return(list(X=X, Y=Y, residuals=E, sel=sel, nosel=nosel, B=B, block.partition=block.partition, p=p, p0=p0, block.sel=block.sel, beta.min=beta.min, beta.max=beta.max, mean.H=mean.H, sigma.H=sigma.H, mean.F=mean.F, sigma.F=sigma.F, seed=seed))
+	return(list(X=X, Y=Y, residuals=E, sel=sel, nosel=nosel, B=B, block.partition=block.partition, p=p, p0=p0, block.sel=block.sel, beta.min=beta.min, beta.max=beta.max, mean.H=mean.H, sigma.H=sigma.H, sigma.F=sigma.F, seed=seed))
 	
 }

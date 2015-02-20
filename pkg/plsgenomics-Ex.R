@@ -638,7 +638,7 @@ library(plsgenomics)
 # generating data
 n = 100
 p = 1000
-sample1 = sample.bin(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, sigma.H=10, mean.F=0, sigma.F=5)
+sample1 = sample.bin(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, sigma.H=10, sigma.F=5)
 
 X = sample1$X
 Y = sample1$Y
@@ -685,7 +685,7 @@ library(plsgenomics)
 # generating data
 n = 100
 p = 1000
-sample1 = sample.bin(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, sigma.H=10, mean.F=0, sigma.F=5)
+sample1 = sample.bin(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, sigma.H=10, sigma.F=5)
 
 X = sample1$X
 Y = sample1$Y
