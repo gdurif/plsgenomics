@@ -17,3 +17,6 @@ system("R CMD INSTALL --library=/home/durif/source_code/tests plsgenomics_1.3.ta
 
 ## loading this new version of the package
 library(plsgenomics, lib.loc="/home/durif/source_code/tests")
+
+## test
+?spls.adapt
