@@ -1,5 +1,5 @@
 \name{spls.adapt}
-\alias{spls.Adapt}
+\alias{spls.adapt}
 
 \title{Classification by Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for binary response}
 \usage{
