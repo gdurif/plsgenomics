@@ -13,9 +13,9 @@
     	\code{Y} is a \{0,1\}-valued vector and contains the response variable for each observation.}
 	\item{lambda.ridge.range}{a vector of positive real values. \code{lambda.ridge} is the ridge regularization parameter 
     	for the RIRLS algorithm (see details), the optimal values will be chosen among \code{lambda.ridge.range}.}
-	\item{lambda.l1}{a vecor of positive real values, in [0,1]. \code{lambda.l1} is the sparse penalty parameter 
+	\item{lambda.l1.range}{a vecor of positive real values, in [0,1]. \code{lambda.l1} is the sparse penalty parameter 
     	for the dimension reduction step by sparse PLS (see details), the optimal values will be chosen among \code{lambda.l1.range}.}
-	\item{ncomp}{a vector of positive integers. \code{ncomp} is the number of PLS components. 
+	\item{ncomp.range}{a vector of positive integers. \code{ncomp} is the number of PLS components. 
 	If \code{ncomp}=0,then the Ridge regression is performed without dimension reduction. 
 	The optimal values will be chosen among \code{ncomp.range}.}
 	\item{adapt}{a boolean value, indicating whether the sparse PLS selection step sould be adaptive or nor.}
@@ -32,8 +32,8 @@
     	nfolds=n corresponds to leave-one-out cross-validation.}
 }
 \description{
-	The function \code{rirls.spls.tune} tuns the hyper-parameter values of the rirls.spls procedure, by minimizing the prediction error rate 
-	over the hyper-parameter grid, using Durif et al. (2015) RIRLS-SPLS algorithm.
+	The function \code{rirls.spls.tune} tuns the hyper-parameter values used in the \code{rirls.spls} procedure, 
+	by minimizing the prediction error rate over the hyper-parameter grid, using Durif et al. (2015) RIRLS-SPLS algorithm.
 	
 }
 
@@ -46,10 +46,10 @@
 	the train set is partitioned into K folds, for each value of hyper-parameters the model is fit K times, using 
 	each fold to compute the prediction error rate, and fitting the model on the remaining observations.
 	The cross-validation procedure returns the optimal hyper-parameters values, meaning the one that minimize
-	the prediction error rate average over all the folds.
+	the prediction error rate averaged over all the folds.
 	
 	This procedures uses the \code{mclapply} from the \code{parallel} package, available on GNU/Linux and MacOS.
-	User using Microsoft Windows can refer to the README file in the source to be able to use a mclapply type
+	Users of Microsoft Windows can refer to the README file in the source to be able to use a mclapply type
 	function.
 	
 }
@@ -99,7 +99,6 @@ lambda.ridge.range = signif(logspace(d1 = -2, d2 = 3, n=11), digits=3)
 
 ### tuning the hyper-parameters
 cv1 = rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, return.grid=TRUE, ncores=1, nfolds=10)
-
 str(cv1)
 	
 }
