@@ -9,7 +9,7 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 \arguments{
 	\item{Xtrain}{a (ntrain x p) data matrix of predictors. \code{Xtrain} must be a matrix. 
 	Each row corresponds to an observation and each column to a predictor variable.}
-	\item{Ytrain}{a ntrain vector of (continuous) responses. \code{Ytrain} must be a vector or a one column matrix. 
+	\item{Ytrain}{a (ntrain) vector of (continuous) responses. \code{Ytrain} must be a vector or a one column matrix. 
 	and contains the response variable for each observation.}
 	\item{lambda.l1}{a positive real value, in [0,1]. \code{lambda.l1} is the sparse penalty parameter 
 	for the dimension reduction step by sparse PLS (see details).}
@@ -21,7 +21,7 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 	\item{Xtest}{a (ntest x p) matrix containing the predictors for the test data set. \code{Xtest} may also be 
 	a vector of length p (corresponding to only one test observation).If \code{Xtest} is not equal to NULL, then the 
 	prediction step is made for these new predictor variables.}
-	\item{adapt}{a boolean value, indicating whether the sparse PLS selection step sould be adaptive or nor.}
+	\item{adapt}{a boolean value, indicating whether the sparse PLS selection step sould be adaptive or not.}
 	\item{center.X}{a boolean value indicating whether the design matrices Xtrain in train set and Xtest in
 	test set if non NULL should be centered or not}
 	\item{scale.X}{a boolean value indicating whether the design matrices Xtrain in train set and Xtest in
@@ -50,17 +50,6 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
  
 }
 
-Xtrain=Xtrain, Ytrain=Ytrain, sXtrain=sXtrain, sYtrain=sYtrain,
-				 betahat=betahat, betahat.nc=betahat.nc,
-				 meanXtrain=meanXtrain, meanYtrain=meanYtrain, sigmaXtrain=sigmaXtrain, sigmaYtrain=sigmaYtrain,
-				 X.score=T, X.score.low=T.low, X.loading=P, Y.loading=Q, X.weight=W, 
-				 residuals=residuals, residuals.nc=residuals.nc,
-				 hatY=hatY, hatY.nc=hatY.nc,
-				 hatYtest=hatYtest, hatYtest.nc=hatYtest.nc,
-				 A=A, betamat=betamat, new2As=new2As,
-				 lambda.l1=lambda.l1, ncomp=ncomp,
-				 V=V, adapt=adapt)
-
 \value{
 	A list with the following components:
 	\item{Xtrain}{the design matrix.}
@@ -69,41 +58,47 @@ Xtrain=Xtrain, Ytrain=Ytrain, sXtrain=sXtrain, sYtrain=sYtrain,
 	\item{sYtrain}{the centered if so and scaled if so response.}
 	\item{betahat}{the linear coefficients in model \code{sYtrain = sXtrain \%*\% betahat + residuals}.}
 	\item{betahat.nc}{the (p+1) vector containing the coefficients and intercept for the non centered
-	non scaled model \code{Ytrain = cbnd(rep(1,ntrain),Xtrain) \%*\% betahat.nc + residuals.nc}.}
+	non scaled model \code{Ytrain = cbind(rep(1,ntrain),Xtrain) \%*\% betahat.nc + residuals.nc}.}
 	\item{meanXtrain}{the (p) vector of Xtrain column mean, used for centering if so.}
 	\item{sigmaXtrain}{the (p) vector of Xtrain column standard deviation, used for scaling if so.}
 	\item{meanYtrain}{the mean of Ytrain, used for centering if so.}
 	\item{sigmaYtrain}{the standard deviation of Ytrain, used for centering if so.}
-	\item{X.score}{a (n x ncomp) matrix being the observations coordinates or scores in the 
-	new component basis produced by the compression step (sparse PLS). Each column t_k of 
-	\code{X.score} is a new component.}
-	\item{X.weight}{a (p x ncomp) matrix being the coefficients of predictors in each components 
-	produced by sparse PLS. Each column w_k of \code{X.weight} verifies t_k = Xtrain x w_k (as a matrix product).}
-	
-	\item{hatY}{the (ntrain) vector containing the estimated reponse value on the train 
-	set of predictors Xtrain.}
-	\item{hatYtest}{the (ntest) vector containing the predicted labels for the observations from 
-	\code{Xtest} if non null.}
-	\item{DeletedCol}{the vector containing the column number of \code{Xtrain} when the 
-	variance of the corresponding predictor variable is null. Otherwise \code{DeletedCol}=NULL}
-	\item{A}{the active set of predictors selected by the procedures. \code{A} is a subset of 1:p}
-	\item{converged}{a \{0,1\} value indicating whether the IRLS algorithm converged 
-	in less than \code{maxIter} iterations or not.}
-
-
-	\item{lambda.ridge}{the ridge hyper-parameter used to fit the model.}
+	\item{X.score.low}{a (n x ncomp) matrix being the observations coordinates in the subspace of selected variables.}
+	\item{X.loading}{the (ncomp x p) matrix of coefficients in regression of Xtrain over the new components \code{X.score}.}
+	\item{Y.loading}{the (ncomp) vector of coefficients in regression of Ytrain over the new components \code{X.score}.}
+	\item{X.weight}{a (p x ncomp) matrix being the coefficients of predictors in each components produced by sparse PLS. 
+	Each column w_k of \code{X.weight} verifies t_k = Xtrain x w_k (as a matrix product).}
+	\item{residuals}{the (ntrain) vector of residuals in the model \code{sYtrain = sXtrain \%*\% betahat + residuals}.}
+	\item{residuals.nc}{the (ntrain) vector of residuals in the non centered non scaled model 
+	\code{Ytrain = cbind(rep(1,ntrain),Xtrain) \%*\% betahat.nc + residuals.nc}.}
+	\item{hatY}{the (ntrain) vector containing the estimated reponse value on the train set of centered 
+	and scaled (if so) predictors \code{sXtrain}, \code{hatY = sXtrain \%*\% betahat}.}
+	\item{hatY.nc}{the (ntrain) vector containing the estimated reponse value on the train set of non centered 
+	and non scaled predictors \code{Xtrain}, \code{hatY.nc = cbind(rep(1,ntrain),Xtrain) \%*\% betahat.nc}.}
+	\item{hatYtest}{the (ntest) vector containing the predicted values for the response on the centered and scaled 
+	test set \code{sXtest} if \code{Xtest} non NULL, \code{hatYtest = sXtest \%*\% betahat}.}
+	\item{hatYtest.nc}{the (ntest) vector containing the predicted values for the response on the non centered and 
+	non scaled test set \code{Xtest} if non NULL, \code{hatYtest.nc = cbind(rep(1,ntest),Xtest) \%*\% betahat.nc}.}	
+	\item{A}{the active set of predictors selected by the procedures. \code{A} is a subset of \code{1:p}.}
+	\item{betamat}{a (ncomp) list of coefficient vector betahat in the model with \code{k} components, for \code{k=1,...,ncomp}.}
+	\item{new2As}{a (ncomp) list of subset of \code{(1:p)} indicating the variables selected when constructing the
+	components \code{k}, for \code{k=1,...,ncomp}.}
 	\item{lambda.l1}{the sparse hyper-parameter used to fit the model.}
 	\item{ncomp}{the number of components used to fit the model.}
-	\item{V}{the (ntrain x ntrain) matrix used to weight the metric in the sparse PLS step.\code{V} 
-	is the inverse of the covariance matrix of the pseudo-response produced by the RIRLS step.}
-	\item{proba.test}{the (ntest) vector of estimated probabilities for the observations in \code{Xtest}, 
-	used to predict the \code{hatYtest} labels.}
+	\item{V}{the (ntrain x ntrain) matrix used to weight the metric in the sparse PLS step.}
+	\item{adapt}{a boolean value, indicating whether the sparse PLS selection step was adaptive or not.}
 }
 
 \references{
  
 	G. Durif, F. Picard, S. Lambert-Lacroix (2015). Adaptive sparse PLS for logistic regression, (in prep), 
-	available on (\url{http://arxiv.org/}). 
+	available on (\url{http://arxiv.org/}).
+	
+	Chun, H., & Keleş, S. (2010). Sparse partial least squares regression for simultaneous dimension reduction and variable selection. 
+	Journal of the Royal Statistical Society. Series B (Methodological), 72(1), 3–25. doi:10.1111/j.1467-9868.2009.00723.x
+	
+	Chung, D., & Keleş, S. (2010). Sparse partial least squares classification for high dimensional data. Statistical Applications 
+	in Genetics and Molecular Biology, 9, Article17. doi:10.2202/1544-6115.1492
 
 }
 
@@ -111,7 +106,7 @@ Xtrain=Xtrain, Ytrain=Ytrain, sXtrain=sXtrain, sYtrain=sYtrain,
 	Ghislain Durif (\url{http://lbbe.univ-lyon1.fr/-Durif-Ghislain-.html}). 
 
 }
-\seealso{\code{\link{rirls.spls.tune}}.}
+\seealso{\code{\link{spls.adapt.tune}}.}
 
 \examples{
 ### load plsgenomics library
@@ -120,7 +115,7 @@ library(plsgenomics)
 ### generating data
 n = 100
 p = 1000
-sample1 = sample.bin(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, sigma.H=10, mean.F=0, sigma.F=5)
+sample1 = sample.cont(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, sigma.H=10, mean.F=0, sigma.F=5, sigma.E=5)
 
 X = sample1$X
 Y = sample1$Y
@@ -136,10 +131,19 @@ Xtest = X[index.test,]
 Ytest = Y[index.test,]
 
 ### fitting the model, and predicting new observations
-model1 = rirls.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=2, lambda.l1=0.5, ncomp=2, Xtest=Xtest, adapt=TRUE, maxIter=100, svd.decompose=TRUE)
+model1 = spls.adapt(Xtrain=Xtrain, Ytrain=Ytrain, lambda.l1=0.5, ncomp=2, weight.mat=NULL, Xtest=Xtest, adapt=TRUE, center.X=TRUE, center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE)
 str(model1)
 
-### prediction error rate
-sum(model1$hatYtest!=Ytest) / length(index.test)
+### plotting some results
+plot(model1$Ytrain, model1$hatY.nc, xlab="real Ytrain", ylab="Ytrain estimates")
+points(-1000:1000,-1000:1000, type="l")
+plot(model1$sYtrain, model1$residuals, xlab="sYtrain", ylab="residuals")
+plot(model1$betahat.nc, xlab="variable index", ylab="coeff")
+
+### mean squares error of prediction
+sYtest = as.matrix(scale(Ytest, center=model1$meanYtrain, scale=model1$sigmaYtrain))
+sum((model1$hatYtest - sYtest)^2) / length(index.test)
+plot(model1$hatYtest, sYtest, xlab="real Ytest", ylab="predicted values")
+points(-1000:1000,-1000:1000, type="l")
 
 }
