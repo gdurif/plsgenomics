@@ -129,6 +129,6 @@ sample.cont = function(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H
 	# sel: index of variables used to generate Y
 	# nosel: index of unused variables
 	
-	return(list(X=X, Y=Y, residuals=E, sel=sel, nosel=nosel, B=B, block.partition=block.partition, n, p=p, kstar, lstar, p0=p0, block.sel=block.sel, beta.min=beta.min, beta.max=beta.max, mean.H=mean.H, sigma.H=sigma.H, sigma.F=sigma.F, seed=seed))
+	return(list(X=X, Y=Y, residuals=E, sel=sel, nosel=nosel, B=B, block.partition=block.partition, n=n, p=p, kstar=kstar, lstar=lstar, p0=p0, block.sel=block.sel, beta.min=beta.min, beta.max=beta.max, mean.H=mean.H, sigma.H=sigma.H, sigma.F=sigma.F, seed=seed))
 	
 }
