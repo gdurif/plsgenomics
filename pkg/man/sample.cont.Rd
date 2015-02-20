@@ -1,9 +1,9 @@
-\name{sample.bin}
-\alias{sample.bin}
+\name{sample.cont}
+\alias{sample.cont}
 
 \title{Generates design matrix X with correlated block of covariates and a continuous random reponse Y depening on X through gaussian linear model Y=XB+E}
 \usage{
-sample.bin(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, sigma.E, seed=NULL)
+sample.cont(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, sigma.E, seed=NULL)
 }
 \arguments{
 	\item{n}{the number of observations in the sample.}
@@ -30,7 +30,6 @@ sample.bin(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, s
 	the coefficients B are sparse, and the design matrix X is composed of correlated blocks of
 	predictors.
 	
-
 }
 
 \details{
@@ -48,9 +47,6 @@ sample.bin(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, s
 	The details of the procedure are developped by Durif et al. (2015).
  
 }
-
-
-X=X, Y=Y, residuals=E, sel=sel, nosel=nosel, B=B, block.partition=block.partition, p=p, p0=p0, block.sel=block.sel, beta.min=beta.min, beta.max=beta.max, mean.H=mean.H, sigma.H=sigma.H, sigma.F=sigma.F, seed=seed
 
 \value{
 	A list with the following components:

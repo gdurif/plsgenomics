@@ -34,7 +34,7 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 }
 \description{
 	The function \code{spls.adapt} performs compression, variable selection in regression context (with possible prediction) 
-	using Durif et al. (2015) adaptive SPLS algorithm, based on sparse PLS developped by Chun and Kele\c{s} (2010).
+	using Durif et al. (2015) adaptive SPLS algorithm, based on sparse PLS developped by Chun and Keles (2010).
   
 }
 

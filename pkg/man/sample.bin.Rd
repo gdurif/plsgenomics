@@ -1,9 +1,9 @@
-\name{sample.cont}
-\alias{sample.cont}
+\name{sample.bin}
+\alias{sample.bin}
 
 \title{Generates design matrix X with correlated block of covariates and a binary random reponse depening on X through logit model}
 \usage{
-sample.cont(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, seed=NULL)
+sample.bin(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, seed=NULL)
 }
 \arguments{
 	\item{n}{the number of observations in the sample.}
@@ -24,11 +24,10 @@ sample.cont(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, 
 \description{
 	
 	The function \code{sample.bin} generates a random sample with p predictors X, a binary response Y, 
-	and n observations, through a logistic model, where the response Y is generated as a Bernouilli
+	and n observations, through a logistic model, where the response Y is generated as a Bernoulli
 	random variable of parameter logit^{-1}(XB),	the coefficients B are sparse, and the design matrix 
 	X is composed of correlated blocks of predictors.
 	
-
 }
 
 \details{
@@ -41,7 +40,7 @@ sample.cont(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, 
 	The variables with non null coefficients are then relevant to explain the response, whereas the ones with null coefficients
 	are not.
 	
-	The response is generated as by a drawing a Bernouilli random variable of parameter logit^{-1}(XB).
+	The response is generated as by a drawing a Bernoulli random variable of parameter logit^{-1}(XB).
 	
 	The details of the procedure are developped by Durif et al. (2015).
  
@@ -51,7 +50,7 @@ sample.cont(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, 
 	A list with the following components:
 	\item{X}{the (n x p) design matrix, containing the \code{n} observations for each of the \code{p} predictors.}
 	\item{Y}{the (n) vector of Y observations.}
-	\item{proba}{the n vector of Bernouilli parameters used to generate the response, in particular \code{logit^{-1}(X \%*\% B)}. }
+	\item{proba}{the n vector of Bernoulli parameters used to generate the response, in particular \code{logit^{-1}(X \%*\% B)}. }
 	\item{sel}{the index in (1:p) of covariates with non null coefficients in \code{B}.}
 	\item{nosel}{the index in (1:p) of covariates with null coefficients in \code{B}.}
 	\item{B}{the (n) vector of coefficients.}
