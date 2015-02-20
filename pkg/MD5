@@ -23,8 +23,8 @@ c1aab58d7f0b3cd154d1aceb2eda7e2f *R/rirls.spls.aux.R
 be8aabd5ebc0bd9641b6587b0afd6a16 *R/rpls.R
 c7dd09a4f2836f8236d375671c2ab47f *R/rpls.cv.R
 ac472524b0e6c05aecc2740c2658d567 *R/rplsaux.R
-cf1e6c074fbb1e8db40176fb5c98fdf3 *R/sample.bin.R
-d4647c3bb74720f01eb3d1fd470c4bd7 *R/sample.cont.R
+1f3062930a599dcba99dbcff6e2b1eab *R/sample.bin.R
+e9ed9a21b6b1bdf6ef9c3a7db113ff1d *R/sample.cont.R
 eebd8de5ad558cac912a173c4a115795 *R/spls.adapt.R
 b26d6d31595b926266d6d0ff8c305c8c *R/spls.adapt.aux.R
 0034b613131f19210d0aea191cd8daf6 *R/spls.adapt.tune.R
@@ -61,9 +61,9 @@ c85a8b19e1bf2067d6e7368a3a54c980 *man/rirls.spls.Rd
 f53db0a22c149b214f3784634b57961a *man/rirls.spls.tune.Rd
 948f3c29ffc7dcc30096ddf34646bf75 *man/rpls.Rd
 edd4560ca0cad02be95f04a5c7a4aa51 *man/rpls.cv.Rd
-a401d918ed5fcc7bdbe16972c31f06a2 *man/sample.bin.Rd
-5cb00290fff7bd2d84fe29822337bcf6 *man/sample.cont.Rd
-85dcaad0f1dd8c60d7ad66ccb30526b2 *man/spls.adapt.Rd
+c1413ad92d47184feade6e78ef3cb03e *man/sample.bin.Rd
+bcab1e9b148ee96d6d73cfdfe2c3e717 *man/sample.cont.Rd
+7a4cdc86179fd649f1763d0a29a773dc *man/spls.adapt.Rd
 b6361357cedf5e57cdc21784ce25628b *man/spls.adapt.tune.Rd
 d962c5d160bf3b3225df5f3a7641f8b6 *man/variable.selection.Rd
 2842855a0fb3af42910dfeb1fe4c4453 *plsgenomics-Ex.R
