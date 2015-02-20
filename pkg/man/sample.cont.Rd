@@ -1,9 +1,9 @@
-\name{sample.cont}
-\alias{sample.cont}
+\name{sample.bin}
+\alias{sample.bin}
 
 \title{Generates design matrix X with correlated block of covariates and a continuous random reponse Y depening on X through gaussian linear model Y=XB+E}
 \usage{
-sample.cont(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, sigma.E, seed=NULL)
+sample.bin(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, sigma.E, seed=NULL)
 }
 \arguments{
 	\item{n}{the number of observations in the sample.}
