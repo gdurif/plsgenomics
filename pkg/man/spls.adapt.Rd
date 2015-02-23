@@ -16,7 +16,7 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 	parameter for the dimension reduction step by sparse PLS (see details).}
 	\item{ncomp}{a positive integer. \code{ncomp} is the number of PLS components. 
 	If \code{ncomp}=0,then the Ridge regression is performed without dimension reduction.}
-	\item{weighted.mat}{a (ntrain x ntrain) matrix used to weight the l2 metric in observation 
+	\item{weight.mat}{a (ntrain x ntrain) matrix used to weight the l2 metric in observation 
 	space if necessary, especially the covariance inverse of the Ytrain observations in 
 	heteroskedastic context. If NULL, the l2 metric is the standard one, corresponding to 
 	homoskedastic model.}
@@ -34,7 +34,7 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 	be centered or not}
 	\item{scale.Y}{a boolean value indicating whether the response Ytrain should be scaled or not, 
 	scale.Y=TRUE implies center.Y=TRUE}
-	\item{weighted.centered}{a boolean value indicating whether should the centering take into 
+	\item{weighted.center}{a boolean value indicating whether should the centering take into 
 	account the weighted l2 metric or not (if TRUE, it implies that weighted.mat is non NULL).}
 }
 \description{

@@ -19,7 +19,7 @@ spls.adapt.tune(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, adapt=TRUE,
 	\item{ncomp.range}{a vector of positive integers. \code{ncomp} is the number of PLS 
 	components. If \code{ncomp}=0,then the Ridge regression is performed without dimension 
 	reduction. The optimal values will be chosen among \code{ncomp.range}.}
-	\item{weighted.mat}{a (n x n) matrix used to weight the l2 metric in observation spase 
+	\item{weight.mat}{a (n x n) matrix used to weight the l2 metric in observation spase 
 	if necessary, especially the covariance inverse of the Ytrain observations in heteroskedastic 
 	context. If NULL, the l2 metric is the standard one, corresponding to homoskedastic model.}
 	\item{adapt}{a boolean value, indicating whether the sparse PLS selection step sould be 
@@ -32,7 +32,7 @@ spls.adapt.tune(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, adapt=TRUE,
 	centered or not}
 	\item{scale.Y}{a boolean value indicating whether the response Ytrain should be scaled or not, 
 	scale.Y=TRUE implies center.Y=TRUE}
-	\item{weighted.centered}{a boolean value indicating whether should the centering take into 
+	\item{weighted.center}{a boolean value indicating whether should the centering take into 
 	account the weighted l2 metric or not (if TRUE, it implies that weighted.mat is non NULL).}
 	\item{return.grid}{a boolean values indicating whether the grid of hyper-parameters values 
 	with corresponding mean prediction error rate over the folds should be returned or not.}

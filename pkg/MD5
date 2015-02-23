@@ -63,7 +63,7 @@ f5ef810c6808df45ff806aed3a2c0f2e *man/rirls.spls.tune.Rd
 922c3aa849a862eb36bc694a7f39b628 *man/rpls.cv.Rd
 55e172895b943a02263eda1ff57a75aa *man/sample.bin.Rd
 28f4caccd7f01458418142161bc1b41a *man/sample.cont.Rd
-1a578953e6780e1bb4b1c871b3c4c135 *man/spls.adapt.Rd
-123010d01b1b51fde41e54139fb3939e *man/spls.adapt.tune.Rd
+2875e39b7a4e0c6143512be73984d262 *man/spls.adapt.Rd
+0b5399eb9c0dfb7e5d5317f07089e24e *man/spls.adapt.tune.Rd
 0c96dcad1048d41282bd5f9a0698305e *man/variable.selection.Rd
 2842855a0fb3af42910dfeb1fe4c4453 *plsgenomics-Ex.R
