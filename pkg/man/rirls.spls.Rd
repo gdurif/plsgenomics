@@ -63,10 +63,10 @@ rirls.spls(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp,
 	\item{converged}{a \{0,1\} value indicating whether the IRLS algorithm converged 
 	in less than \code{maxIter} iterations or not.}
 	\item{X.score}{a (n x ncomp) matrix being the observations coordinates or scores in the 
-	new component basis produced by the compression step (sparse PLS). Each column t_k of 
+	new component basis produced by the compression step (sparse PLS). Each column t.k of 
 	\code{X.score} is a new component.}
 	\item{X.weight}{a (p x ncomp) matrix being the coefficients of predictors in each components 
-	produced by sparse PLS. Each column w_k of \code{X.weight} verifies t_k = Xtrain x w_k (as a 
+	produced by sparse PLS. Each column w.k of \code{X.weight} verifies t.k = Xtrain x w.k (as a 
 	matrix product).}
 	\item{Xtrain}{the design matrix.}
 	\item{sXtrain}{the scaled design matrix.}

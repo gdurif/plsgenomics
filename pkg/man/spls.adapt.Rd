@@ -71,6 +71,9 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 	\item{sigmaXtrain}{the (p) vector of Xtrain column standard deviation, used for scaling if so.}
 	\item{meanYtrain}{the mean of Ytrain, used for centering if so.}
 	\item{sigmaYtrain}{the standard deviation of Ytrain, used for centering if so.}
+	\item{X.score}{a (n x ncomp) matrix being the observations coordinates or scores in the 
+	new component basis produced by the compression step (sparse PLS). Each column t.k of 
+	\code{X.score} is a new component.}
 	\item{X.score.low}{a (n x ncomp) matrix being the observations coordinates in the subspace of 
 	selected variables.}
 	\item{X.loading}{the (ncomp x p) matrix of coefficients in regression of Xtrain over the new 
@@ -78,8 +81,8 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 	\item{Y.loading}{the (ncomp) vector of coefficients in regression of Ytrain over the new 
 	components \code{X.score}.}
 	\item{X.weight}{a (p x ncomp) matrix being the coefficients of predictors in each components 
-	produced by sparse PLS. 
-	Each column w_k of \code{X.weight} verifies t_k = Xtrain x w_k (as a matrix product).}
+	produced by sparse PLS. Each column w.k of \code{X.weight} verifies t.k = Xtrain x w.k 
+	(as a matrix product).}
 	\item{residuals}{the (ntrain) vector of residuals in the model 
 	\code{sYtrain = sXtrain \%*\% betahat + residuals}.}
 	\item{residuals.nc}{the (ntrain) vector of residuals in the non centered non scaled model 
