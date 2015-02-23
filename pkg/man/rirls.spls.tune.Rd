@@ -1,5 +1,5 @@
-\name{rirls.spls}
-\alias{rirls.spls}
+\name{rirls.spls.tune}
+\alias{rirls.spls.tune}
 
 \title{Tuning parameters (ncomp, lambda.l1, lambda.ridge) for Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for binary response, by K-fold cross-validation}
 \usage{
