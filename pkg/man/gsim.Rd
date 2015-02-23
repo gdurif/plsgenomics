@@ -47,12 +47,15 @@ gsim(Xtrain, Ytrain, Xtest=NULL, Lambda, hA, hB=NULL, NbIterMax=50)
   estimated by plug-in if the argument value was equal to NULL)}
   \item{DeletedCol}{the vector containing the column number of \code{Xtrain} when the 
   variance of the corresponding predictor variable is null. Otherwise \code{DeletedCol}=NULL}
-  \item{Cvg}{the 0-1 value indicating convergence of the algorithm (1 for convergence, 0 otherwise).}
+  \item{Cvg}{the 0-1 value indicating convergence of the algorithm (1 for convergence, 
+  0 otherwise).}
   }
 
 \references{
  
-S. Lambert-Lacroix,  J. Peyre . (2006) Local likelyhood regression in  generalized linear single-index models with applications to microarrays data. Computational Statistics and Data Analysis, vol 51, n 3, 2091-2113. 
+S. Lambert-Lacroix,  J. Peyre . (2006) Local likelyhood regression in  generalized linear 
+single-index models with applications to microarrays data. Computational Statistics and 
+Data Analysis, vol 51, n 3, 2091-2113. 
 
 }
 \author{
@@ -76,7 +79,8 @@ Ytrain <- Colon$Y[IndexLearn]
 Xtest <- Colon$X[-IndexLearn,]
 
 # preprocess data
-resP <- preprocess(Xtrain= Xtrain, Xtest=Xtest,Threshold = c(100,16000),Filtering=c(5,500),log10.scale=TRUE,row.stand=TRUE)
+resP <- preprocess(Xtrain= Xtrain, Xtest=Xtest,Threshold = c(100,16000),Filtering=c(5,500),
+		log10.scale=TRUE,row.stand=TRUE)
 
 # perform prediction by GSIM
 res <- gsim(Xtrain=resP$pXtrain,Ytrain= Ytrain,Xtest=resP$pXtest,Lambda=10,hA=50,hB=NULL)
