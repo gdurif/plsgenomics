@@ -48,7 +48,8 @@ mrpls(Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50)
   \item{DeletedCol}{the vector containing the column number of \code{Xtrain} when the 
   variance of the corresponding predictor variable is null. Otherwise \code{DeletedCol}=NULL}
   \item{hatY}{If \code{ncomp} is greater than 1, \code{hatY} is a matrix of size ntest x ncomp 
-  in such a way that the kth column corresponds to the predicted label obtained with k PLS components.}
+  in such a way that the kth column corresponds to the predicted label obtained with k 
+  PLS components.}
 
   }
 
@@ -72,10 +73,12 @@ library(plsgenomics)
 
 # load SRBCT data
 data(SRBCT)
-IndexLearn <- c(sample(which(SRBCT$Y==1),10),sample(which(SRBCT$Y==2),4),sample(which(SRBCT$Y==3),7),sample(which(SRBCT$Y==4),9))
+IndexLearn <- c(sample(which(SRBCT$Y==1),10),sample(which(SRBCT$Y==2),4),
+			sample(which(SRBCT$Y==3),7),sample(which(SRBCT$Y==4),9))
 
 # perform prediction by MRPLS
-res <- mrpls(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],Lambda=0.001,ncomp=2,Xtest=SRBCT$X[-IndexLearn,])
+res <- mrpls(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],Lambda=0.001,ncomp=2,
+			Xtest=SRBCT$X[-IndexLearn,])
 sum(res$Ytest!=SRBCT$Y[-IndexLearn])
 
 # prediction for another sample

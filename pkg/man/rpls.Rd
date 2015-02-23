@@ -23,7 +23,8 @@ rpls(Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50)
   Newton-Rapson parts.}
 }
 \description{
- The function \code{mrpls} performs prediction using Fort and Lambert-Lacroix (2005) RPLS algorithm.
+ The function \code{mrpls} performs prediction using Fort and Lambert-Lacroix (2005) RPLS 
+ algorithm.
   
 }
 
@@ -48,7 +49,8 @@ rpls(Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50)
   \item{DeletedCol}{the vector containing the column number of \code{Xtrain} when the 
   variance of the corresponding predictor variable is null. Otherwise \code{DeletedCol}=NULL}
   \item{hatY}{If \code{ncomp} is greater than 1, \code{hatY} is a matrix of size ntest x ncomp 
-  in such a way that the kth column corresponds to the predicted label obtained with k PLS components.}
+  in such a way that the kth column corresponds to the predicted label obtained with k 
+  PLS components.}
 
   }
 
@@ -74,7 +76,8 @@ data(Colon)
 IndexLearn <- c(sample(which(Colon$Y==2),12),sample(which(Colon$Y==1),8))
 
 # preprocess data
-res <- preprocess(Xtrain= Colon$X[IndexLearn,], Xtest=Colon$X[-IndexLearn,],Threshold = c(100,16000),Filtering=c(5,500),log10.scale=TRUE,row.stand=TRUE)
+res <- preprocess(Xtrain= Colon$X[IndexLearn,], Xtest=Colon$X[-IndexLearn,],
+				Threshold = c(100,16000),Filtering=c(5,500),log10.scale=TRUE,row.stand=TRUE)
 # the results are given in res$pXtrain and res$pXtest
 
 # perform prediction by RPLS
