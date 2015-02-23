@@ -96,7 +96,7 @@ spls.adapt.tune(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, adapt=TRUE,
 	Ghislain Durif (\url{http://lbbe.univ-lyon1.fr/-Durif-Ghislain-.html}). 
 
 }
-\seealso{\code{\link{spls.adapt.tune.tune}}.}
+\seealso{\code{\link{spls.adapt}}.}
 
 \examples{
 ### load plsgenomics library

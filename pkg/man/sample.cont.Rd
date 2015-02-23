@@ -94,7 +94,7 @@ sample.cont(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, 
 	Ghislain Durif (\url{http://lbbe.univ-lyon1.fr/-Durif-Ghislain-.html}). 
 
 }
-\seealso{\code{\link{spls.adapt.tune.tune}}.}
+\seealso{\code{\link{sampe.bin}}.}
 
 \examples{
 ### load plsgenomics library
