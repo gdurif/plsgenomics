@@ -4,8 +4,9 @@
 \title{Tuning parameters (ncomp, lambda.l1, lambda.ridge) for Ridge Iteratively Reweighted Least 
 Squares followed by Adaptive Sparse PLS regression for binary response, by K-fold cross-validation}
 \usage{
-	rirls.spls.tune(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, 
-	                maxIter=100, svd.decompose=TRUE, return.grid=FALSE, ncores=1, nfolds=10)
+	rirls.spls.tune(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, 
+                    adapt=TRUE, maxIter=100, svd.decompose=TRUE, return.grid=FALSE, 
+                    ncores=1, nfolds=10)
 }
 \arguments{
 	\item{X}{a (n x p) data matrix of predictors. \code{X} must be a matrix. Each row corresponds 
@@ -95,7 +96,7 @@ library(plsgenomics)
 n = 100
 p = 1000
 sample1 = sample.bin(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, 
-				sigma.H=10, sigma.F=5)
+                    sigma.H=10, sigma.F=5)
 
 X = sample1$X
 Y = sample1$Y
@@ -110,8 +111,9 @@ lambda.ridge.range = signif(logspace(d1 = -2, d2 = 3, n=11), digits=3)
 
 ### tuning the hyper-parameters
 cv1 = rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
-					lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, adapt=TRUE, 
-					maxIter=100, svd.decompose=TRUE, return.grid=TRUE, ncores=1, nfolds=10)
+                         lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
+                         adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+                         return.grid=TRUE, ncores=1, nfolds=10)
 str(cv1)
 	
 }

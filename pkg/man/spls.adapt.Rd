@@ -5,7 +5,8 @@
 Adaptive Sparse PLS regression for binary response}
 \usage{
 spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=TRUE, 
-           center.X=TRUE, center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE)
+               center.X=TRUE, center.Y=TRUE, scale.X=TRUE, 
+               scale.Y=TRUE, weighted.center=FALSE)
 }
 \arguments{
 	\item{Xtrain}{a (ntrain x p) data matrix of predictors. \code{Xtrain} must be a matrix. 
@@ -140,7 +141,7 @@ library(plsgenomics)
 n = 100
 p = 1000
 sample1 = sample.cont(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, 
-					mean.H=0.2, sigma.H=10, sigma.F=5, sigma.E=5)
+                         mean.H=0.2, sigma.H=10, sigma.F=5, sigma.E=5)
 
 X = sample1$X
 Y = sample1$Y
@@ -157,8 +158,8 @@ Ytest = Y[index.test,]
 
 ### fitting the model, and predicting new observations
 model1 = spls.adapt(Xtrain=Xtrain, Ytrain=Ytrain, lambda.l1=0.5, ncomp=2, weight.mat=NULL, 
-				Xtest=Xtest, adapt=TRUE, center.X=TRUE, center.Y=TRUE, scale.X=TRUE, 
-				scale.Y=TRUE, weighted.center=FALSE)
+                         Xtest=Xtest, adapt=TRUE, center.X=TRUE, center.Y=TRUE, scale.X=TRUE, 
+                         scale.Y=TRUE, weighted.center=FALSE)
 str(model1)
 
 ### plotting some results

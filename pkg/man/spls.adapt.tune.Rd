@@ -4,9 +4,9 @@
 \title{Tuning parameters (ncomp, lambda.l1) for Adaptive Sparse PLS regression for continuous 
 response, by K-fold cross-validation}
 \usage{
-spls.adapt.tune(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, adapt=TRUE, center.X=TRUE, 
-                center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
-                return.grid=FALSE, ncores=1, nfolds=10)
+spls.adapt.tune(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, adapt=TRUE, 
+                    center.X=TRUE, center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, 
+                    weighted.center=FALSE, return.grid=FALSE, ncores=1, nfolds=10)
 }
 \arguments{
 	\item{X}{a (n x p) data matrix of predictors. \code{Xtrain} must be a matrix. 
@@ -113,9 +113,9 @@ Y = sample1$Y
 
 ### tuning the hyper-parameters
 cv1 = spls.adapt.tune(X=X, Y=Y, lambda.l1.range=seq(0.05, 0.95, by=0.1), ncomp.range=1:2, 
-					weight.mat=NULL, adapt=TRUE, center.X=TRUE, 
-                      	center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
-                      	return.grid=TRUE, ncores=1, nfolds=10)
+                         weight.mat=NULL, adapt=TRUE, center.X=TRUE, 
+                         center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
+                         return.grid=TRUE, ncores=1, nfolds=10)
 str(cv1)
 
 }
