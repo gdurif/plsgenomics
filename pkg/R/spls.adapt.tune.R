@@ -46,7 +46,7 @@ spls.adapt.tune <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 		if ((!is.matrix(Vfull)) || (!is.numeric(Vfull))) {
 			stop("Message from spls.adapt: Vfull is not of valid type")}
 		
-		if ((ntrain != ncol(Vfull)) || (ntrain != nrow(Vfull))) {
+		if ((n != ncol(Vfull)) || (n != nrow(Vfull))) {
 			stop("Message from spls.adapt: wrong dimension for Vfull, must be a square matrix of size the number of observations in Xtrain")
 		}
 	} else { # no weighting in sclar product

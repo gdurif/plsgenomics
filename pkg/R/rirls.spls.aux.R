@@ -74,9 +74,7 @@ rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, la
 		
 		## Run SPLS on Xtrain without svd decomposition
 		sXtrain = sXtrain.nosvd
-		if (!is.null(Xtest)) {
-			sXtest = sXtest.nosvd
-		}
+		sXtest = sXtest.nosvd
 		
 		# mu = h(Eta)
 		mu = 1 / (1 + exp(-Eta))

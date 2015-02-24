@@ -37,7 +37,6 @@ spls.adapt <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=
 	index.p <- c(1:p)
 	Ytrain <- as.matrix(Ytrain)
 	q <- ncol(Ytrain)
-	one <- matrix(1,nrow=1,ncol=n)
 	
 	if(!is.null(Xtest)) {
 		ntest <- nrow(Xtest)

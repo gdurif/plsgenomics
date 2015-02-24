@@ -39,7 +39,6 @@ spls.adapt.aux <- function(Xtrain, sXtrain, Ytrain, sYtrain, lambda.l1, ncomp, w
 	index.p <- c(1:p)
 	Ytrain <- as.matrix(Ytrain)
 	q <- ncol(Ytrain)
-	one <- matrix(1,nrow=1,ncol=n)
 	
 	sXtrain <- as.matrix(sXtrain)
 	sYtrain <- as.matrix(sYtrain)
