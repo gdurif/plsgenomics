@@ -47,8 +47,8 @@ mrpls.cv(Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50)
 
 \references{
  
- G. Fort, S. Lambert-Lacroix and Julie Peyre (2005). R�duction de dimension dans les mod�les 
- lin�aires g�n�ralis�s : application � la classification supervis�e de donn�es issues des biopuces.
+ G. Fort, S. Lambert-Lacroix and Julie Peyre (2005). Reduction de dimension dans les modeles 
+ lineaires generalises : application a la classification supervisee de donnees issues des biopuces.
  Journal de la SFDS, tome 146, n1-2, 117-152. 
 
 }

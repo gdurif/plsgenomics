@@ -114,16 +114,16 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 
 \references{
  
-	G. Durif, F. Picard, S. Lambert-Lacroix (2015). Adaptive sparse PLS for logistic regression, 
-	(in prep), available on (\url{http://arxiv.org/}).
-	
-	Chun, H., & Keleş, S. (2010). Sparse partial least squares regression for simultaneous 
-	dimension reduction and variable selection.  Journal of the Royal Statistical Society. 
-	Series B (Methodological), 72(1), 3–25. doi:10.1111/j.1467-9868.2009.00723.x
-	
-	Chung, D., & Keleş, S. (2010). Sparse partial least squares classification for high 
-	dimensional data. Statistical Applications in Genetics and Molecular Biology, 9, Article17. 
-	doi:10.2202/1544-6115.1492
+     G. Durif, F. Picard, S. Lambert-Lacroix (2015). Adaptive sparse PLS for logistic regression, 
+     (in prep), available on (\url{http://arxiv.org/}).
+     
+     Chun, H., & Keles, S. (2010). Sparse partial least squares regression for simultaneous 
+     dimension reduction and variable selection.  Journal of the Royal Statistical Society.
+     Series B (Methodological), 72(1), 3-25. doi:10.1111/j.1467-9868.2009.00723.x
+     
+     Chung, D., & Keles, S. (2010). Sparse partial least squares classification for high 
+     dimensional data. Statistical Applications in Genetics and Molecular Biology, 9, Article17. 
+     doi:10.2202/1544-6115.1492
 
 }
 
