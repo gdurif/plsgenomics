@@ -49,8 +49,8 @@ a463935272041d18b58893efedaea095 *man/gsim.Rd
 9f2984e9e6ca0a7d4da29c0a8ef32114 *man/leukemia.Rd
 6daa2a724a8d62dd0bae47bd10ae716a *man/mgsim.Rd
 c9309f9b535fcceaaf36d4d192268e85 *man/mgsim.cv.Rd
-46568eb0e89bd33b76a7f9520f69b383 *man/mrpls.Rd
-694d0d61d34d495ab19bf616fa9df1aa *man/mrpls.cv.Rd
+498ba6bde828b04551a88290297a7cfb *man/mrpls.Rd
+2d5260c870514bb7ba4b72dc18aa242e *man/mrpls.cv.Rd
 b03cd621ed60e81728cd192ade61f87b *man/pls.lda.Rd
 e9a8b0db64755d28cb43fa7b164446f1 *man/pls.lda.cv.Rd
 63008c74cccfa27b10ea2e01934c6ff3 *man/pls.regression.Rd
@@ -63,7 +63,7 @@ e9a8b0db64755d28cb43fa7b164446f1 *man/pls.lda.cv.Rd
 75101c40b80e5038fcd6b57667bac6a1 *man/rpls.cv.Rd
 55e172895b943a02263eda1ff57a75aa *man/sample.bin.Rd
 d5392851d0b4404bfb1abe02f5dbdead *man/sample.cont.Rd
-ad10adeda118df568d32f11f3744645e *man/spls.adapt.Rd
-6fd2ed5dfacd3b29be23eb63d8b90343 *man/spls.adapt.tune.Rd
+14c744ddf89761e3824f905e5eac7139 *man/spls.adapt.Rd
+f1e2a935375f709efe5419268a882a7d *man/spls.adapt.tune.Rd
 0c96dcad1048d41282bd5f9a0698305e *man/variable.selection.Rd
 2842855a0fb3af42910dfeb1fe4c4453 *plsgenomics-Ex.R
