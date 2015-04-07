@@ -40,7 +40,7 @@ data(Ecoli)
 }
 
 \source{The data are described in Kao et al. (2004) and can be freely downloaded from 
-\url{http://www.seas.ucla.edu/~liaoj/downloads.htm}.}
+\url{http://www.seas.ucla.edu/~liaoj/downloads.html}.}
 
 \examples{
 # load plsgenomics library

@@ -85,7 +85,8 @@ pls.regression(Xtrain, Ytrain, Xtest=NULL, ncomp=NULL,  unit.weights=TRUE)
   Korbinian Strimmer (\url{http://strimmerlab.org/}).
 
  Adapted in part from 
-  pls.pcr code by R. Wehrens (\url{http://cran.r-project.org/src/contrib/Descriptions/pls.html}). 
+  pls.pcr code by R. Wehrens (in a former version of the 'pls' package
+  \url{http://cran.r-project.org/web/packages/pls/index.html}). 
 
 
 }
