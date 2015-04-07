@@ -227,12 +227,12 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 				stop("Message from rirls.spls.tune: ncomp is not of valid type")
 			}
 			
-			model <- tryCatch( rirls.spls.aux(sXtrain=sXtrain, sXtrain.nosvd=sXtrain.nosvd, Ytrain=Ytrain, lambda.ridge=grid.line$lambda.ridge, lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, meanXtrain=meanXtrain, sigma2train=sigma2train), error = function(e) { warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NA);} )
+			model <- tryCatch( rirls.spls.aux(sXtrain=sXtrain, sXtrain.nosvd=sXtrain.nosvd, Ytrain=Ytrain, lambda.ridge=grid.line$lambda.ridge, lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, meanXtrain=meanXtrain, sigma2train=sigma2train), error = function(e) { warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
 			
 			## resutls
 			res = numeric(6)
 			
-			if(!is.na(model)) {
+			if(!is.null(model)) {
 				res = c(grid.line$lambda.ridge, grid.line$lambda.l1, grid.line$ncomp, k, model$converged, sum(model$hatYtest != Ytest) / ntest)
 			} else {
 				res = c(grid.line$lambda.ridge, grid.line$lambda.l1, grid.line$ncomp, k, NA, NA)
@@ -245,7 +245,7 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 		return( as.vector(t(cv.grid.byfold)) )
 		
 		
-	}, mc.cores=ncores)), ncol=6, byrow=TRUE)
+	}, mc.cores=ncores, mc.silent=TRUE)), ncol=6, byrow=TRUE)
 	
 	cv.grid.allfolds = data.frame(cv.grid.allfolds)
 	colnames(cv.grid.allfolds) = c("lambda.ridge", "lambda.l1", "ncomp", "nfold", "converged", "error")
