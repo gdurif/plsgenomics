@@ -7,7 +7,7 @@ IES Postdoctoral Fellow at Northwestern University
 
 at http://www.stat.cmu.edu/~nmv/2014/07/14/implementing-mclapply-on-windows/
 
-
+Here is reproduced his article (if you do not have access to the network):
 
 An easy way to run R code in parallel on a multicore system is with the mclapply() function. Unfortunately, mclapply() does not work on Windows machines because the mclapply() implementation relies on forking and Windows does not support forking.
 
