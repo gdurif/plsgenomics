@@ -248,14 +248,12 @@ spls.adapt.tune <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 		### sur chaque fold, on calcule pour tout lambda.ridge.range
 		cv.grid.byfold <- matrix( sapply( split(grid, f=row.names(grid)), function(grid.line) {
 			
-			model <- tryCatch( spls.adapt.aux(Xtrain=Xtrain, sXtrain=sXtrain, Ytrain=Ytrain, sYtrain=sYtrain, lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, weight.mat=weight.mat, Xtest=Xtest, sXtest=sXtest, adapt=adapt, meanXtrain=meanXtrain, meanYtrain=meanYtrain, sigmaXtrain=sigmaXtrain, sigmaYtrain=sigmaYtrain, center.X=center.X, center.Y=center.Y, scale.X=scale.X, scale.Y=scale.Y, weighted.center=weighted.center), error = function(e) { warnings("Message from spls.adapt.tune: error when fitting a model in crossvalidation"); return(NA);} )
-			
-			print(str(model))
+			model <- tryCatch( spls.adapt.aux(Xtrain=Xtrain, sXtrain=sXtrain, Ytrain=Ytrain, sYtrain=sYtrain, lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, weight.mat=weight.mat, Xtest=Xtest, sXtest=sXtest, adapt=adapt, meanXtrain=meanXtrain, meanYtrain=meanYtrain, sigmaXtrain=sigmaXtrain, sigmaYtrain=sigmaYtrain, center.X=center.X, center.Y=center.Y, scale.X=scale.X, scale.Y=scale.Y, weighted.center=weighted.center), error = function(e) { warnings("Message from spls.adapt.tune: error when fitting a model in crossvalidation"); return(NULL);} )
 			
 			## resutls
 			res <- numeric(4)
 			
-			if(!is.na(model)) {
+			if(!is.null(model)) {
 				res <- c(grid.line$lambda.l1, grid.line$ncomp, k, sum((model$hatYtest - sYtest)^2) / ntest)
 			} else {
 				res <- c(grid.line$lambda.l1, grid.line$ncomp, k, NA)
@@ -265,17 +263,13 @@ spls.adapt.tune <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 			
 		}), ncol=4, byrow=TRUE)
 		
-		print(cv.grid.byfold)
-		
 		return( t(cv.grid.byfold) )
 		
 		
-	}, mc.cores = ncores)), ncol=4, byrow=TRUE)
+	}, mc.cores = ncores, mc.silent=TRUE)), ncol=4, byrow=TRUE)
 	
 	cv.grid.allfolds <- data.frame(cv.grid.allfolds)
 	colnames(cv.grid.allfolds) <- c("lambda.l1", "ncomp", "nfold", "error")
-	
-	print(cv.grid.allfolds)
 	
 	#####################################################################
 	#### Find the optimal point in the grid

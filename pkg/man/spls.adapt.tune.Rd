@@ -112,10 +112,14 @@ X = sample1$X
 Y = sample1$Y
 
 ### tuning the hyper-parameters
-cv1 = spls.adapt.tune(X=X, Y=Y, lambda.l1.range=seq(0.05, 0.95, by=0.1), ncomp.range=1:2, 
+cv1 = spls.adapt.tune(X=X, Y=Y, lambda.l1.range=seq(0.05, 0.95, by=0.3), ncomp.range=1:2, 
                          weight.mat=NULL, adapt=TRUE, center.X=TRUE, 
                          center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
                          return.grid=TRUE, ncores=1, nfolds=10)
 str(cv1)
+
+### otpimal values
+cv1$lambda.l1.opt
+cv1$ncomp.opt
 
 }
