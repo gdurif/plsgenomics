@@ -165,15 +165,21 @@ model1 = spls.adapt(Xtrain=Xtrain, Ytrain=Ytrain, lambda.l1=0.5, ncomp=2, weight
                          scale.Y=TRUE, weighted.center=FALSE)
 str(model1)
 
-### plotting some results
+### plotting the estimation versus real values for the non centered response
 plot(model1$Ytrain, model1$hatY.nc, xlab="real Ytrain", ylab="Ytrain estimates")
 points(-1000:1000,-1000:1000, type="l")
+
+### plotting residuals versus centered response values
 plot(model1$sYtrain, model1$residuals, xlab="sYtrain", ylab="residuals")
+
+### plotting the predictor coefficients
 plot(model1$betahat.nc, xlab="variable index", ylab="coeff")
 
-### mean squares error of prediction
+### mean squares error of prediction on test sample
 sYtest = as.matrix(scale(Ytest, center=model1$meanYtrain, scale=model1$sigmaYtrain))
 sum((model1$hatYtest - sYtest)^2) / length(index.test)
+
+### plotting predicted values versus non centered real response values on the test set
 plot(model1$hatYtest, sYtest, xlab="real Ytest", ylab="predicted values")
 points(-1000:1000,-1000:1000, type="l")
 
