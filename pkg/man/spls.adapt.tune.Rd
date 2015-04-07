@@ -80,7 +80,7 @@ spls.adapt.tune(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, adapt=TRUE,
 \references{
  
      G. Durif, F. Picard, S. Lambert-Lacroix (2015). Adaptive sparse PLS for logistic regression, 
-     (in prep), available on (\url{http://arxiv.org/}).
+     (in prep), available on (\url{http://arxiv.org/abs/1502.05933}).
      
      Chun, H., & Keles, S. (2010). Sparse partial least squares regression for simultaneous 
      dimension reduction and variable selection.  Journal of the Royal Statistical Society.

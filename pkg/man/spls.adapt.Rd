@@ -115,7 +115,7 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 \references{
  
      G. Durif, F. Picard, S. Lambert-Lacroix (2015). Adaptive sparse PLS for logistic regression, 
-     (in prep), available on (\url{http://arxiv.org/}).
+     (in prep), available on (\url{http://arxiv.org/abs/1502.05933}).
      
      Chun, H., & Keles, S. (2010). Sparse partial least squares regression for simultaneous 
      dimension reduction and variable selection.  Journal of the Royal Statistical Society.
@@ -129,6 +129,9 @@ spls.adapt(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=
 
 \author{
 	Ghislain Durif (\url{http://lbbe.univ-lyon1.fr/-Durif-Ghislain-.html}). 
+     
+     Adapted in part from spls code by H. Chun, D. Chung and S.Keles 
+     (\url{http://cran.r-project.org/web/packages/spls/index.html}).
 
 }
 \seealso{\code{\link{spls.adapt.tune}}.}

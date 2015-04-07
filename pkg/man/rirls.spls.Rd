@@ -86,12 +86,15 @@ rirls.spls(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp,
 \references{
  
 	G. Durif, F. Picard, S. Lambert-Lacroix (2015). Adaptive sparse PLS for logistic regression, 
-	(in prep), available on (\url{http://arxiv.org/}). 
+	(in prep), available on (\url{http://arxiv.org/abs/1502.05933}). 
 
 }
 
 \author{
 	Ghislain Durif (\url{http://lbbe.univ-lyon1.fr/-Durif-Ghislain-.html}). 
+     
+     Adapted in part from rpls code by S. Lambert-Lacroix 
+     (function available in this package).
 
 }
 \seealso{\code{\link{rirls.spls.tune}}.}
