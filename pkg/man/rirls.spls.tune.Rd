@@ -93,24 +93,24 @@ Squares followed by Adaptive Sparse PLS regression for binary response, by K-fol
 library(plsgenomics)
 
 ### generating data
-n = 100
-p = 1000
-sample1 = sample.bin(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, 
+n <- 50
+p <- 100
+sample1 <- sample.bin(n=n, p=p, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, 
                     sigma.H=10, sigma.F=5)
 
-X = sample1$X
-Y = sample1$Y
+X <- sample1$X
+Y <- sample1$Y
 
 ### hyper-parameters values to test
-lambda.l1.range = seq(0.05,0.95,by=0.1) # between 0 and 1
-ncomp.range = 1:10
+lambda.l1.range <- seq(0.05,0.95,by=0.3) # between 0 and 1
+ncomp.range <- 1:2
 
-# log-linear between 0.01 a,d 1000 for lambda.ridge.range
-logspace = function( d1, d2, n) exp(log(10)*seq(d1, d2, length.out=n)) 
-lambda.ridge.range = signif(logspace(d1 = -2, d2 = 3, n=11), digits=3)
+# log-linear range between 0.01 a,d 1000 for lambda.ridge.range
+logspace <- function( d1, d2, n) exp(log(10)*seq(d1, d2, length.out=n)) 
+lambda.ridge.range <- signif(logspace(d1 <- -2, d2 <- 3, n=6), digits=3)
 
 ### tuning the hyper-parameters
-cv1 = rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
+cv1 <- rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
                          lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
                          adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
                          return.grid=TRUE, ncores=1, nfolds=10)

@@ -277,13 +277,16 @@ library(plsgenomics)
 
 # load SRBCT data
 data(SRBCT)
-IndexLearn <- c(sample(which(SRBCT$Y==1),10),sample(which(SRBCT$Y==2),4),sample(which(SRBCT$Y==3),7),sample(which(SRBCT$Y==4),9))
+IndexLearn <- c(sample(which(SRBCT$Y==1),10),sample(which(SRBCT$Y==2),4),
+                sample(which(SRBCT$Y==3),7),sample(which(SRBCT$Y==4),9))
 
 # Determine optimum h and lambda 
-hl <- mgsim.cv(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],LambdaRange=c(0.1),hRange=c(7,20))
+system.time( hl <- mgsim.cv(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],
+                            LambdaRange=c(0.1),hRange=c(7,20)) )
 
 # perform prediction by MGSIM
-res <- mgsim(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],Lambda=hl$Lambda,h=hl$h,Xtest=SRBCT$X[-IndexLearn,])
+res <- mgsim(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],Lambda=hl$Lambda,
+             h=hl$h,Xtest=SRBCT$X[-IndexLearn,])
 res$Cvg
 sum(res$Ytest!=SRBCT$Y[-IndexLearn])
 
@@ -632,32 +635,34 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
-# load plsgenomics library
+### load plsgenomics library
 library(plsgenomics)
 
-# generating data
-n = 100
-p = 1000
-sample1 = sample.bin(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, sigma.H=10, sigma.F=5)
+### generating data
+n <- 50
+p <- 100
+sample1 <- sample.bin(n=n, p=p, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, 
+                      mean.H=0.2, sigma.H=10, sigma.F=5)
 
-X = sample1$X
-Y = sample1$Y
+X <- sample1$X
+Y <- sample1$Y
 
-# splitting between learning and testing set
-index.train = sort(sample(1:n, size=round(0.7*n)))
-index.test = (1:n)[-index.train]
+### splitting between learning and testing set
+index.train <- sort(sample(1:n, size=round(0.7*n)))
+index.test <- (1:n)[-index.train]
 
-Xtrain = X[index.train,]
-Ytrain = Y[index.train,]
+Xtrain <- X[index.train,]
+Ytrain <- Y[index.train,]
 
-Xtest = X[index.test,]
-Ytest = Y[index.test,]
+Xtest <- X[index.test,]
+Ytest <- Y[index.test,]
 
-# fitting the model, and predicting new observations
-model1 = rirls.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=2, lambda.l1=0.5, ncomp=2, Xtest=Xtest, adapt=TRUE, maxIter=100, svd.decompose=TRUE)
+### fitting the model, and predicting new observations
+model1 <- rirls.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=2, lambda.l1=0.5, ncomp=2, 
+                     Xtest=Xtest, adapt=TRUE, maxIter=100, svd.decompose=TRUE)
 str(model1)
 
-# prediction error rate
+### prediction error rate
 sum(model1$hatYtest!=Ytest) / length(index.test)
 
 
@@ -679,28 +684,31 @@ flush(stderr()); flush(stdout())
 
 ### ** Examples
 
-# load plsgenomics library
+### load plsgenomics library
 library(plsgenomics)
 
-# generating data
-n = 100
-p = 1000
-sample1 = sample.bin(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, sigma.H=10, sigma.F=5)
+### generating data
+n <- 50
+p <- 100
+sample1 <- sample.bin(n=n, p=p, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, 
+                      sigma.H=10, sigma.F=5)
 
-X = sample1$X
-Y = sample1$Y
+X <- sample1$X
+Y <- sample1$Y
 
-# hyper-parameters values to test
-lambda.l1.range = seq(0.05,0.95,by=0.1) # between 0 and 1
-ncomp.range = 1:10
+### hyper-parameters values to test
+lambda.l1.range <- seq(0.05,0.95,by=0.3) # between 0 and 1
+ncomp.range <- 1:2
 
-# log-linear between 0.01 a,d 1000 for lambda.ridge.range
-logspace = function( d1, d2, n) exp(log(10)*seq(d1, d2, length.out=n)) 
-lambda.ridge.range = signif(logspace(d1 = -2, d2 = 3, n=11), digits=3)
+# log-linear range between 0.01 a,d 1000 for lambda.ridge.range
+logspace <- function( d1, d2, n) exp(log(10)*seq(d1, d2, length.out=n)) 
+lambda.ridge.range <- signif(logspace(d1 <- -2, d2 <- 3, n=6), digits=3)
 
-# tuning the hyper-parameters
-cv1 = rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, return.grid=TRUE, ncores=1, nfolds=10)
-
+### tuning the hyper-parameters
+cv1 <- rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
+                       lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
+                       adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+                       return.grid=TRUE, ncores=1, nfolds=10)
 str(cv1)
 
 

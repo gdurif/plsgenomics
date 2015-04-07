@@ -102,9 +102,9 @@ sample.cont(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H,
 library(plsgenomics)
 
 ### generating data
-n = 100
-p = 1000
-sample1 = sample.cont(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, 
+n <- 100
+p <- 1000
+sample1 <- sample.cont(n=n, p=p, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, 
 					sigma.H=10, sigma.F=5, sigma.E=5)
 str(sample1)
 

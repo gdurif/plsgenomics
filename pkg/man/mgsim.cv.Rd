@@ -74,8 +74,8 @@ IndexLearn <- c(sample(which(SRBCT$Y==1),10),sample(which(SRBCT$Y==2),4),
 			sample(which(SRBCT$Y==3),7),sample(which(SRBCT$Y==4),9))
 
 # Determine optimum h and lambda 
-hl <- mgsim.cv(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],
-			LambdaRange=c(0.1),hRange=c(7,20))
+system.time( hl <- mgsim.cv(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],
+			LambdaRange=c(0.1),hRange=c(7,20)) )
 
 # perform prediction by MGSIM
 res <- mgsim(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],Lambda=hl$Lambda,

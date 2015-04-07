@@ -103,16 +103,16 @@ spls.adapt.tune(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, adapt=TRUE,
 library(plsgenomics)
 
 ### generating data
-n = 100
-p = 1000
-sample1 = sample.cont(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, 
+n <- 100
+p <- 1000
+sample1 <- sample.cont(n=100, p=1000, kstar=20, lstar=2, beta.min=0.25, beta.max=0.75, mean.H=0.2, 
 					sigma.H=10, sigma.F=5, sigma.E=5)
 
-X = sample1$X
-Y = sample1$Y
+X <- sample1$X
+Y <- sample1$Y
 
 ### tuning the hyper-parameters
-cv1 = spls.adapt.tune(X=X, Y=Y, lambda.l1.range=seq(0.05, 0.95, by=0.3), ncomp.range=1:2, 
+cv1 <- spls.adapt.tune(X=X, Y=Y, lambda.l1.range=seq(0.05, 0.95, by=0.3), ncomp.range=1:2, 
                          weight.mat=NULL, adapt=TRUE, center.X=TRUE, 
                          center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
                          return.grid=TRUE, ncores=1, nfolds=10)
