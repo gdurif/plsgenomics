@@ -55,7 +55,7 @@ mrpls.cv(Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50)
 
 \author{
   Sophie Lambert-Lacroix 
-  (\url{http://www.upmf-grenoble.fr/lambert-lacroix-sophie-167268.htm}). 
+  (\url{http://membres-timc.imag.fr/Sophie.Lambert/}). 
 
 }
 \seealso{\code{\link{mrpls}}, \code{\link{rpls}}, \code{\link{rpls.cv}}.}

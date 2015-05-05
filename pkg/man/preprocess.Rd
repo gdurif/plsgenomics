@@ -46,7 +46,7 @@ Journal of the American Statistical Association, 97, 77--87.
 
 \author{
   Sophie Lambert-Lacroix 
-  (\url{http://www.upmf-grenoble.fr/lambert-lacroix-sophie-167268.htm}) 
+  (\url{http://membres-timc.imag.fr/Sophie.Lambert/}) 
    and 
   Julie Peyre (\url{http://www-lmc.imag.fr/lmc-sms/Julie.Peyre/}).
 }
