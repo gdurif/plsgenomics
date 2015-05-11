@@ -1,0 +1,1 @@
+R CMD check --as-cran plsgenomics_1.3.tar.gz
