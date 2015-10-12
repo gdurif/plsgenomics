@@ -9,7 +9,7 @@ source("pkg/R/ust.R")
 source("pkg/R/wpls.R")
 
 home = Sys.getenv("HOME")
-source(paste0(home, "/source_code/plsgenomics/pkg/R/wirrls.R"))
+source("pkg/R/wirrls.R")
 
 library(parallel)
 library(boot)
@@ -18,7 +18,7 @@ source("pkg/R/rirls.spls.R")
 
 # sample
 n = 100
-p = 1000
+p = 50
 kstar = 12
 lstar = 3
 beta.min = 0.5
@@ -35,7 +35,7 @@ Y = sample1$Y
 
 ##### test without Xtest
 
-model1 = rirls.spls(Xtrain=X, Ytrain=Y, lambda.ridge=2, lambda.l1=0.5, ncomp=2, Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE)
+model1 = rirls.spls(Xtrain=X, Ytrain=Y, lambda.ridge=2, lambda.l1=0.5, ncomp=2, Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, center.X=FALSE, scale.X=FALSE, weighted.center=FALSE)
 
 str(model1)
 
@@ -47,7 +47,7 @@ sum(sort(model1$A) %in% sort(sample1$sel))/sample1$p0
 
 ##### test with Xtest
 
-model2 = rirls.spls(Xtrain=X[1:80,], Ytrain=Y[1:80,], lambda.ridge=2, lambda.l1=0.5, ncomp=2, Xtest=X[81:100,], adapt=TRUE, maxIter=100, svd.decompose=TRUE)
+model2 = rirls.spls(Xtrain=X[1:80,], Ytrain=Y[1:80,], lambda.ridge=2, lambda.l1=0.5, ncomp=2, Xtest=X[81:100,], adapt=TRUE, maxIter=100, svd.decompose=TRUE, center.X=FALSE, scale.X=FALSE, weighted.center=FALSE)
 
 str(model2)
 
@@ -55,6 +55,9 @@ sum(Y[81:100,]!=model2$hatYtest)
 sum(model2$Ytrain!=model2$hatY)
 plot(model2$X.score[,1:2])
 plot(model2$Coefficients)
+
+sort(model2$A)
+sample1$sel
 
 
 ###########################################################
@@ -78,6 +81,10 @@ DeletedCol <- NULL
 
 svd.decompose=TRUE
 
+center.X = FALSE
+scale.X = FALSE
+weighted.center=FALSE
+
 ### Standardize the Xtrain matrix
 # standard deviation (biased one) of Xtrain
 sigma2train <- apply(Xtrain, 2, var) * (ntrain-1)/(ntrain)
@@ -86,7 +93,13 @@ sigma2train <- apply(Xtrain, 2, var) * (ntrain-1)/(ntrain)
 meanXtrain <- apply(Xtrain,2,mean)
 
 # center and scale Xtrain
-sXtrain <- scale(Xtrain, center=meanXtrain, scale=sqrt(sigma2train))
+if(center.X && scale.X) {
+     sXtrain <- scale(Xtrain, center=meanXtrain, scale=sqrt(sigma2train))
+} else if(center.X && !scale.X) {
+     sXtrain <- scale(Xtrain, center=meanXtrain, scale=FALSE)
+} else {
+     sXtrain <- Xtrain
+}
 
 sXtrain.nosvd = sXtrain # keep in memory if svd decomposition
 
@@ -109,7 +122,13 @@ if ((p > ntrain) && (svd.decompose)) {
 meanXtest <- apply(Xtest,2,mean)
 sigma2test <- apply(Xtest,2,var)
 
-sXtest <- scale(Xtest, center=meanXtrain, scale=sqrt(sigma2train))
+if(center.X && scale.X) {
+     sXtest <- scale(Xtest, center=meanXtrain, scale=sqrt(sigma2train))
+} else if(center.X && !scale.X) {
+     sXtest <- scale(Xtest, center=meanXtrain, scale=FALSE)
+} else {
+     sXtest <- Xtest
+}
 
 sXtest.nosvd <- sXtest # keep in memory if svd decomposition
 
@@ -119,8 +138,9 @@ if ((p > ntrain) && (svd.decompose)) {
 }
 
 
-model3 = rirls.spls.aux(sXtrain=sXtrain, sXtrain.nosvd=sXtrain.nosvd, Ytrain=Ytrain, lambda.ridge=2, lambda.l1=0.5, ncomp=2, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, adapt=TRUE, maxIter=100, svd.decompose=svd.decompose, meanXtrain=meanXtrain, sigma2train=sigma2train)
+model3 = rirls.spls.aux(sXtrain=sXtrain, sXtrain.nosvd=sXtrain.nosvd, Ytrain=Ytrain, lambda.ridge=2, lambda.l1=0.5, ncomp=2, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, adapt=TRUE, maxIter=100, svd.decompose=svd.decompose, meanXtrain=meanXtrain, sigma2train=sigma2train, center.X=center.X, scale.X=scale.X, weighted.center=weighted.center)
 
 str(model3)
 
 sum(model2$hatYtest!=model3$hatYtest)
+
