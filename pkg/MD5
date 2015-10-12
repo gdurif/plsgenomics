@@ -20,7 +20,7 @@ cb12228de7005dc3584cd61dd522f427 *R/pls.regression.cv.R
 afe30b447801271407f2d7e811b8a191 *R/preprocess.R
 bd4bec0a415856e7016f9d6ec0f4e63f *R/rirls.spls.R
 b5adf9aa65853b89392d2dd49610f00f *R/rirls.spls.aux.R
-8d4c35015f25a28c4c628ec16bb344c7 *R/rirls.spls.tune.R
+06ea41885d961ffb0b0391009e34cea8 *R/rirls.spls.tune.R
 be8aabd5ebc0bd9641b6587b0afd6a16 *R/rpls.R
 c7dd09a4f2836f8236d375671c2ab47f *R/rpls.cv.R
 ac472524b0e6c05aecc2740c2658d567 *R/rplsaux.R

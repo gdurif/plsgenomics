@@ -245,7 +245,7 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
                                                  lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, 
                                                  adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
                                                  meanXtrain=meanXtrain, sigma2train=sigma2train, 
-                                                 center.X=centr.X, scale.X=scale.X, weighted.center=weighted.center), 
+                                                 center.X=centre.X, scale.X=scale.X, weighted.center=weighted.center), 
                                   error = function(e) { warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
 			
 			## results
