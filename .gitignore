@@ -1,3 +1,5 @@
 .svn
 .Rproj.user
 *.tar.gz
+log
+*.Rcheck
