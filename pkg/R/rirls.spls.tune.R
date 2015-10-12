@@ -22,7 +22,9 @@
 ### MA 02111-1307, USA
 
 
-rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, return.grid=FALSE, ncores=1, nfolds=10) {
+rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+                            return.grid=FALSE, ncores=1, nfolds=10, 
+                            center.X=TRUE, scale.X=FALSE, weighted.center=TRUE) {
 	
 	#####################################################################
 	#### Initialisation
@@ -176,7 +178,13 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 		meanXtrain <- apply(Xtrain,2,mean)
 		
 		# center and scale Xtrain
-		sXtrain <- scale(Xtrain, center=meanXtrain, scale=sqrt(sigma2train))
+		if(center.X && scale.X) {
+		     sXtrain <- scale(Xtrain, center=meanXtrain, scale=sqrt(sigma2train))
+		} else if(center.X && !scale.X) {
+		     sXtrain <- scale(Xtrain, center=meanXtrain, scale=FALSE)
+		} else {
+		     sXtrain <- Xtrain
+		}
 		
 		sXtrain.nosvd = sXtrain # keep in memory if svd decomposition
 		
@@ -199,7 +207,13 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 		meanXtest <- apply(Xtest,2,mean)
 		sigma2test <- apply(Xtest,2,var)
 		
-		sXtest <- scale(Xtest, center=meanXtrain, scale=sqrt(sigma2train))
+		if(center.X && scale.X) {
+		     sXtest <- scale(Xtest, center=meanXtrain, scale=sqrt(sigma2train))
+		} else if(center.X && !scale.X) {
+		     sXtest <- scale(Xtest, center=meanXtrain, scale=FALSE)
+		} else {
+		     sXtest <- Xtest
+		}
 		
 		sXtest.nosvd <- sXtest # keep in memory if svd decomposition
 		
@@ -227,9 +241,14 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 				stop("Message from rirls.spls.tune: ncomp is not of valid type")
 			}
 			
-			model <- tryCatch( rirls.spls.aux(sXtrain=sXtrain, sXtrain.nosvd=sXtrain.nosvd, Ytrain=Ytrain, lambda.ridge=grid.line$lambda.ridge, lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, meanXtrain=meanXtrain, sigma2train=sigma2train), error = function(e) { warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
+			model <- tryCatch( rirls.spls.aux(sXtrain=sXtrain, sXtrain.nosvd=sXtrain.nosvd, Ytrain=Ytrain, lambda.ridge=grid.line$lambda.ridge, 
+                                                 lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, 
+                                                 adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
+                                                 meanXtrain=meanXtrain, sigma2train=sigma2train, 
+                                                 center.X=centr.X, scale.X=scale.X, weighted.center=weighted.center), 
+                                  error = function(e) { warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
 			
-			## resutls
+			## results
 			res = numeric(6)
 			
 			if(!is.null(model)) {
@@ -279,10 +298,6 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 		return( list(lambda.ridge.opt = cv.grid$lambda.ridge[which.min(cv.grid$error)], lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], conv.per=conv.per, cv.grid=NULL) )
 		
 	}
-	
-	
-	
-	
 	
 	
 	

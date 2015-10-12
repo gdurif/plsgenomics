@@ -24,7 +24,9 @@
 ### MA 02111-1307, USA
 
 
-rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, lambda.l1, ncomp, sXtest, sXtest.nosvd=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, meanXtrain, sigma2train) {
+rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, lambda.l1, ncomp, sXtest, sXtest.nosvd=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+                           meanXtrain, sigma2train, 
+                           center.X=TRUE, scale.X=FALSE, weighted.center=TRUE) {
 	
 	
 	#####################################################################
@@ -101,7 +103,7 @@ rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, la
 		VmeansXtrain <- t(diagV)%*%sXtrain/sumV
 		
 		# SPLS(X, pseudo-var, weighting = V)
-		resSPLS = spls.adapt(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt, center.X=TRUE, scale.X=FALSE, center.Y=TRUE, scale.Y=FALSE, weighted.center=TRUE)
+		resSPLS = spls.adapt(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt, center.X=center.X, scale.X=scale.X, center.Y=TRUE, scale.Y=FALSE, weighted.center=weighted.center)
 		
 		BETA = resSPLS$betahat.nc
 		

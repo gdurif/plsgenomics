@@ -23,7 +23,8 @@
 ### MA 02111-1307, USA
 
 
-rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE) {
+rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+                       center.X=TRUE, scale.X=FALSE, weighted.center=TRUE) {
 	
 	
 	#####################################################################
@@ -152,9 +153,15 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	meanXtrain <- apply(Xtrain,2,mean)
 	
 	# center and scale Xtrain
-	sXtrain <- scale(Xtrain, center=meanXtrain, scale=sqrt(sigma2train))
+     if(center.X && scale.X) {
+          sXtrain <- scale(Xtrain, center=meanXtrain, scale=sqrt(sigma2train))
+     } else if(center.X && !scale.X) {
+          sXtrain <- scale(Xtrain, center=meanXtrain, scale=FALSE)
+     } else {
+          sXtrain <- Xtrain
+     }
 	
-	sXtrain.nosvd = sXtrain # keep in memory if svd decomposition
+	sXtrain.nosvd <- sXtrain # keep in memory if svd decomposition
 	
 	# Compute the svd when necessary -> case p > ntrain (high dim)
 	if ((p > ntrain) && (svd.decompose)) {
@@ -177,7 +184,13 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 		meanXtest <- apply(Xtest,2,mean)
 		sigma2test <- apply(Xtest,2,var)
 		
-		sXtest <- scale(Xtest, center=meanXtrain, scale=sqrt(sigma2train))
+		if(center.X && scale.X) {
+		     sXtest <- scale(Xtest, center=meanXtrain, scale=sqrt(sigma2train))
+		} else if(center.X && !scale.X) {
+		     sXtest <- scale(Xtest, center=meanXtrain, scale=FALSE)
+		} else {
+		     sXtest <- Xtest
+		}
 		
 		sXtest.nosvd <- sXtest # keep in memory if svd decomposition
 		
@@ -251,7 +264,7 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 		VmeansXtrain <- t(diagV)%*%sXtrain/sumV
 		
 		# SPLS(X, pseudo-var, weighting = V)
-		resSPLS = spls.adapt(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt, center.X=TRUE, scale.X=FALSE, center.Y=TRUE, scale.Y=FALSE, weighted.center=TRUE)
+		resSPLS = spls.adapt(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt, center.X=center.X, scale.X=scale.X, center.Y=TRUE, scale.Y=FALSE, weighted.center=weighted.center)
 		
 		BETA = resSPLS$betahat.nc
 		
