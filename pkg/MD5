@@ -13,7 +13,7 @@ f660a3909caa38a6f41ef98153831c76 *R/mrpls.R
 b11a371ac082476b9e37445a7b11bba4 *R/mrpls.cv.R
 8f01f0e3588f2d12d0fbf1959fb6f248 *R/mrplsaux.R
 9efa3699fe8af36851ea2bb64cdfb47b *R/mwirrls.R
-7ee5c3ee4da9f301b5b4af735b0040b4 *R/pls.lda.R
+9c59a8d699e3cf0d66b840b4a5edde12 *R/pls.lda.R
 4b4c3471ad035b094808486fe8ed2058 *R/pls.lda.cv.R
 c0cacddfc968459e5c569d3a432717fb *R/pls.regression.R
 cb12228de7005dc3584cd61dd522f427 *R/pls.regression.cv.R
@@ -51,7 +51,7 @@ a780673376e00713fb5c9c960723c3de *man/mgsim.Rd
 81f147a242ed58b15efec725a7bdad0e *man/mgsim.cv.Rd
 15e04c247368b3ae4a8e52f69e0498dc *man/mrpls.Rd
 89c65f1b00f79a6ec37b403780bf0bd8 *man/mrpls.cv.Rd
-b03cd621ed60e81728cd192ade61f87b *man/pls.lda.Rd
+090a8a8b0fa6dd62ed015be317b771c5 *man/pls.lda.Rd
 e9a8b0db64755d28cb43fa7b164446f1 *man/pls.lda.cv.Rd
 777360e51c12de517d09c96a23715125 *man/pls.regression.Rd
 4566e07d6c65be5f8d63966e2c9ce23d *man/pls.regression.cv.Rd
