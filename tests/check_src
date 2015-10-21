@@ -1,0 +1,3 @@
+#!/bin/bash
+
+R CMD check plsgenomics_1.3-2.tar.gz
