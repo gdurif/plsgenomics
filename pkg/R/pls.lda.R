@@ -23,7 +23,7 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-pls.lda<-function(Xtrain, Ytrain, Xtest=NULL, ncomp, nruncv=0, alpha=2/3, priors=NULL)
+pls.lda<-function(Xtrain, Ytrain, Xtest=NULL, ncomp, nruncv=0, alpha=2/3, priors=NULL, CVlda=TRUE)
 {
      ntrain<-nrow(Xtrain)
      Ytrain<-as.factor(Ytrain)
