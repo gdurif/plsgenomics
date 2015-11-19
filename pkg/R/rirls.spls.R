@@ -48,7 +48,8 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	}
 	
 	if (p==1) {
-		stop("Message from rirls.spls: p=1 is not valid")}
+		stop("Message from rirls.spls: p=1 is not valid")
+	}
 	
 	# On Xtest if necessary
 	if (!is.null(Xtest)) {
