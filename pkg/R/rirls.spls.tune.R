@@ -35,11 +35,11 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 	p <- ncol(X) # nb covariates
 	index.p <- c(1:p)
 	if(is.factor(Y)) {
-		Y = as.numeric(levels(Y))[Y]
+		Y <- as.numeric(levels(Y))[Y]
 	}
 	Y <- as.integer(Y)
 	Y <- as.matrix(Y)
-	q = ncol(Y)
+	q <- ncol(Y)
 	one <- matrix(1,nrow=1,ncol=n)
 	
 	if(!is.null(seed)) {
