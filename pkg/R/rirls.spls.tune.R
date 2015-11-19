@@ -23,8 +23,9 @@
 
 
 rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-                            return.grid=FALSE, ncores=1, nfolds=10, 
-                            center.X=TRUE, scale.X=FALSE, weighted.center=TRUE) {
+                            return.grid=FALSE, ncores=1, nfolds=10, nrun=1, 
+                            center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
+                            seed=NULL, verbose=TRUE) {
 	
 	#####################################################################
 	#### Initialisation
@@ -33,14 +34,58 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 	n <- nrow(X) # nb observations
 	p <- ncol(X) # nb covariates
 	index.p <- c(1:p)
+	if(is.factor(Y)) {
+		Y = as.numeric(levels(Y))[Y]
+	}
+	Y <- as.integer(Y)
 	Y <- as.matrix(Y)
 	q = ncol(Y)
 	one <- matrix(1,nrow=1,ncol=n)
+	
+	if(!is.null(seed)) {
+	     set.seed(seed)
+	}
 	
 	
 	#####################################################################
 	#### Tests on type input
 	#####################################################################
+	
+	# On X
+	if ((!is.matrix(X)) || (!is.numeric(X))) {
+	     stop("Message from rirls.spls.tune: X is not of valid type")
+	}
+	
+	if (p==1) {
+	     stop("Message from rirls.spls.tune: p=1 is not valid")
+	}
+	
+	# On Y
+	if ((!is.matrix(Y)) || (!is.numeric(Y))) {
+	     stop("Message from rirls.spls.tune: Y is not of valid type")
+	}
+	
+	if (q != 1) {
+	     stop("Message from rirls.spls.tune: Y must be univariate")
+	}
+	
+	if (nrow(Y)!=n) {
+	     stop("Message from rirls.spls.tune: the number of observations in Y is not equal to the number of row in X")
+	}
+	
+	# On Ytrain value
+	if (sum(is.na(Y))!=0) {
+	     stop("Message from rirls.spls.tune: NA values in Ytrain")
+	}
+	
+	if (sum(!(Y %in% c(0,1)))!=0) {
+	     stop("Message from rirls.spls.tune: Y is not of valid type")
+	}
+	
+	if (sum(as.numeric(table(Y))==0)!=0) {
+	     stop("Message from rirls.spls.tune: there are empty classes")
+	}
+	
 	
 	# maxIter
 	if ((!is.numeric(maxIter)) || (round(maxIter)-maxIter!=0) || (maxIter<1)) {
@@ -56,83 +101,74 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 	if ((!is.numeric(nfolds)) || (round(nfolds)-nfolds!=0) || (nfolds<1)) {
 		stop("Message from rirls.spls.tune: nfolds is not of valid type")
 	}
+	# necessary to insure that both classes are represented in each folds
+	if( any(as.vector(table(Y))<nfolds)) {
+	     stop("Message from rirls.spls.tune: there is a class defined by Y that has less members than the number of folds nfold")
+	}
 	
 	
 	#####################################################################
 	#### Cross-validation: computation on each fold over the entire grid
 	#####################################################################
 	
-	## the train set is partitioned into nfolds part, each observation is assigned into a fold
-	fold.obs = sort(rep(1:nfolds, length.out = n))
+	## fold size
+	fold.size = n %/% nfolds
+	
+	## draw nrun nfolds partition
+	folds.obs = sapply(1:nrun, function(run) {
+	     ## the train set is partitioned into nfolds part, each observation is assigned into a fold
+	     
+	     # observations from the different classes
+	     index0 = (1:n)[Y==0]
+	     index1 = (1:n)[Y==1]
+	     
+	     # each folds contains at least one elements of each class
+	     # choose the represent of each class in each fold
+	     folds0 = c(1:nfolds, rep(0, length(index0) - nfolds))[sample(x=1:length(index0), size=length(index0), replace=FALSE)]
+	     folds1 = c(1:nfolds, rep(0, length(index1) - nfolds))[sample(x=1:length(index1), size=length(index1), replace=FALSE)]
+	     
+	     ind.folds0 = index0[folds0!=0]
+	     ind.folds1 = index1[folds1!=0]
+	     #folds0[index0 %in% ind.folds0]
+	     #folds1[index1 %in% ind.folds1]
+	     
+	     # group the remaining observation and equally dispatch them into the folds
+	     rest = c(index0[folds0==0], index1[folds1==0])
+	     folds.rest = rep(1:nfolds, length.out = length(rest))[sample(x=1:length(rest), size=length(rest), replace=FALSE)]
+	     
+	     folds.res = rep(NA, n)
+	     folds.res[ind.folds0] = folds0[folds0!=0]
+	     folds.res[ind.folds1] = folds1[folds1!=0]
+	     folds.res[rest] = folds.rest
+	     
+	     #table(folds.res)
+	     #sapply(1:nfolds, function(x) table(Y[folds.res==x]))
+	     
+	     return(folds.res)
+	})
+	
+	
 	
 	## hyper-parameter grid
 	grid = expand.grid(lambda.ridge=lambda.ridge.range, lambda.l1=lambda.l1.range, ncomp=ncomp.range, KEEP.OUT.ATTRS=FALSE)
 	
-	cv.grid.allfolds = matrix( unlist( mclapply(1:nfolds, function(k) {
+	## folds x run grid
+	folds.grid = expand.grid(k=1:nfolds, run=1:nrun, KEEP.OUT.ATTRS=FALSE)
+	
+	## computation on the folds x run grid
+	cv.grid.allfolds = matrix( unlist( mclapply(split(folds.grid, f=row.names(folds.grid)), function(folds.line) {
 		
 		
 		#### train and test variable
-		Xtrain <- subset(X, fold.obs != k)
-		Ytrain <- subset(Y, fold.obs != k)
+		Xtrain <- subset(X, folds.obs[,folds.line$run] != folds.line$k)
+		Ytrain <- subset(Y, folds.obs[,folds.line$run] != folds.line$k)
 		
 		ntrain <- nrow(Xtrain)
 		
-		Xtest <- subset(X, fold.obs == k)
-		Ytest <- subset(Y, fold.obs == k)
+		Xtest <- subset(X, folds.obs[,folds.line$run] == folds.line$k)
+		Ytest <- subset(Y, folds.obs[,folds.line$run] == folds.line$k)
 		
 		ntest <- nrow(Xtest)
-		
-		#####################################################################
-		#### Tests on type input
-		#####################################################################
-		# On Xtrain
-		if ((!is.matrix(Xtrain)) || (!is.numeric(Xtrain))) {
-			stop("Message from rirls.spls.tune: Xtrain is not of valid type")
-		}
-		
-		if (p==1) {
-			stop("Message from rirls.spls.tune: p=1 is not valid")}
-		
-		# On Xtest
-		if (is.vector(Xtest)==TRUE) {
-			Xtest <- matrix(Xtest,nrow=1)
-		}
-		
-		Xtest <- as.matrix(Xtest)
-		ntest <- nrow(Xtest) 
-		
-		if ((!is.matrix(Xtest)) || (!is.numeric(Xtest))) {
-			stop("Message from rirls.spls.tune: Xtest is not of valid type")}
-		
-		if (p != ncol(Xtest)) {
-			stop("Message from rirls.spls.tune: columns of Xtest and columns of Xtrain must be equal")
-		}	
-		
-		# On Ytrain
-		if ((!is.matrix(Ytrain)) || (!is.numeric(Ytrain))) {
-			stop("Message from rirls.spls.tune: Ytrain is not of valid type")
-		}
-		
-		if (q != 1) {
-			stop("Message from rirls.spls.tune: Ytrain must be univariate")
-		}
-		
-		if (nrow(Ytrain)!=ntrain) {
-			stop("Message from rirls.spls.tune: the number of observations in Ytrain is not equal to the Xtrain row number")
-		}
-		
-		# On Ytrain value
-		if (sum(is.na(Ytrain))!=0) {
-			stop("Message from rirls.spls.tune: NA values in Ytrain")
-		}
-		
-		if (sum(!(Ytrain %in% c(0,1)))!=0) {
-			stop("Message from rirls.spls.tune: Ytrain is not of valid type")
-		}
-		
-		if (sum(as.numeric(table(Ytrain))==0)!=0) {
-			stop("Message from rirls.spls.tune: there are empty classes")
-		}
 		
 		
 		#####################################################################
@@ -242,37 +278,45 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 			}
 			
 			model <- tryCatch( rirls.spls.aux(sXtrain=sXtrain, sXtrain.nosvd=sXtrain.nosvd, Ytrain=Ytrain, lambda.ridge=grid.line$lambda.ridge, 
-                                                 lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, 
-                                                 adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
-                                                 meanXtrain=meanXtrain, sigma2train=sigma2train, 
-                                                 center.X=center.X, scale.X=scale.X, weighted.center=weighted.center), 
-                                  error = function(e) { warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
-			
+	                                            lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, 
+	                                            adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
+	                                            meanXtrain=meanXtrain, sigma2train=sigma2train, 
+	                                            center.X=center.X, scale.X=scale.X, weighted.center=weighted.center), 
+	                             error = function(e) { print(e); warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )		
+	          
 			## results
 			res = numeric(6)
 			
 			if(!is.null(model)) {
-				res = c(grid.line$lambda.ridge, grid.line$lambda.l1, grid.line$ncomp, k, model$converged, sum(model$hatYtest != Ytest) / ntest)
+				res = c(grid.line$lambda.ridge, grid.line$lambda.l1, grid.line$ncomp, folds.line$k, folds.line$run, model$converged, sum(model$hatYtest != Ytest) / ntest)
 			} else {
-				res = c(grid.line$lambda.ridge, grid.line$lambda.l1, grid.line$ncomp, k, NA, NA)
+				res = c(grid.line$lambda.ridge, grid.line$lambda.l1, grid.line$ncomp, folds.line$k, folds.line$run, NA, NA)
 			}
 			
 			return(res)
 			
-		}), ncol=6, byrow=TRUE)
+		}), ncol=7, byrow=TRUE)
 		
 		return( as.vector(t(cv.grid.byfold)) )
 		
 		
-	}, mc.cores=ncores, mc.silent=TRUE)), ncol=6, byrow=TRUE)
+	}, mc.cores=ncores, mc.silent=!verbose)), ncol=7, byrow=TRUE)
 	
 	cv.grid.allfolds = data.frame(cv.grid.allfolds)
-	colnames(cv.grid.allfolds) = c("lambda.ridge", "lambda.l1", "ncomp", "nfold", "converged", "error")
+	colnames(cv.grid.allfolds) = c("lambda.ridge", "lambda.l1", "ncomp", "nfold", "nrun", "converged", "error")
 	
 	#####################################################################
 	#### Find the optimal point in the grid
 	#####################################################################
 	
+	## compute the number of NAs (=fails)
+	cv.grid.fails <- data.frame( as.matrix( with( cv.grid.allfolds, aggregate(error, list(lambda.ridge, lambda.l1, ncomp), function(x) {sum(is.na(x))}))))
+	colnames(cv.grid.fails) <- c("lambda.ridge", "lambda.l1", "ncomp", "nb.fail")
+	
+	## check number of NAs (=fails)
+	if(sum(cv.grid.fails$nb.fail>0.8*nrun*nfolds) > (0.8*nrow(grid))) {
+	     warnings("Message from rirls.spls.tune: too many errors during the cross-validation process, the grid is not enough filled")
+	}     
 	
 	## compute the mean error over the folds for each point of the grid
 	cv.grid.error <- data.frame( as.matrix( with( cv.grid.allfolds, aggregate(error, list(lambda.ridge, lambda.l1, ncomp), function(x) c(mean(x, na.rm=TRUE), sd(x, na.rm=TRUE)) ))))
@@ -285,8 +329,9 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 	## % of convergence over all cross-validation process
 	conv.per <- mean(cv.grid.conv$converged)
 	
-	## merge the two tables
-	cv.grid <- merge(cv.grid.error, cv.grid.conv, by = c("lambda.ridge", "lambda.l1", "ncomp"))
+	## merge the three tables
+	cv.grid1 <- merge(cv.grid.error, cv.grid.conv, by = c("lambda.ridge", "lambda.l1", "ncomp"))
+	cv.grid <- merge(cv.grid1, cv.grid.fails, by = c("lambda.ridge", "lambda.l1", "ncomp"))
 	
 	##### return
 	if(return.grid) {

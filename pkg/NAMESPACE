@@ -8,7 +8,8 @@ exportPattern(".")
 import(
   MASS,
   boot,
-  parallel
+  parallel,
+  reshape2
 )
 
 importFrom("stats", "median", "predict", "rbinom", "rnorm", "runif",
