@@ -320,10 +320,7 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           rm(H)
           
           pseudoVar = Eta + Vinv %*% Psi
-          
-          if(weighted.center) {
-               pseudoVar = pseudoVar - Cte %*% VMeanPseudoVar
-          }
+          pseudoVar = pseudoVar - Cte %*% VMeanPseudoVar
           
           if(center.X && weighted.center) {
                sXtrain <- VCtrsXtrain
