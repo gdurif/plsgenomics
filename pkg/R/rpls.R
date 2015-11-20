@@ -229,23 +229,29 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
           #WPLS loop
           for (count in 1:ncomp) {
                Omega[,count]<-t(E)%*%(W%*%f1+f2)
+               
                #Score vector
                t<-E%*%Omega[,count]
                c<-t(Omega[,count])%*%t(E)%*%W%*%E%*%Omega[,count]
                Scores[,count]<-t
                TildePsi[,count] <- PsiAux%*%Omega[,count]
+               
                #Deflation of X
                Loadings[,count]<-t(t(t)%*%W%*%E)/c[1,1]
                E<-E-t%*%t(Loadings[,count])
+               
                #Deflation of f1
                qcoeff[count]<-t(W%*%f1+f2)%*%t/c[1,1]
                f1 <- f1-qcoeff[count]*t
+               
                #Recursve definition of RMatrix
                PsiAux<-PsiAux%*%(diag(c(rep(1,r)))-Omega[,count]%*%t(Loadings[,count]))
+               
                #Express regression coefficients w.r.t. the columns of [1 sX] for ncomp=count
                if (count==1) {
                     GAMMA[-1,count]<-TildePsi[,1:count]%*%t(c(qcoeff[1:count]))
                }
+               
                if (count!=1) {
                     GAMMA[-1,count]<-TildePsi[,1:count]%*%qcoeff[1:count]
                }

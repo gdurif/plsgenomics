@@ -41,7 +41,7 @@ mwirrls <- function(Y, Z, Lambda=0, NbrIterMax=15, Threshold=10^(-12), WKernel) 
      
      ##    OUT     
      ############
-     ##  out :  structure that contains the fields
+     ##      out :  structure that contains the fields
      ##      Gamma : vector of the regression coefficients w.r.t the design
      ##      matrix.
      ##      Cvg : Cvg=1 if the algorithm has converged otherwise 0.
