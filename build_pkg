@@ -6,7 +6,7 @@
 #fi
 
 ## compile attributes
-Rscript --verbose compileAttributes.R
+#Rscript --verbose compileAttributes.R
 
 ## compute MD5 sum
 Rscript --verbose computeMD5sum.R
