@@ -1,4 +1,4 @@
-### m.rirls.spls.R  (2014-10)
+### m.rirls.spls.R  (2015-10)
 ###
 ###    Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for 
 ###    multicategorial response
@@ -405,7 +405,7 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
      #### RETURN
      
      result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=resSPLS$A, converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, V=V, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain)
-     class(result) <- "rirls.spls"
+     class(result) <- "m.rirls.spls"
      return(result)
      
 }
