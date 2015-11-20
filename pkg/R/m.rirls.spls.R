@@ -3,7 +3,7 @@
 ###    Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for 
 ###    multicategorial response
 ###
-### Copyright 2014-10 Ghislain DURIF
+### Copyright 2015-10 Ghislain DURIF
 ###
 ### Adapted from rpls function in plsgenomics package, copyright 2006-01 Sophie Lambert-Lacroix
 ###
@@ -35,6 +35,10 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
      ntrain <- nrow(Xtrain) # nb observations
      p <- ncol(Xtrain) # nb covariates
      index.p <- c(1:p)
+     if(is.factor(Ytrain)) {
+          Ytrain <- as.numeric(levels(Ytrain))[Ytrain]
+     }
+     Ytrain <- as.integer(Ytrain)
      Ytrain <- as.matrix(Ytrain)
      q <- ncol(Ytrain)
      one <- matrix(1,nrow=1,ncol=ntrain)
@@ -88,7 +92,7 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           stop("Message from m.rirls.spls: NA values in Ytrain")
      }
      
-     if (sum(!(Ytrain %in% c(0,1)))!=0) {
+     if((sum(floor(Ytrain)-Ytrain)!=0)||(sum(Ytrain<0)>0)) {
           stop("Message from m.rirls.spls: Ytrain is not of valid type")
      }
      
@@ -116,7 +120,8 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
      #### Move into the reduced space
      #####################################################################
      
-     r <- min(p, ntrain)
+     r <- p #min(p, ntrain)
+     G <- max(Ytrain)
      DeletedCol <- NULL
      
      ### Standardize the Xtrain matrix
@@ -202,12 +207,33 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           }
      }
      
+     #Compute Zblock 
+     Z <- cbind(rep(1,ntrain),sXtrain)
+     Zbloc <- matrix(0,nrow=ntrain*G,ncol=G*(r+1))
+
+     if (!is.null(Xtest)) {
+          Zt <- cbind(rep(1,ntest),sXtest)
+          Ztestbloc <- matrix(0,nrow=ntest*G,ncol=G*(r+1))
+     }
+     
+     for (g in 1:G) {
+          row <- (0:(ntrain-1))*G+g
+          col <- (r+1)*(g-1)+1:(r+1)
+          Zbloc[row,col] <- Z
+          if (!is.null(Xtest)) {
+               row <- (0:(ntest-1))*G+g
+               Ztestbloc[row,col] <- Zt
+          }
+     }
+     rm(Z)
+     Zt <- NULL
+     
      
      #####################################################################
      #### Ridge IRLS step
      #####################################################################
      
-     fit <- wirrls(Y=Ytrain, Z=cbind(rep(1,ntrain),sXtrain), Lambda=lambda.ridge, NbrIterMax=maxIter, WKernel=diag(rep(1,ntrain)))
+     fit <- mwirrls(Y=Ytrain, Z=Zbloc, Lambda=lambda.ridge, NbrIterMax=maxIter, WKernel=diag(rep(1,ntrain*G)))
      
      converged=fit$Cvg
      
@@ -233,43 +259,90 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           #Pseudovar = Eta + W^-1 Psi
           
           # Eta = X * betahat (covariate summary)
-          Eta <- cbind(rep(1, ntrain), sXtrain) %*% fit$Coefficients
+          Eta <- Zbloc %*% fit$Coefficients
           
           ## Run SPLS on Xtrain without svd decomposition
-          sXtrain = sXtrain.nosvd
-          if (!is.null(Xtest)) {
-               sXtest = sXtest.nosvd
+          if(svd.decompose) {
+               sXtrain = sXtrain.nosvd
+               if (!is.null(Xtest)) {
+                    sXtest = sXtest.nosvd
+               }
+               
+               #Compute Zblock (for X without svd)
+               Z <- cbind(rep(1,ntrain),sXtrain)
+               Zbloc <- matrix(0,nrow=ntrain*G,ncol=G*(p+1))
+               
+               if (!is.null(Xtest)) {
+                    Zt <- cbind(rep(1,ntest),sXtest)
+                    Ztestbloc <- matrix(0,nrow=ntest*G,ncol=G*(p+1))
+               }
+               
+               for (g in 1:G) {
+                    row <- (0:(ntrain-1))*G+g
+                    col <- (p+1)*(g-1)+1:(p+1)
+                    Zbloc[row,col] <- Z
+                    if (!is.null(Xtest)) {
+                         row <- (0:(ntest-1))*G+g
+                         Ztestbloc[row,col] <- Zt
+                    }
+               }
+               rm(Z)
+               Zt <- NULL
           }
           
-          # mu = h(Eta)
-          mu = 1 / (1 + exp(-Eta))
+          # compute ponderation matrix V and mean parameter mu
+          mu <- rep(0, length(Eta))
+          V <- matrix(0, length(mu), length(mu))
+          Vinv <- matrix(0, length(mu), length(mu))
+          for (kk in 1:ntrain) {
+               mu[G*(kk-1)+(1:G)] <- exp(Eta[G*(kk-1)+(1:G)])/(1+sum(exp(Eta[G*(kk-1)+(1:G)])))
+               Blocmu <- mu[G*(kk-1)+(1:G)]
+               BlocV <- -Blocmu %*% t(Blocmu)
+               BlocV <- BlocV + diag(Blocmu)
+               V[G*(kk-1)+(1:G), G*(kk-1)+(1:G)] <- BlocV
+               Vinv[G*(kk-1)+(1:G), G*(kk-1)+(1:G)] <- tryCatch(solve(BlocV), error = function(e) return(ginv(BlocV)))
+          }
+          Psi <- fit$Ybloc - mu
           
-          # ponderation matrix : V
-          diagV <- mu * (1-mu)
-          V <- diag(c(diagV))
-          
-          # inv de V
-          diagVinv = 1/ifelse(diagV!=0, diagV, diagV+0.00000001)
-          Vinv = diag(c(diagVinv))
-          
-          Psi <- Ytrain-mu
+          # V-Center the Xtrain and pseudo variable
+          col.intercept <- seq(from=1, to=G*(p+1), by=(p+1)) # column corresponding to intercept
+          index <- 1:(G*(p+1))
+          Xbloc <- Zbloc[,-col.intercept]
+          Cte <- Zbloc[,col.intercept]
+          # Weighted centering of Pseudo variable
+          H <- t(Cte) %*% V %*% Cte
+          VMeanPseudoVar <- solve(H, t(Cte) %*% (V %*% Eta + Psi))
+          VCtrPsi <- Psi
+          VCtrEta <- Eta - Cte %*% VMeanPseudoVar
+          # Weighted centering of sXtrain
+          VMeansXtrain <- solve(H, t(Cte) %*% V %*% Xbloc)
+          VCtrsXtrain <- Xbloc - Cte %*% VMeansXtrain
+          rm(H)
           
           pseudoVar = Eta + Vinv %*% Psi
           
-          # V-Center the sXtrain and pseudo variable
-          sumV=sum(diagV)
+          if(weighted.center) {
+               pseudoVar = pseudoVar - Cte %*% VMeanPseudoVar
+          }
           
-          # Weighted centering of Pseudo variable
-          VmeanPseudoVar <- sum(V %*% Eta + Psi ) / sumV
-          
-          # Weighted centering of sXtrain
-          VmeansXtrain <- t(diagV)%*%sXtrain/sumV
+          if(center.X && weighted.center) {
+               sXtrain <- VCtrsXtrain
+          } else {
+               sXtrain <- Xbloc
+          }
           
           # SPLS(X, pseudo-var, weighting = V)
-          resSPLS = spls.adapt(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt, center.X=center.X, scale.X=scale.X, center.Y=TRUE, scale.Y=FALSE, weighted.center=weighted.center)
+          resSPLS = spls.in(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt)
           
-          BETA = resSPLS$betahat.nc
+          #Express regression coefficients w.r.t. the columns of [1 sX] for ncomp
+          BETA <- matrix(0, nrow=G*(r+1), ncol=1)
+          BETA[-col.intercept,] <- resSPLS$betahat
+          BETA[col.intercept,] <- VMeanPseudoVar - VMeansXtrain %*% BETA[-col.intercept,]
           
+     } else {
+          A <- NULL
+          X.score <- NULL
+          X.weight <- NULL
      }
      
      
@@ -278,47 +351,61 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
      #####################################################################
      
      hatY <- numeric(ntrain)
+     Eta <- matrix(0, nrow=G+1, ncol=1)
+     proba <- matrix(0, nrow=ntrain, ncol=G+1)
+     
+     Eta <- cbind(rep(0,ntrain),matrix(Zbloc%*%BETA,nrow=ntrain,byrow=TRUE))
+     proba <- t(apply(exp(Eta), 1, function(x) x/sum(x)))
+     hatY <- as.matrix(apply(proba,1,which.max)-1)
      
      if (!is.null(Xtest)) {
           
-          hatYtest <- cbind(rep(1,ntest),sXtest) %*% BETA
-          hatYtest <- as.numeric(hatYtest>0)
+          hatYtest <- numeric(ntest)
+          Eta.test <- matrix(0, nrow=G+1, ncol=1)
+          proba.test <- matrix(0, nrow=ntest, ncol=G+1)
           
-          proba.test = inv.logit( cbind(rep(1,ntest),sXtest) %*% BETA )
-          
-          hatY <- cbind(rep(1,ntrain),sXtrain) %*% BETA
-          hatY <- as.numeric(hatY>0)
+          Eta.test <- cbind(rep(0,ntest),matrix(Ztestbloc%*%BETA,nrow=ntest,byrow=TRUE))
+          proba.test <- t(apply(exp(Eta.test), 1, function(x) x/sum(x)))
+          hatYtest <- as.matrix(apply(proba.test,1,which.max)-1)
           
      } else {
-          
           hatYtest <- NULL
-          
+          Eta.test <- NULL
           proba.test <- NULL
-          
-          hatY <- cbind(rep(1,ntrain),sXtrain) %*% BETA
-          hatY <- as.numeric(hatY>0)
-          
      }
      
      
      #####################################################################
      #### Conclude
      #####################################################################
+
+     ##Compute the coefficients w.r.t. [1 X]
+     Beta <- t(matrix(BETA,nrow=G,byrow=TRUE))
+     Coefficients <- t(matrix(0, nrow=G, ncol=(p+1)))
+     Coefficients[-1,] <- diag(c(1/sqrt(sigma2train))) %*% Beta[-1,]
+     Coefficients[1,] <- Beta[1,] - meanXtrain %*% Coefficients[-1,]
      
-     Coefficients=BETA
-     
-     Coefficients[-1] <- diag(c(1/sqrt(sigma2train)))%*%BETA[-1]
-     
-     Coefficients[1] <- BETA[1] - meanXtrain %*% Coefficients[-1]
+     # comute X.score, X.weight, active set for original variables
+     if(ncomp != 0) {
+          
+          A <- lapply(1:G, function(g) {
+               return((1:p)[Coefficients[-1,g]!=0])
+          })
+          
+          X.score <- lapply(1:G, function(g) {
+               return(resSPLS$X.score[ (0:(ntrain-1)) * G + g, ])
+          })
+          
+          X.weight <- lapply(1:G, function(g) {
+               return(resSPLS$X.weight[ (g-1)*p + (1:p), ])
+          })
+     }
      
      
      #### RETURN
      
-     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=resSPLS$A, converged=converged, X.score=resSPLS$X.score, X.weight=resSPLS$X.weight, sXtrain=resSPLS$sXtrain, sPseudoVar=resSPLS$sYtrain, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, V=resSPLS$V, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain)
+     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=resSPLS$A, converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, V=V, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain)
      class(result) <- "rirls.spls"
      return(result)
-     
-     
-     
      
 }
