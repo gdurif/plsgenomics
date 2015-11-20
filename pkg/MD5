@@ -21,7 +21,7 @@ b11a371ac082476b9e37445a7b11bba4 *R/mrpls.cv.R
 c0cacddfc968459e5c569d3a432717fb *R/pls.regression.R
 cb12228de7005dc3584cd61dd522f427 *R/pls.regression.cv.R
 afe30b447801271407f2d7e811b8a191 *R/preprocess.R
-6e31cf1f2dce3e25392e1981f9f8697d *R/rirls.spls.R
+2108d20367f3d0d8d8b621e86ecd64fa *R/rirls.spls.R
 b5adf9aa65853b89392d2dd49610f00f *R/rirls.spls.aux.R
 18d34696c4315d5e46801cec9a562798 *R/rirls.spls.tune.R
 6a30bb604dd61281a59ae16a3e3f5fad *R/rpls.R

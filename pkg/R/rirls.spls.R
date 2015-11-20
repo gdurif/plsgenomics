@@ -31,7 +31,7 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	#### Initialisation
 	#####################################################################
 	Xtrain <- as.matrix(Xtrain)
-	n <- nrow(Xtrain) # nb observations
+	ntrain <- nrow(Xtrain) # nb observations
 	p <- ncol(Xtrain) # nb covariates
 	index.p <- c(1:p)
 	if(is.factor(Ytrain)) {
@@ -40,7 +40,7 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	Ytrain <- as.integer(Ytrain)
 	Ytrain <- as.matrix(Ytrain)
 	q <- ncol(Ytrain)
-	one <- matrix(1,nrow=1,ncol=n)
+	one <- matrix(1,nrow=1,ncol=ntrain)
 	
 	
 	#####################################################################
