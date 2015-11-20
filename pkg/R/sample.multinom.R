@@ -1,4 +1,4 @@
-### sample.bin.R  (2014-10)
+### sample.bin.R  (2015-10)
 ###
 ###    Generates design matrix X with correlated block of covariates and a multicategorial random reponse depening on X through multinomial model
 ###
