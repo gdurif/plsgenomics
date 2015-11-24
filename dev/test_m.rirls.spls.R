@@ -6,6 +6,8 @@ rm(list=ls())
 source("pkg/R/spls.in.R")
 source("pkg/R/mwirrls.R")
 source("pkg/R/m.rirls.spls.R")
+source("pkg/R/m.rirls.spls.aux.R")
+source("pkg/R/m.rirls.spls.tune.R")
 source("pkg/R/ust.adapt.R")
 source("pkg/R/ust.R")
 source("pkg/R/wpls.R")
@@ -14,6 +16,7 @@ source("pkg/R/sample.multinom.R")
 # library
 library(parallel)
 library(MASS)
+library(plsgenomics)
 
 
 # sample

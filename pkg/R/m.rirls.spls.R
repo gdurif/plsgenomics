@@ -401,7 +401,7 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
      
      #### RETURN
      
-     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=resSPLS$A, converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, V=V, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain)
+     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=sort(unique(unlist(A))), converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, V=V, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain)
      class(result) <- "m.rirls.spls"
      return(result)
      
