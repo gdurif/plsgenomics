@@ -16,21 +16,21 @@ source("pkg/R/sample.multinom.R")
 # library
 library(parallel)
 library(MASS)
-library(plsgenomics)
+#library(plsgenomics)
 
 
 # sample
 n = 100
-p = 50
+p = 500
 nb.class=3
 kstar = 12
 lstar = 3
-beta.min = 0.5
-beta.max = 1
+beta.min = 0.05
+beta.max = 0.1
 mean.H=0
-sigma.H=10
+sigma.H=3
 mean.F=0
-sigma.F=5
+sigma.F=1
 
 sample1 = sample.multinom(n, p, nb.class, kstar, lstar, beta.min, beta.max, mean.H, sigma.H, mean.F, sigma.F)
 
@@ -39,17 +39,34 @@ Y = sample1$Y
 
 ##### test without Xtest
 
-model1 = m.rirls.spls(Xtrain=X, Ytrain=Y, lambda.ridge=0.0001, lambda.l1=0.3, ncomp=2, Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, center.X=TRUE, scale.X=TRUE, weighted.center=FALSE)
+model1 = m.rirls.spls(Xtrain=X, Ytrain=Y, lambda.ridge=1, lambda.l1=0.5, ncomp=2, Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, center.X=TRUE, scale.X=TRUE, weighted.center=TRUE)
 
 str(model1)
 
-sum(model1$Ytrain!=model1$hatY)
+sum(model1$Ytrain!=model1$hatY)/length(Y)
+
+cbind(model1$proba, Y+1)
 
 plot(model1$Coefficients[,1])
 points(model1$Coefficients[,2], col="red")
 
+plot(model1$hatBeta[,1])
+points(model1$hatBeta[,2], col="red")
+
 plot(sample1$B[,1])
 points(sample1$B[,2], col="red")
+
+plot(model1$Coefficients[,1], model1$hatBeta[,1])
+abline(a=0,b=1)
+points(model1$Coefficients[,2], model1$hatBeta[,2], col="red")
+
+plot(sample1$B[,1], model1$hatBeta[-1,1])
+abline(a=0,b=1)
+points(sample1$B[,1], model1$Coefficients[-1,1], col="red")
+
+plot(sample1$B[,1])
+points(model1$Coefficients[-1,1], col="red", pch=2)
+points(model1$hatBeta[-1,1], col="blue", pch=3)
 
 print(model1$A)
 print(sample1$sel)

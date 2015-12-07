@@ -263,23 +263,26 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           
           ## Run SPLS on Xtrain without svd decomposition
           if(svd.decompose) {
+               
+               r <- p
+               
                sXtrain = sXtrain.nosvd
                if (!is.null(Xtest)) {
                     sXtest = sXtest.nosvd
                }
                
-               #Compute Zblock (for X without svd)
+               #Compute Zblock (for X without svd)               
                Z <- cbind(rep(1,ntrain),sXtrain)
-               Zbloc <- matrix(0,nrow=ntrain*G,ncol=G*(p+1))
+               Zbloc <- matrix(0,nrow=ntrain*G,ncol=G*(r+1))
                
                if (!is.null(Xtest)) {
                     Zt <- cbind(rep(1,ntest),sXtest)
-                    Ztestbloc <- matrix(0,nrow=ntest*G,ncol=G*(p+1))
+                    Ztestbloc <- matrix(0,nrow=ntest*G,ncol=G*(r+1))
                }
                
                for (g in 1:G) {
                     row <- (0:(ntrain-1))*G+g
-                    col <- (p+1)*(g-1)+1:(p+1)
+                    col <- (r+1)*(g-1)+1:(r+1)
                     Zbloc[row,col] <- Z
                     if (!is.null(Xtest)) {
                          row <- (0:(ntest-1))*G+g
@@ -401,7 +404,7 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
      
      #### RETURN
      
-     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=sort(unique(unlist(A))), converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, V=V, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain)
+     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=sort(unique(unlist(A))), converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, V=V, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain, hatBeta=Beta)
      class(result) <- "m.rirls.spls"
      return(result)
      

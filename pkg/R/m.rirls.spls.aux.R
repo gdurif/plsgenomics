@@ -98,19 +98,22 @@ m.rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, 
           
           ## Run SPLS on Xtrain without svd decomposition
           if(svd.decompose) {
+               
+               p <- ncol(sXtrain.nosvd)
+               r <- p
                sXtrain = sXtrain.nosvd
                sXtest = sXtest.nosvd
                
                #Compute Zblock (for X without svd)
                Z <- cbind(rep(1,ntrain),sXtrain)
-               Zbloc <- matrix(0,nrow=ntrain*G,ncol=G*(p+1))
+               Zbloc <- matrix(0,nrow=ntrain*G,ncol=G*(r+1))
                
                Zt <- cbind(rep(1,ntest),sXtest)
-               Ztestbloc <- matrix(0,nrow=ntest*G,ncol=G*(p+1))
+               Ztestbloc <- matrix(0,nrow=ntest*G,ncol=G*(r+1))
                
                for (g in 1:G) {
                     row <- (0:(ntrain-1))*G+g
-                    col <- (p+1)*(g-1)+1:(p+1)
+                    col <- (r+1)*(g-1)+1:(r+1)
                     Zbloc[row,col] <- Z
                     row <- (0:(ntest-1))*G+g
                     Ztestbloc[row,col] <- Zt
