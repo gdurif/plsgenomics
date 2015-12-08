@@ -153,7 +153,7 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           
           # new number of predictor
           p <- ncol(Xtrain)
-          r <- min(p,ntrain)
+          r <- p
      }
      
      # mean of Xtrain

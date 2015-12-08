@@ -232,7 +232,7 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
                
                # new number of predictor
                p <- ncol(Xtrain)
-               r <- min(p,ntrain)
+               r <- p
           }
           
           # mean of Xtrain
@@ -307,13 +307,13 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
                                                  adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
                                                  meanXtrain=meanXtrain, sigma2train=sigma2train, 
                                                  center.X=center.X, scale.X=scale.X, weighted.center=weighted.center), 
-                                  error = function(e) { print(e); warnings("Message from m.rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )		
+                                  error = function(e) { print(e); warnings("Message from m.rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
                
-#                model <- m.rirls.spls.aux(sXtrain=sXtrain, sXtrain.nosvd=sXtrain.nosvd, Ytrain=Ytrain, lambda.ridge=grid.line$lambda.ridge, 
-#                                                    lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, 
-#                                                    adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
-#                                                    meanXtrain=meanXtrain, sigma2train=sigma2train, 
-#                                                    center.X=center.X, scale.X=scale.X, weighted.center=weighted.center)
+               #model <- m.rirls.spls.aux(sXtrain=sXtrain, sXtrain.nosvd=sXtrain.nosvd, Ytrain=Ytrain, lambda.ridge=grid.line$lambda.ridge, 
+               #                                    lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, sXtest=sXtest, sXtest.nosvd=sXtest.nosvd, 
+               #                                    adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
+               #                                    meanXtrain=meanXtrain, sigma2train=sigma2train, 
+               #                                    center.X=center.X, scale.X=scale.X, weighted.center=weighted.center)
 
                ## results
                res = numeric(6)
