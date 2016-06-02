@@ -6,9 +6,9 @@ f20545affa9ece26d5f7bdd6627030d1 *R/gsim.R
 d4799b322412e1aa267788033e92f5a1 *R/gsim.aux.R
 9d6e420072611b0d12a4e664a65cc248 *R/gsim.cv.R
 96e38465726b912fc6c4640ced479cf3 *R/hplugin.R
-56ee16b1ba6066e3c65da03eb03b1682 *R/m.rirls.spls.R
+583e9aa213cbd3fd2ace5e53b39befdb *R/m.rirls.spls.R
 4b31e34960b5f6c760af984597f29030 *R/m.rirls.spls.aux.R
-1337deb1f7677dfb1899a63bfff6cc54 *R/m.rirls.spls.tune.R
+437dbe5913c9336ea5b3794d216d32bb *R/m.rirls.spls.tune.R
 7e6d6e7a1a50833e12cfee0f57026801 *R/mgsim.R
 c886da85a9a98cb842d1bf2de902a882 *R/mgsim.cv.R
 372a3392b67b73fdf02322173d41c3b7 *R/mgsimaux.R
@@ -21,9 +21,9 @@ b11a371ac082476b9e37445a7b11bba4 *R/mrpls.cv.R
 c0cacddfc968459e5c569d3a432717fb *R/pls.regression.R
 cb12228de7005dc3584cd61dd522f427 *R/pls.regression.cv.R
 afe30b447801271407f2d7e811b8a191 *R/preprocess.R
-2108d20367f3d0d8d8b621e86ecd64fa *R/rirls.spls.R
+8154a8508dc4ccd450cf1515f52c0559 *R/rirls.spls.R
 b5adf9aa65853b89392d2dd49610f00f *R/rirls.spls.aux.R
-18d34696c4315d5e46801cec9a562798 *R/rirls.spls.tune.R
+fae7f9deecb842c1fd8eca2a483fd56a *R/rirls.spls.tune.R
 6a30bb604dd61281a59ae16a3e3f5fad *R/rpls.R
 c7dd09a4f2836f8236d375671c2ab47f *R/rpls.cv.R
 ac472524b0e6c05aecc2740c2658d567 *R/rplsaux.R
