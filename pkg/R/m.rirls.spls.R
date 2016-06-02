@@ -49,7 +49,7 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
      #####################################################################
      
      # if Binary response
-     if(length(table(Y)) == 2) {
+     if(length(table(Ytrain)) == 2) {
           warning("message from m.rirls.spls: binary response")
           results = rirls.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=lambda.ridge, 
                                lambda.l1=lambda.l1, ncomp=ncomp, Xtest=Xtest, adapt=adapt, 

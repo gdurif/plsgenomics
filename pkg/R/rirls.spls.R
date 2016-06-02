@@ -48,7 +48,7 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	#####################################################################
 	
 	# if multicategorical response
-	if(length(table(Y)) > 2) {
+	if(length(table(Ytrain)) > 2) {
 	     warning("message from rirls.spls: multicategorical response")
 	     results = m.rirls.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=lambda.ridge, 
 	                            lambda.l1=lambda.l1, ncomp=ncomp, Xtest=Xtest, adapt=adapt, 
