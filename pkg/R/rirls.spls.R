@@ -46,6 +46,17 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	#####################################################################
 	#### Tests on type input
 	#####################################################################
+	
+	# if multicategorical response
+	if(length(table(Y)) > 2) {
+	     warning("message from rirls.spls: multicategorical response")
+	     results = m.rirls.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=lambda.ridge, 
+	                            lambda.l1=lambda.l1, ncomp=ncomp, Xtest=Xtest, adapt=adapt, 
+	                            maxIter=maxIter, svd.decompose=svd.decompose, 
+	                            center.X=center.X, scale.X=scale.X, weighted.center=weighted.center)
+	     return(results)
+	}
+	
 	# On Xtrain
 	if ((!is.matrix(Xtrain)) || (!is.numeric(Xtrain))) {
 		stop("Message from rirls.spls: Xtrain is not of valid type")
