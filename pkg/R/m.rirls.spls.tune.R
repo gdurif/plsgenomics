@@ -53,6 +53,20 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
      #### Tests on type input
      #####################################################################
      
+     # if Binary response
+     if(length(table(Y)) == 2) {
+          warning("message from m.rirls.spls.tune: binary response")
+          results = rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
+                                    lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
+                                    adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
+                                    return.grid=return.grid, ncores=ncores, 
+                                    nfolds=nfolds, nrun=nrun, 
+                                    center.X=center.X, scale.X=scale.X, 
+                                    weighted.center=weighted.center, 
+                                    seed=seed, verbose=verbose)
+          return(results)
+     }
+     
      # On X
      if ((!is.matrix(X)) || (!is.numeric(X))) {
           stop("Message from m.rirls.spls.tune: X is not of valid type")
