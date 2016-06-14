@@ -77,12 +77,12 @@ res <- preprocess(Xtrain= Colon$X[IndexLearn,], Xtest=Colon$X[-IndexLearn,],
 # the results are given in res$pXtrain and res$pXtest
 
 # Determine optimum ncomp and lambda
-nl <- rpls.cv(Ytrain=Colon$Y[IndexLearn],Xtrain=res$pXtrain,LambdaRange=c(0.1,1),ncompMax=3)
+nl <- rpls.cv(Ytrain=Colon$Y[IndexLearn]-1,Xtrain=res$pXtrain,LambdaRange=c(0.1,1),ncompMax=3)
 
 # perform prediction by RPLS
-resrpls <- rpls(Ytrain=Colon$Y[IndexLearn],Xtrain=res$pXtrain,Lambda=nl$Lambda,
+resrpls <- rpls(Ytrain=Colon$Y[IndexLearn]-1,Xtrain=res$pXtrain,Lambda=nl$Lambda,
 			ncomp=nl$ncomp,Xtest=res$pXtest)
-sum(resrpls$Ytest!=Colon$Y[-IndexLearn])
+sum(resrpls$Ytest!=Colon$Y[-IndexLearn]-1)
 
 }
 }

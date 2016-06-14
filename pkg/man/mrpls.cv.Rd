@@ -72,13 +72,13 @@ IndexLearn <- c(sample(which(SRBCT$Y==1),10),sample(which(SRBCT$Y==2),4),
 			sample(which(SRBCT$Y==3),7),sample(which(SRBCT$Y==4),9))
 
 # Determine optimum ncomp and Lambda
-nl <- mrpls.cv(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],
+nl <- mrpls.cv(Ytrain=SRBCT$Y[IndexLearn]-1,Xtrain=SRBCT$X[IndexLearn,],
 			LambdaRange=c(0.1,1),ncompMax=3)
 
 # perform prediction by MRPLS
-res <- mrpls(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],Lambda=nl$Lambda,
+res <- mrpls(Ytrain=SRBCT$Y[IndexLearn]-1,Xtrain=SRBCT$X[IndexLearn,],Lambda=nl$Lambda,
 			ncomp=nl$ncomp,Xtest=SRBCT$X[-IndexLearn,])
-sum(res$Ytest!=SRBCT$Y[-IndexLearn])
+sum(res$Ytest!=SRBCT$Y[-IndexLearn]-1)
 }
 }
 

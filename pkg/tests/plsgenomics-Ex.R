@@ -314,15 +314,15 @@ data(SRBCT)
 IndexLearn <- c(sample(which(SRBCT$Y==1),10),sample(which(SRBCT$Y==2),4),sample(which(SRBCT$Y==3),7),sample(which(SRBCT$Y==4),9))
 
 # perform prediction by MRPLS
-res <- mrpls(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],Lambda=0.001,ncomp=2,Xtest=SRBCT$X[-IndexLearn,])
-sum(res$Ytest!=SRBCT$Y[-IndexLearn])
+res <- mrpls(Ytrain=SRBCT$Y[IndexLearn]-1,Xtrain=SRBCT$X[IndexLearn,],Lambda=0.001,ncomp=2,Xtest=SRBCT$X[-IndexLearn,])
+sum(res$Ytest!=SRBCT$Y[-IndexLearn]-1)
 
 # prediction for another sample
 Xnew <- SRBCT$X[83,]
 # Compute the linear predictor for each classes expect class 1
 eta <- diag(t(cbind(c(1,Xnew),c(1,Xnew),c(1,Xnew))) %*% res$Coefficients)
 Ypred <- which.max(c(0,eta))
-Ypred
+Ypred+1
 SRBCT$Y[83]
 
 
@@ -351,11 +351,11 @@ data(SRBCT)
 IndexLearn <- c(sample(which(SRBCT$Y==1),10),sample(which(SRBCT$Y==2),4),sample(which(SRBCT$Y==3),7),sample(which(SRBCT$Y==4),9))
 
 # Determine optimum ncomp and Lambda
-nl <- mrpls.cv(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],LambdaRange=c(0.1,1),ncompMax=3)
+nl <- mrpls.cv(Ytrain=SRBCT$Y[IndexLearn]-1,Xtrain=SRBCT$X[IndexLearn,],LambdaRange=c(0.1,1),ncompMax=3)
 
 # perform prediction by MRPLS
-res <- mrpls(Ytrain=SRBCT$Y[IndexLearn],Xtrain=SRBCT$X[IndexLearn,],Lambda=nl$Lambda,ncomp=nl$ncomp,Xtest=SRBCT$X[-IndexLearn,])
-sum(res$Ytest!=SRBCT$Y[-IndexLearn])
+res <- mrpls(Ytrain=SRBCT$Y[IndexLearn]-1,Xtrain=SRBCT$X[IndexLearn,],Lambda=nl$Lambda,ncomp=nl$ncomp,Xtest=SRBCT$X[-IndexLearn,])
+sum(res$Ytest!=SRBCT$Y[-IndexLearn]-1)
 
 
 
@@ -535,16 +535,16 @@ res <- preprocess(Xtrain= Colon$X[IndexLearn,], Xtest=Colon$X[-IndexLearn,],Thre
 # the results are given in res$pXtrain and res$pXtest
 
 # perform prediction by RPLS
-resrpls <- rpls(Ytrain=Colon$Y[IndexLearn],Xtrain=res$pXtrain,Lambda=0.6,ncomp=1,Xtest=res$pXtest)
+resrpls <- rpls(Ytrain=Colon$Y[IndexLearn]-1,Xtrain=res$pXtrain,Lambda=0.6,ncomp=1,Xtest=res$pXtest)
 resrpls$hatY
-sum(resrpls$Ytest!=Colon$Y[-IndexLearn])
+sum(resrpls$Ytest!=Colon$Y[-IndexLearn]-1)
 
 # prediction for another sample
 Xnew <- res$pXtest[1,]
 # Compute the linear predictor for each classes expect class 0
 eta <- c(1,Xnew) %*% resrpls$Coefficients
 Ypred <- which.max(c(0,eta))
-Ypred
+Ypred+1
 
 
 
@@ -578,11 +578,11 @@ res <- preprocess(Xtrain= Colon$X[IndexLearn,], Xtest=Colon$X[-IndexLearn,],Thre
 # the results are given in res$pXtrain and res$pXtest
 
 # Determine optimum ncomp and lambda
-nl <- rpls.cv(Ytrain=Colon$Y[IndexLearn],Xtrain=res$pXtrain,LambdaRange=c(0.1,1),ncompMax=3)
+nl <- rpls.cv(Ytrain=Colon$Y[IndexLearn]-1,Xtrain=res$pXtrain,LambdaRange=c(0.1,1),ncompMax=3)
 
 # perform prediction by RPLS
-resrpls <- rpls(Ytrain=Colon$Y[IndexLearn],Xtrain=res$pXtrain,Lambda=nl$Lambda,ncomp=nl$ncomp,Xtest=res$pXtest)
-sum(resrpls$Ytest!=Colon$Y[-IndexLearn])
+resrpls <- rpls(Ytrain=Colon$Y[IndexLearn]-1,Xtrain=res$pXtrain,Lambda=nl$Lambda,ncomp=nl$ncomp,Xtest=res$pXtest)
+sum(resrpls$Ytest!=Colon$Y[-IndexLearn]-1)
 
 
 
