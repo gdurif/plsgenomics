@@ -91,7 +91,7 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
           stop("Message from mrpls.R: the length of Ytrain is not equal to the Xtrain row number")
      }
      
-     Ytrain <- Ytrain-1
+     ##Ytrain <- Ytrain-1
      
      if ((sum(floor(Ytrain)-Ytrain)!=0)||(sum(Ytrain<0)>0)) {
           stop("Message from mrpls.R: Ytrain is not of valid type")
@@ -208,7 +208,9 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
           #Ridge procedure
           GAMMA <- fit$Coefficients
           if (is.null(Xtest)==FALSE) {
-               hatY <- apply(cbind(rep(0,ntest),matrix(Ztestbloc%*%GAMMA,nrow=ntest,byrow=TRUE)),1,which.max)-1
+               hatYtest_k <- apply(cbind(rep(0,ntest),matrix(Ztestbloc%*%GAMMA,nrow=ntest,byrow=TRUE)),1,which.max)-1
+          } else {
+               hatYtest_k <- NULL
           }
      }
      
@@ -256,8 +258,10 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
           Loadings <- matrix(0,r*c,ncomp)
           qcoeff <- vector(ncomp,mode="numeric")
           GAMMA <- matrix(0,nrow=c*(r+1),ncol=ncomp)
-          if (is.null(Xtest)==FALSE) {
-               hatY <- matrix(0,nrow=ntest,ncol=ncomp)
+          if(is.null(Xtest)==FALSE) {
+               hatYtest_k <- matrix(0,nrow=ntest,ncol=ncomp)
+          } else {
+               hatYtest_k <- NULL
           }
           
           #WPLS loop
@@ -293,9 +297,40 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
                
                #classification step
                if (is.null(Xtest)==FALSE) {
-                    hatY[,count] <- apply(cbind(rep(0,ntest),matrix(Ztestbloc%*%GAMMA[,count],nrow=ntest,byrow=TRUE)),1,which.max)-1
+                    hatYtest_k[,count] <- apply(cbind(rep(0,ntest),matrix(Ztestbloc%*%GAMMA[,count],nrow=ntest,byrow=TRUE)),1,which.max)-1
                }
           }
+     }
+     
+     ## CLASSIFICATION STEP
+     #######################
+     
+     if (ncomp!=0) {
+          GAMMA <- GAMMA[,ncomp]
+     }
+     
+     hatY <- numeric(ntrain)
+     Eta <- matrix(0, nrow=c+1, ncol=1)
+     proba <- matrix(0, nrow=ntrain, ncol=c+1)
+     
+     Eta <- cbind(rep(0,ntrain),matrix(Zbloc%*%GAMMA,nrow=ntrain,byrow=TRUE))
+     proba <- t(apply(exp(Eta), 1, function(x) x/sum(x)))
+     hatY <- as.matrix(apply(proba,1,which.max)-1)
+     
+     if (!is.null(Xtest)) {
+          
+          hatYtest <- numeric(ntest)
+          Eta.test <- matrix(0, nrow=c+1, ncol=1)
+          proba.test <- matrix(0, nrow=ntest, ncol=c+1)
+          
+          Eta.test <- cbind(rep(0,ntest),matrix(Ztestbloc%*%GAMMA,nrow=ntest,byrow=TRUE))
+          proba.test <- t(apply(exp(Eta.test), 1, function(x) x/sum(x)))
+          hatYtest <- as.matrix(apply(proba.test,1,which.max)-1)
+          
+     } else {
+          hatYtest <- NULL
+          Eta.test <- NULL
+          proba.test <- NULL
      }
      
      
@@ -303,9 +338,9 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
      ##############
      
      ##Compute the coefficients w.r.t. [1 X]
-     if (ncomp!=0) {
-          GAMMA <- GAMMA[,ncomp]
-     }
+     # if (ncomp!=0) {
+     #      GAMMA <- GAMMA[,ncomp]
+     # }
      GAMMA <- t(matrix(GAMMA,nrow=c,byrow=TRUE))
      Coefficients <- t(matrix(0,nrow=c,ncol=(p+1)))
      
@@ -323,12 +358,12 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
      
      if (is.null(Xtest)==FALSE) {
           if ((ncomp==0)|(ncomp==1)) {
-               List <- list(Coefficients=Coefficients,Ytest=(hatY+1),DeletedCol=DeletedCol)
+               List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test,DeletedCol=DeletedCol)
           }
           if ((ncomp!=0)&(ncomp!=1)) {
-               colnames(hatY)=1:ncomp
-               rownames(hatY)=1:ntest
-               List <- list(Coefficients=Coefficients,hatY=(hatY+1),Ytest=(hatY[,ncomp]+1),DeletedCol=DeletedCol)
+               colnames(hatYtest_k)=1:ncomp
+               rownames(hatYtest_k)=1:ntest
+               List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, hatYtest_k=hatYtest_k, DeletedCol=DeletedCol)
           }
      }
      

@@ -93,7 +93,7 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
           stop("Message from rpls.R: the length of Ytrain is not equal to the Xtrain row number")
      }
      
-     Ytrain <- Ytrain-1
+     #Ytrain <- Ytrain-1
      
      if ((sum(floor(Ytrain)-Ytrain)!=0)||(sum(Ytrain<0)>0)) {
           stop("Message from rpls.R: Ytrain is not of valid type")
@@ -261,20 +261,45 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
      
      ## CLASSIFICATION STEP
      #######################
-     if (is.null(Xtest)==FALSE) {
-          hatY <- cbind(rep(1,ntest),sXtest)%*%GAMMA
-          hatY <- (hatY>0)+0
+     if(is.null(Xtest)==FALSE) {
+          hatYtest_k <- cbind(rep(1,ntest),sXtest)%*%GAMMA
+          hatYtest_k <- (hatYtest_k>0)+0
+     } else {
+          hatYtest_k <- NULL
      }
      
+     if (ncomp!=0) {
+          GAMMA <- GAMMA[,ncomp]
+     }
+     
+     hatY <- numeric(ntrain)
+     hatY <- cbind(rep(1,ntrain),sXtrain) %*% GAMMA
+     hatY <- as.numeric(hatY>0)
+     proba <- numeric(ntrain)
+     proba <- inv.logit( cbind(rep(1,ntrain),sXtrain) %*% GAMMA )
+
+     if(!is.null(Xtest)) {
+
+          hatYtest <- cbind(rep(1,ntest),sXtest) %*% GAMMA
+          hatYtest <- as.numeric(hatYtest>0)
+          proba.test = inv.logit( cbind(rep(1,ntest),sXtest) %*% GAMMA )
+
+     } else {
+
+          hatYtest <- NULL
+          proba.test <- NULL
+
+     }
+
      
      ## CONCLUDE
      ##############
      
      
      ##Compute the coefficients w.r.t. [1 X]
-     if (ncomp!=0) {
-          GAMMA <- GAMMA[,ncomp]
-     }
+     # if (ncomp!=0) {
+     #      GAMMA <- GAMMA[,ncomp]
+     # }
      Coefficients <- rep(0,p+1)
      if (p>ntrain) {
           Coefficients[-1] <- diag(c(1/sqrt(Sigma2train)))%*%V%*%GAMMA[-1]
@@ -283,15 +308,16 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
           Coefficients[-1] <- diag(c(1/sqrt(Sigma2train)))%*%GAMMA[-1]
      }
      Coefficients[1] <- GAMMA[1]-MeanXtrain%*%Coefficients[-1]
-     List <- list(Coefficients=Coefficients,Ytest=NULL,DeletedCol=DeletedCol)
+     List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, DeletedCol=DeletedCol)
      if (is.null(Xtest)==FALSE) {
           if ((ncomp==0)|(ncomp==1)) {
-               List <- list(Coefficients=Coefficients,Ytest=(hatY[,1]+1),DeletedCol=DeletedCol)
+               # List <- list(Coefficients=Coefficients,Ytest=(hatY[,1]+1),DeletedCol=DeletedCol)
+               List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, DeletedCol=DeletedCol)
           }
           if ((ncomp!=0)&(ncomp!=1)) {
-               colnames(hatY)=1:ncomp
-               rownames(hatY)=1:ntest
-               List <- list(Coefficients=Coefficients,hatY=(hatY+1),Ytest=(hatY[,ncomp]+1),DeletedCol=DeletedCol)
+               colnames(hatYtest_k)=1:ncomp
+               rownames(hatYtest_k)=1:ntest
+               List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, hatYtest_k=hatYtest_k, DeletedCol=DeletedCol)
           }
      }
      
