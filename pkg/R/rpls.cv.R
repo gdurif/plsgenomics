@@ -64,7 +64,7 @@ if ((is.vector(Ytrain)==FALSE)||(is.numeric(Ytrain)==FALSE)) {
 if (length(Ytrain)!=ntrain) {
  stop("Message from rpls.cv.R: the length of Ytrain is not equal to the Xtrain row number")}
 
-Ytrain <- Ytrain-1
+#Ytrain <- Ytrain-1
 
 if ((sum(floor(Ytrain)-Ytrain)!=0)||(sum(Ytrain<0)>0)){
  stop("Message from rpls.cv.R: Ytrain is not of valid type")}
