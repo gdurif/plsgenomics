@@ -292,25 +292,21 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	#####################################################################
 	
 	hatY <- numeric(ntrain)
+	hatY <- cbind(rep(1,ntrain),sXtrain) %*% BETA
+	hatY <- as.numeric(hatY>0)
+	proba <- numeric(ntrain)
+	proba <- inv.logit( cbind(rep(1,ntrain),sXtrain) %*% BETA )
 	
 	if (!is.null(Xtest)) {
 		
 		hatYtest <- cbind(rep(1,ntest),sXtest) %*% BETA
 		hatYtest <- as.numeric(hatYtest>0)
-		
 		proba.test = inv.logit( cbind(rep(1,ntest),sXtest) %*% BETA )
-		
-		hatY <- cbind(rep(1,ntrain),sXtrain) %*% BETA
-		hatY <- as.numeric(hatY>0)
 		
 	} else {
 		
 		hatYtest <- NULL
-		
 		proba.test <- NULL
-		
-		hatY <- cbind(rep(1,ntrain),sXtrain) %*% BETA
-		hatY <- as.numeric(hatY>0)
 		
 	}
 	
@@ -328,7 +324,12 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	
 	#### RETURN
 	
-	result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=resSPLS$A, converged=converged, X.score=resSPLS$X.score, X.weight=resSPLS$X.weight, sXtrain=resSPLS$sXtrain, sPseudoVar=resSPLS$sYtrain, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, V=resSPLS$V, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain)
+	result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, 
+	               A=resSPLS$A, converged=converged, 
+	               X.score=resSPLS$X.score, X.weight=resSPLS$X.weight, 
+	               sXtrain=resSPLS$sXtrain, sPseudoVar=resSPLS$sYtrain, 
+	               lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, 
+	               V=resSPLS$V, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain)
 	class(result) <- "rirls.spls"
 	return(result)
 	
