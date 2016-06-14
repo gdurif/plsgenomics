@@ -21,11 +21,11 @@ b11a371ac082476b9e37445a7b11bba4 *R/mrpls.cv.R
 c0cacddfc968459e5c569d3a432717fb *R/pls.regression.R
 cb12228de7005dc3584cd61dd522f427 *R/pls.regression.cv.R
 afe30b447801271407f2d7e811b8a191 *R/preprocess.R
-8154a8508dc4ccd450cf1515f52c0559 *R/rirls.spls.R
+297da6a28ff9de5073a94291b9f53c56 *R/rirls.spls.R
 b5adf9aa65853b89392d2dd49610f00f *R/rirls.spls.aux.R
 fae7f9deecb842c1fd8eca2a483fd56a *R/rirls.spls.tune.R
-6a30bb604dd61281a59ae16a3e3f5fad *R/rpls.R
-c7dd09a4f2836f8236d375671c2ab47f *R/rpls.cv.R
+17905a039d6caf7886a5d079ad45d4a7 *R/rpls.R
+853d321f4bf0744766af9a6da6c550ee *R/rpls.cv.R
 ac472524b0e6c05aecc2740c2658d567 *R/rplsaux.R
 1f3062930a599dcba99dbcff6e2b1eab *R/sample.bin.R
 e9ed9a21b6b1bdf6ef9c3a7db113ff1d *R/sample.cont.R
@@ -53,6 +53,7 @@ b44271d18ad86a4d417ece1ac5cbd365 *man/TFA.estimate.Rd
 27df1e345856e0b18a5666f84762d9ef *man/gsim.cv.Rd
 95570744d693bf6b5ab362a0b35b25ff *man/leukemia.Rd
 a780673376e00713fb5c9c960723c3de *man/mgsim.Rd
+<<<<<<< 65d2173a16f856fecbdf5e3c10aaba02ad57df2b
 67caa5241a1087ea1444802278904168 *man/mgsim.cv.Rd
 15e04c247368b3ae4a8e52f69e0498dc *man/mrpls.Rd
 0f4bc6499efea1ecbe71664821943664 *man/mrpls.cv.Rd
@@ -72,3 +73,24 @@ a852e0f06daa4f6fd688e820e2376c10 *man/spls.adapt.Rd
 c071b998426d9b0866613bc611b4498f *man/spls.adapt.tune.Rd
 bb1ec066a7b3cd2834c354491e764507 *man/variable.selection.Rd
 aeae794fbae13ad1bb31d428abc0921a *tests/plsgenomics-Ex.R
+=======
+81f147a242ed58b15efec725a7bdad0e *man/mgsim.cv.Rd
+ba6ea4c45aaa48964ea121aab5b5b4a8 *man/mrpls.Rd
+bda402accba4ee479dc89e2c97d4a832 *man/mrpls.cv.Rd
+b03cd621ed60e81728cd192ade61f87b *man/pls.lda.Rd
+e9a8b0db64755d28cb43fa7b164446f1 *man/pls.lda.cv.Rd
+777360e51c12de517d09c96a23715125 *man/pls.regression.Rd
+4566e07d6c65be5f8d63966e2c9ce23d *man/pls.regression.cv.Rd
+6289d45aa51793a7e3ee55800224f281 *man/plsgenomics-internal.Rd
+c478545f58dedc8d6ac10a807a8b7da0 *man/preprocess.Rd
+98606000fa5bb4739f9c74af63c881e3 *man/rirls.spls.Rd
+52ff25abade063f5de6b901fcffac069 *man/rirls.spls.tune.Rd
+f5935e0c684569477e5706892cedf0f0 *man/rpls.Rd
+b63ae37a664d78ea138a6caac0d216e9 *man/rpls.cv.Rd
+0fb24e5ee69b46c1bbd2e68ac63625bd *man/sample.bin.Rd
+c53f58005fc89fa85535e23023bc203a *man/sample.cont.Rd
+9128c0f2804889eeacc0499216a6a76e *man/spls.adapt.Rd
+cb38cd664a03ed8e89040c2fe07eeafc *man/spls.adapt.tune.Rd
+0c96dcad1048d41282bd5f9a0698305e *man/variable.selection.Rd
+d817844dfa9c1e5ffe6953daceecbdf7 *tests/plsgenomics-Ex.R
+>>>>>>> new MD5
