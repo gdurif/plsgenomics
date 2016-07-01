@@ -22,7 +22,7 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-mrpls.cv <- function (Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50)
+mrpls.cv <- function (Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50,ncores=1)
 {
 
      ##    INPUT VARIABLES
@@ -38,6 +38,8 @@ mrpls.cv <- function (Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50)
      ##  ncompMax : positive integer
      ##      maximal number of PLS components
      ##      if ncompMax=0 -> Ridge
+     ## ncores : positive integer
+     ##      number of cores to be used in parallel computing
      
      
      ##    OUTPUT VARIABLES
@@ -90,6 +92,9 @@ mrpls.cv <- function (Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50)
      if ((is.numeric(NbIterMax)==FALSE)||(round(NbIterMax)-NbIterMax!=0)||(NbIterMax<1)){
       stop("Message from mrpls.cv.R: NbIterMax is not of valid type")}
      
+     if ((is.numeric(ncores)==FALSE)||(round(ncores)-ncores!=0)||(ncores<1)){
+          stop("Message from mrpls.cv.R: ncores is not of valid type")}
+     
      
      ## CV LOOP
      ############
@@ -108,8 +113,8 @@ mrpls.cv <- function (Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50)
      ResCV <- matrix(0,nrow=length(LambdaRange),ncol=nc)
      ResCVbis <- matrix(0,nrow=length(LambdaRange),ncol=nc)
      
-     for (ncv in 1:ntrain) {
-     
+     # for (ncv in 1:ntrain) {
+     res_cv <- Reduce("rbind", mclapply(1:ntrain, function(ncv) {
           # Determine the data matrix
           
           cvXtrain <- Xtrain[-ncv,]
@@ -169,36 +174,69 @@ mrpls.cv <- function (Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50)
           rm(Zt)
           
           
-          LIndexaux <- LambdaIndex
+          # LIndexaux <- LambdaIndex
+          # 
+          # for (i in LambdaIndex) {
+          #      res <- mrplsaux(Ytrain[-ncv],Zbloc,LambdaRange[i],ncompMax,Ztestbloc,NbIterMax=NbIterMax)
+          #      if (res$Convergence==0) {
+          #           LIndexaux <- LIndexaux[LIndexaux!=i]
+          #      }
+          #      if (res$Convergence==1) {
+          #           ResCV[i,] <- ResCV[i,]+abs(res$hatY-Ytrain[ncv])
+          #           ResCVbis[i,] <- ResCVbis[i,]+as.numeric(res$hatY!=Ytrain[ncv])
+          #      }
+          # }
+          # 
+          # LambdaIndex <- LIndexaux
           
-          for (i in LambdaIndex) {
+          resInter <- sapply(LambdaIndex, function(i) {
                res <- mrplsaux(Ytrain[-ncv],Zbloc,LambdaRange[i],ncompMax,Ztestbloc,NbIterMax=NbIterMax)
-               if (res$Convergence==0) {
-                    LIndexaux <- LIndexaux[LIndexaux!=i]
-               }
-               if (res$Convergence==1) {
-                    ResCV[i,] <- ResCV[i,]+abs(res$hatY-Ytrain[ncv])
-                    ResCVbis[i,] <- ResCVbis[i,]+as.numeric(res$hatY!=Ytrain[ncv])
-               }
-          }
-          
-          LambdaIndex <- LIndexaux
-          
-     }
+               return(c(ncv, i, res$Convergence, abs(res$hatY-Ytrain[ncv]), as.numeric(res$hatY!=Ytrain[ncv])))
+          })
+          return(t(resInter))
+     }, mc.cores=ncores))
+     #}
      
-     ## CONCLUDE
-     ##############
-     if (length(LambdaIndex)==0) {
+     ## formatting results
+     res_cv <- data.frame(res_cv)
+     colnames(res_cv) <- c("ncv", "LambdaIndex", "convergence", paste0("c", 1:ncompMax), paste0("c", 1:ncompMax))
+     
+     nconv <- which(res_cv$convergence == 0)
+     badLambdaIndex <- unique(res_cv$LambdaIndex[nconv])
+     keepIndex <- which(! res_cv$LambdaIndex %in% badLambdaIndex)
+     
+     if(length(keepIndex)==0) {
           stop("No optimal Lambda for the given LambdaRange")
      }
      
-     ResCVbis = ResCVbis/ntrain
+     res_cv <- res_cv[keepIndex,]
+     
+     res_cv1 <- res_cv[,c(1:3, (1:ncompMax)+3)]
+     res_cv2 <- res_cv[,c(1:3, (1:ncompMax)+ncompMax+3)]
+     
+     resCV <- with(res_cv1, aggregate(res_cv1[,(1:ncompMax)+3], data.frame(LambdaIndex), sum))
+     resCVbis <- with(res_cv2, aggregate(res_cv2[,(1:ncompMax)+3], data.frame(LambdaIndex), mean))
+     
+     resCV <- resCV[order(resCV$LambdaIndex),]
+     resCVbis <- resCVbis[order(resCVbis$LambdaIndex),]
+     
+     ResCV = as.matrix(resCV[,-1])
+     ResCVbis = as.matrix(resCVbis[,-1])
+     
+     
+     ## CONCLUDE
+     ##############
+     # if (length(LambdaIndex)==0) {
+     #      stop("No optimal Lambda for the given LambdaRange")
+     # }
+     
+     # ResCVbis = ResCVbis/ntrain
      
      #else
-     ResCV <- ResCV[LambdaIndex,]
-     if (length(LambdaIndex)==1)  {
-          ResCV <- matrix(ResCV,nrow=1)
-     }
+     # ResCV <- ResCV[LambdaIndex,]
+     # if (length(LambdaIndex)==1)  {
+     #      ResCV <- matrix(ResCV,nrow=1)
+     # }
      # Determine optimal Lambda and ncomp
      aux <- which.min(ResCV)
      if (ncompMax <=1) {
