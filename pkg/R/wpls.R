@@ -255,15 +255,17 @@ wpls <- function(Xtrain, Ytrain, ncomp, weight.mat=NULL, Xtest=NULL, type="pls1"
 	}
 	
 	#### return object : list( W=W, T=T, Q=Q, P=P, coeff=coeff )
-	result <- list( Xtrain=Xtrain, Ytrain=Ytrain, sXtrain=sXtrain, sYtrain=sYtrain,
-				 betahat=betahat, betahat.nc=betahat.nc,
-				 meanXtrain=meanXtrain, meanYtrain=meanYtrain, sigmaXtrain=sigmaXtrain, sigmaYtrain=sigmaYtrain,
-				 X.score=T, X.loading=P, Y.loading=Q, X.weight=W, 
-				 residuals=residuals, residuals.nc=residuals.nc,
-				 hatY=hatY, hatY.nc=hatY.nc,
-				 hatYtest=hatYtest, hatYtest.nc=hatYtest.nc,
-				 ncomp=ncomp,
-				 V=V, W=W, T=T, Q=Q, P=P, coeff=coeff)
+	# result <- list( Xtrain=Xtrain, Ytrain=Ytrain, sXtrain=sXtrain, sYtrain=sYtrain,
+	# 			 betahat=betahat, betahat.nc=betahat.nc,
+	# 			 meanXtrain=meanXtrain, meanYtrain=meanYtrain, sigmaXtrain=sigmaXtrain, sigmaYtrain=sigmaYtrain,
+	# 			 X.score=T, X.loading=P, Y.loading=Q, X.weight=W, 
+	# 			 residuals=residuals, residuals.nc=residuals.nc,
+	# 			 hatY=hatY, hatY.nc=hatY.nc,
+	# 			 hatYtest=hatYtest, hatYtest.nc=hatYtest.nc,
+	# 			 ncomp=ncomp,
+	# 			 V=V, W=W, T=T, Q=Q, P=P, coeff=coeff)
+	
+	result <- list( W=W, T=T, Q=Q, P=P, coeff=coeff )
 	
 	class(result) <- "wpls"
 	return(result)
