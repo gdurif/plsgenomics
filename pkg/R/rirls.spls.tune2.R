@@ -22,7 +22,7 @@
 ### MA 02111-1307, USA
 
 
-rirls.spls.tune2 <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
                             return.grid=FALSE, ncores=1, nfolds=10, nrun=1, 
                             center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
                             seed=NULL, verbose=TRUE) {
