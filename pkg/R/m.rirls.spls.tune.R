@@ -25,9 +25,9 @@
 
 
 m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-                            return.grid=FALSE, ncores=1, nfolds=10, nrun=1, 
-                            center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
-                            seed=NULL, verbose=TRUE) {
+                              return.grid=FALSE, ncores=1, nfolds=10, nrun=1, 
+                              center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
+                              seed=NULL, verbose=TRUE) {
      
      #####################################################################
      #### Initialisation
@@ -347,7 +347,7 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
           
      }, mc.cores=ncores, mc.silent=!verbose)), ncol=7, byrow=TRUE)
      #})), ncol=7, byrow=TRUE)
-     
+     rownames(cv.grid.allfolds) <- paste(1:nrow(cv.grid.allfolds))
      cv.grid.allfolds = data.frame(cv.grid.allfolds)
      colnames(cv.grid.allfolds) = c("lambda.ridge", "lambda.l1", "ncomp", "nfold", "nrun", "converged", "error")
      
