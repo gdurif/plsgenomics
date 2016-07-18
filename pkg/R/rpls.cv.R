@@ -182,7 +182,7 @@ rpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores
           # LambdaIndex <- LIndexaux
           
           resInter <- sapply(LambdaIndex, function(i) {
-               res <- mrplsaux(Ytrain[-ncv],Zbloc,LambdaRange[i],ncompMax,Ztestbloc,NbIterMax=NbIterMax)
+               res <- rplsaux(Ytrain[-ncv],sXtrain,LambdaRange[i],ncompMax,sXtest,NbIterMax=NbIterMax)
                return(c(ncv, i, res$Convergence, abs(res$hatY-Ytrain[ncv]), as.numeric(res$hatY!=Ytrain[ncv])))
           })
           return(t(resInter))
