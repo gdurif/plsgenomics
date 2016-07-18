@@ -17,6 +17,15 @@
 \alias{wpls}
 \alias{spls.adapt.aux}
 \alias{rirls.spls.aux}
+\alias{m.rirls.spls.aux}
+
+\alias{rirls.spls.tune2}
+\alias{m.rirls.spls}
+\alias{m.rirls.spls.aux}
+\alias{m.rirls.spls.tune}
+\alias{m.rirls.spls.tune2}
+\alias{sample.multinom}
+\alias{spls.in}
 
 \title{Internal plsgenomics Functions}
 \description{
