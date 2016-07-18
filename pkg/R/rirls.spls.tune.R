@@ -172,7 +172,6 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 	## computation on the folds x run grid
 	cv.grid.allfolds = matrix( unlist( mclapply(split(folds.grid, f=row.names(folds.grid)), function(folds.line) {
 		
-		
 		#### train and test variable
 		Xtrain <- subset(X, folds.obs[,folds.line$run] != folds.line$k)
 		Ytrain <- subset(Y, folds.obs[,folds.line$run] != folds.line$k)
@@ -296,8 +295,8 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 	                                            adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
 	                                            meanXtrain=meanXtrain, sigma2train=sigma2train, 
 	                                            center.X=center.X, scale.X=scale.X, weighted.center=weighted.center), 
-	                             error = function(e) { print(e); warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )		
-	          
+	                             error = function(e) { print(e); warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
+			
 			## results
 			res = numeric(6)
 			
@@ -313,9 +312,8 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
 		
 		return( as.vector(t(cv.grid.byfold)) )
 		
-		
 	}, mc.cores=ncores, mc.silent=!verbose)), ncol=7, byrow=TRUE)
-	
+	rownames(cv.grid.allfolds) <- paste(1:nrow(cv.grid.allfolds))
 	cv.grid.allfolds = data.frame(cv.grid.allfolds)
 	colnames(cv.grid.allfolds) = c("lambda.ridge", "lambda.l1", "ncomp", "nfold", "nrun", "converged", "error")
 	
