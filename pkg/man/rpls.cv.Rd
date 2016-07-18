@@ -4,7 +4,7 @@
 \title{Determination of the ridge regularization parameter and the number of PLS 
 components to be used for classification with RPLS for binary data}
 \usage{
-rpls.cv(Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50)
+rpls.cv(Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores=1)
 }
 \arguments{
   \item{Xtrain}{a (ntrain x p) data matrix of predictors. \code{Xtrain} must be a matrix. 
@@ -19,6 +19,8 @@ rpls.cv(Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50)
   reduction dimension. }
   \item{NbIterMax}{a positive integer. \code{NbIterMax} is the maximal number of iterations in the 
   Newton-Rapson parts.}
+  \item{ncores}{a positive integer. The number of cores to be used for parallel computing 
+  (if different from 1)}
 }
 \description{
  The function \code{rpls.cv} determines the best ridge regularization parameter and the best 

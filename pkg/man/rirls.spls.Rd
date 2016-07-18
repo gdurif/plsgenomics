@@ -4,8 +4,9 @@
 \title{Classification by Ridge Iteratively Reweighted Least Squares followed by 
 Adaptive Sparse PLS regression for binary response}
 \usage{
-rirls.spls(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, 
-           Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE)
+rirls.spls(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NULL, adapt=TRUE, 
+           maxIter=100, svd.decompose=TRUE, 
+           center.X=TRUE, scale.X=FALSE, weighted.center=TRUE)
 }
 \arguments{
 	\item{Xtrain}{a (ntrain x p) data matrix of predictors. \code{Xtrain} must be a matrix. 
@@ -30,6 +31,12 @@ rirls.spls(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp,
 	\item{svd.decompose}{a boolean parameter. \code{svd.decompose} indicates wether or not should 
 	the design matrix X be decomposed by SVD (singular values decomposition) for the RIRLS step 
 	(see details).}
+	\item{center.X}{a boolean parameter. It indicates whether \code{Xtrain} should be 
+	centered or not}
+	\item{scale.X}{a boolean parameter. It indicates whether \code{Xtrain} should be 
+	scaled or not}
+	\item{weighted.center}{a boolean parameter. It indicates whether \code{Xtrain} should be 
+	centered according to weighted scalar product or not (i.e. standard scalar product)}
 }
 \description{
 	The function \code{rirls.spls} performs compression, variable selection and classification (with possible prediction) 

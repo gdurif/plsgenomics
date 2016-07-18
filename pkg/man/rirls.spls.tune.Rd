@@ -4,9 +4,11 @@
 \title{Tuning parameters (ncomp, lambda.l1, lambda.ridge) for Ridge Iteratively Reweighted Least 
 Squares followed by Adaptive Sparse PLS regression for binary response, by K-fold cross-validation}
 \usage{
-	rirls.spls.tune(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, 
-                    adapt=TRUE, maxIter=100, svd.decompose=TRUE, return.grid=FALSE, 
-                    ncores=1, nfolds=10)
+	rirls.spls.tune(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, 
+	                maxIter=100, svd.decompose=TRUE, 
+                     return.grid=FALSE, ncores=1, nfolds=10, nrun=1, 
+                     center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
+                     seed=NULL, verbose=TRUE)
 }
 \arguments{
 	\item{X}{a (n x p) data matrix of predictors. \code{X} must be a matrix. Each row corresponds 
@@ -37,6 +39,17 @@ Squares followed by Adaptive Sparse PLS regression for binary response, by K-fol
     	number of cpu cores (see details).}
     	\item{nfolds}{a positive integer indicating the number of folds in K-folds cross-validation 
     	procedure, nfolds=n corresponds to leave-one-out cross-validation.}
+    	\item{nrun}{a positive integer indicating the number of run of K-folds cross-validation 
+    	procedure.}
+    	\item{center.X}{a boolean parameter. It indicates whether \code{Xtrain} should be 
+	centered or not}
+	\item{scale.X}{a boolean parameter. It indicates whether \code{Xtrain} should be 
+	scaled or not}
+	\item{weighted.center}{a boolean parameter. It indicates whether \code{Xtrain} should be 
+	centered according to weighted scalar product or not (i.e. standard scalar product)}
+	\item{seed}{a positive integer value (default is NULL). If non NULL, it sets the seed 
+	for the pseudo-random number generation.}
+	\item{verbose}{a boolean parameter. It indicates whether the verbosity.}
 }
 \description{
 	The function \code{rirls.spls.tune} tuns the hyper-parameter values used in the 
