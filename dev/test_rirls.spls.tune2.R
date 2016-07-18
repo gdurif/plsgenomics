@@ -21,10 +21,10 @@ source("pkg/R/rirls.spls.tune.R")
 source("pkg/R/rirls.spls.tune2.R")
 
 # sample
-n = 50
-p = 100
-kstar = 10
-lstar = 3
+n = 30
+p = 10
+kstar = 5
+lstar = 1
 beta.min = 5
 beta.max = 10
 mean.H=0
@@ -41,13 +41,18 @@ print(table(Y))
 
 ##### tuning parameter
 
-time1 <- system.time( cv1 <- rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=c(0.1, 1, 5, 10), lambda.l1.range=seq(0.05,0.95,by=0.1), 
-                                             ncomp.range=1:4, adapt=FALSE, maxIter=100, svd.decompose=FALSE, return.grid=TRUE, 
+print("##################################")
+print("method1")
+
+time1 <- system.time( cv1 <- rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=c(1, 10), lambda.l1.range=seq(0.05,0.95,by=0.7), 
+                                             ncomp.range=1:2, adapt=FALSE, maxIter=100, svd.decompose=FALSE, return.grid=TRUE, 
                                              ncores=8, nfolds=5, nrun=1, center.X=TRUE, scale.X=FALSE, weighted.center=FALSE, seed=1) )
 
+print("##################################")
+print("method2")
 
-time2 <- system.time( cv2 <- rirls.spls.tune2(X=X, Y=Y, lambda.ridge.range=c(0.1, 1, 5, 10), lambda.l1.range=seq(0.05,0.95,by=0.1), 
-                                              ncomp.range=1:4, adapt=FALSE, maxIter=100, svd.decompose=FALSE, return.grid=TRUE, 
+time2 <- system.time( cv2 <- rirls.spls.tune2(X=X, Y=Y, lambda.ridge.range=c(1, 10), lambda.l1.range=seq(0.05,0.95,by=0.7), 
+                                              ncomp.range=1:2, adapt=FALSE, maxIter=100, svd.decompose=FALSE, return.grid=TRUE, 
                                               ncores=8, nfolds=5, nrun=1, center.X=TRUE, scale.X=FALSE, weighted.center=FALSE, seed=1) )
 
 str(cv1)
