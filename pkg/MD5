@@ -8,7 +8,8 @@ d4799b322412e1aa267788033e92f5a1 *R/gsim.aux.R
 96e38465726b912fc6c4640ced479cf3 *R/hplugin.R
 583e9aa213cbd3fd2ace5e53b39befdb *R/m.rirls.spls.R
 4b31e34960b5f6c760af984597f29030 *R/m.rirls.spls.aux.R
-437dbe5913c9336ea5b3794d216d32bb *R/m.rirls.spls.tune.R
+93d5080410e7f933a0c262f847ef5d3d *R/m.rirls.spls.tune.R
+e4824533d8bda1f787e639abbdd955fc *R/m.rirls.spls.tune2.R
 7e6d6e7a1a50833e12cfee0f57026801 *R/mgsim.R
 c886da85a9a98cb842d1bf2de902a882 *R/mgsim.cv.R
 372a3392b67b73fdf02322173d41c3b7 *R/mgsimaux.R
@@ -23,9 +24,10 @@ cb12228de7005dc3584cd61dd522f427 *R/pls.regression.cv.R
 afe30b447801271407f2d7e811b8a191 *R/preprocess.R
 297da6a28ff9de5073a94291b9f53c56 *R/rirls.spls.R
 b5adf9aa65853b89392d2dd49610f00f *R/rirls.spls.aux.R
-fae7f9deecb842c1fd8eca2a483fd56a *R/rirls.spls.tune.R
+65f8d4a9bc9d0f5c3dec4244ce9e8be1 *R/rirls.spls.tune.R
+666cf1c387a75942ffac6120241f21ed *R/rirls.spls.tune2.R
 17905a039d6caf7886a5d079ad45d4a7 *R/rpls.R
-853d321f4bf0744766af9a6da6c550ee *R/rpls.cv.R
+053b031c725f073935bb601c98c82c59 *R/rpls.cv.R
 ac472524b0e6c05aecc2740c2658d567 *R/rplsaux.R
 1f3062930a599dcba99dbcff6e2b1eab *R/sample.bin.R
 e9ed9a21b6b1bdf6ef9c3a7db113ff1d *R/sample.cont.R
@@ -38,7 +40,7 @@ d66a02ef1b3a0d791be1b0f8ac407733 *R/spls.in.R
 59b2a0d3b3d40fb0bb54bd4b63696b19 *R/ust.adapt.R
 37390a8e9af2efe1e3785170ab6d6ccf *R/variable.selection.R
 4fdb1afcd1d59dc8dcb6df59a53a8acb *R/wirrls.R
-7de7230608017afa17f638ea6e32b730 *R/wpls.R
+aeb5414bdc7c944ada3091d1c214f7b4 *R/wpls.R
 0f45ae2fd13519dda91611e35f258b1d *README
 39c9cea02c7015699f80871475e4f1e3 *data/Colon.rda
 b877856ddfa18da08c71cc038f0db845 *data/Ecoli.rda
