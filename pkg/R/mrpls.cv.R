@@ -22,8 +22,7 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-mrpls.cv <- function (Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50,ncores=1)
-{
+mrpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores=1) {
 
      ##    INPUT VARIABLES
      #########################
@@ -52,48 +51,60 @@ mrpls.cv <- function (Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50,ncores=1)
      ##############################
      #On Xtrain
      if ((is.matrix(Xtrain)==FALSE)||(is.numeric(Xtrain)==FALSE)) {
-      stop("Message from mrpls.cv.R: Xtrain is not of valid type")}
+          stop("Message from mrpls.cv.R: Xtrain is not of valid type")
+     }
      
      if (dim(Xtrain)[2]==1) {
-      stop("Message from mrpls.cv.R: p=1 is not valid")}
+          stop("Message from mrpls.cv.R: p=1 is not valid")
+     }
      
      ntrain <- dim(Xtrain)[1]
      
      #On Ytrain
      if ((is.vector(Ytrain)==FALSE)||(is.numeric(Ytrain)==FALSE)) {
-      stop("Message from mrpls.cv.R: Ytrain is not of valid type")}
+          stop("Message from mrpls.cv.R: Ytrain is not of valid type")
+     }
      
      if (length(Ytrain)!=ntrain) {
-      stop("Message from mrpls.cv.R: the length of Ytrain is not equal to the Xtrain row number")}
+          stop("Message from mrpls.cv.R: the length of Ytrain is not equal to the Xtrain row number")
+     }
      
      ##Ytrain <- Ytrain-1
      
-     if ((sum(floor(Ytrain)-Ytrain)!=0)||(sum(Ytrain<0)>0)){
-      stop("Message from mrpls.cv.R: Ytrain is not of valid type")}
+     if ((sum(floor(Ytrain)-Ytrain)!=0)||(sum(Ytrain<0)>0)) {
+          stop("Message from mrpls.cv.R: Ytrain is not of valid type")
+     }
      
      c <- max(Ytrain)
      eff<-rep(0,(c+1))
      for (i in 0:c) {
-         eff[(i+1)]<-sum(Ytrain==i)}
+          eff[(i+1)]<-sum(Ytrain==i)
+     }
      if (sum(eff<=1)>0) {
-      stop("Message from mrpls.cv.R: there are not enough samples for each class")}
+          stop("Message from mrpls.cv.R: there are not enough samples for each class")
+     }
      
      if (c==1) {
-      stop("Message from mrpls.cv.R: Ytrain is a binary vector, use rpls.cv.R")}
+          stop("Message from mrpls.cv.R: Ytrain is a binary vector, use rpls.cv.R")
+     }
      
      #On hyper parameters range
      
-     if ((is.numeric(LambdaRange)==FALSE)||(is.vector(LambdaRange)==FALSE)||(sum(LambdaRange<0)>0)){
-      stop("Message from mrpls.cv.R: LambdaRange is not of valid type")}
+     if ((is.numeric(LambdaRange)==FALSE)||(is.vector(LambdaRange)==FALSE)||(sum(LambdaRange<0)>0)) {
+          stop("Message from mrpls.cv.R: LambdaRange is not of valid type")
+     }
      
-     if ((is.numeric(ncompMax)==FALSE)||(round(ncompMax)-ncompMax!=0)||(ncompMax<0)){
-      stop("Message from mrpls.cv.R: ncompMax is not of valid type")}
+     if ((is.numeric(ncompMax)==FALSE)||(round(ncompMax)-ncompMax!=0)||(ncompMax<0)) {
+          stop("Message from mrpls.cv.R: ncompMax is not of valid type")
+     }
      
-     if ((is.numeric(NbIterMax)==FALSE)||(round(NbIterMax)-NbIterMax!=0)||(NbIterMax<1)){
-      stop("Message from mrpls.cv.R: NbIterMax is not of valid type")}
+     if ((is.numeric(NbIterMax)==FALSE)||(round(NbIterMax)-NbIterMax!=0)||(NbIterMax<1)) {
+          stop("Message from mrpls.cv.R: NbIterMax is not of valid type")
+     }
      
-     if ((is.numeric(ncores)==FALSE)||(round(ncores)-ncores!=0)||(ncores<1)){
-          stop("Message from mrpls.cv.R: ncores is not of valid type")}
+     if ((is.numeric(ncores)==FALSE)||(round(ncores)-ncores!=0)||(ncores<1)) {
+          stop("Message from mrpls.cv.R: ncores is not of valid type")
+     }
      
      
      ## CV LOOP
@@ -107,7 +118,7 @@ mrpls.cv <- function (Ytrain,Xtrain,LambdaRange,ncompMax,NbIterMax=50,ncores=1)
      if (ncompMax <=1) {
           nc <- 1
      }
-     if (ncompMax > 1){
+     if (ncompMax > 1) {
           nc <- ncompMax
      }
      ResCV <- matrix(0,nrow=length(LambdaRange),ncol=nc)
