@@ -48,18 +48,27 @@ rpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores
      ##  TEST ON INPUT VARIABLES
      ##############################
      #On Xtrain
+     Xtrain <- as.matrix(Xtrain)
      if ((is.matrix(Xtrain)==FALSE)||(is.numeric(Xtrain)==FALSE)) {
           stop("Message from rpls.cv.R: Xtrain is not of valid type")
      }
      
+     if (ncompMax > dim(Xtrain)[2]) {
+          warning("Message from rpls.cv: ncomp>p is not valid, ncompMax is set to p")
+          ncomp <- dim(Xtrain)[2]
+     }
+     
      if (dim(Xtrain)[2]==1) {
-          stop("Message from rpls.cv.R: p=1 is not valid")
+          # stop("Message from rpls.cv: p=1 is not valid")
+          warning("Message from rpls.cv: p=1 is not valid, ncompMax is set to 0")
+          ncompMax <- 0
      }
      
      ntrain <- dim(Xtrain)[1]
      
      #On Ytrain
-     if ((is.vector(Ytrain)==FALSE)||(is.numeric(Ytrain)==FALSE)) {
+     Ytrain <- as.matrix(Ytrain)
+     if ((ncol(Ytrain)>1)||(is.numeric(Ytrain)==FALSE)) {
           stop("Message from rpls.cv.R: Ytrain is not of valid type")
      }
      
@@ -126,7 +135,7 @@ rpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores
      res_cv <- Reduce("rbind", mclapply(1:ntrain, function(ncv) {
           # Determine the data matrix
           
-          cvXtrain <- Xtrain[-ncv,]
+          cvXtrain <- as.matrix(Xtrain[-ncv,])
           cvXtest <- matrix(Xtrain[ncv,],nrow=1)
           p <- dim(cvXtrain)[2]
           r <- min(p,ntrainCV)
@@ -137,7 +146,7 @@ rpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores
                if (sum(Sigma2train==0)>(p-2)) {
                     stop("Message from rpls.cv.R: the procedure stops because, after leaving one sample, number of predictor variables with no null variance is less than 1.")
                }
-               cvXtrain <- cvXtrain[,which(Sigma2train!=0)]
+               cvXtrain <- as.matrix(cvXtrain[,which(Sigma2train!=0)])
                cvXtest <- matrix(cvXtest[,which(Sigma2train!=0)],nrow=1)
                Sigma2train <-Sigma2train[which(Sigma2train!=0)]
                p <- dim(cvXtrain)[2]
@@ -182,7 +191,7 @@ rpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores
           # LambdaIndex <- LIndexaux
           
           resInter <- sapply(LambdaIndex, function(i) {
-               res <- rplsaux(Ytrain[-ncv],sXtrain,LambdaRange[i],ncompMax,sXtest,NbIterMax=NbIterMax)
+               res <- rplsaux(Ytrain[-ncv], sXtrain, LambdaRange[i],ncompMax,sXtest,NbIterMax=NbIterMax)
                return(c(ncv, i, res$Convergence, abs(res$hatY-Ytrain[ncv]), as.numeric(res$hatY!=Ytrain[ncv])))
           })
           return(t(resInter))
@@ -191,7 +200,13 @@ rpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores
      
      ## formatting results
      res_cv <- data.frame(res_cv)
-     colnames(res_cv) <- c("ncv", "LambdaIndex", "convergence", paste0("c", 1:ncompMax), paste0("c", 1:ncompMax))
+     nc <- ncompMax
+     index_nc <- 1:nc
+     if(ncompMax==0) {
+          nc <- 1
+          index_nc <- 0
+     }
+     colnames(res_cv) <- c("ncv", "LambdaIndex", "convergence", paste0(index_nc), paste0(index_nc))
      
      nconv <- which(res_cv$convergence == 0)
      badLambdaIndex <- unique(res_cv$LambdaIndex[nconv])
@@ -203,11 +218,11 @@ rpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores
      
      res_cv <- res_cv[keepIndex,]
      
-     res_cv1 <- res_cv[,c(1:3, (1:ncompMax)+3)]
-     res_cv2 <- res_cv[,c(1:3, (1:ncompMax)+ncompMax+3)]
+     res_cv1 <- res_cv[,c(1:3, (1:nc)+3)]
+     res_cv2 <- res_cv[,c(1:3, (1:nc)+nc+3)]
      
-     resCV <- with(res_cv1, aggregate(res_cv1[,(1:ncompMax)+3], data.frame(LambdaIndex), sum))
-     resCVbis <- with(res_cv2, aggregate(res_cv2[,(1:ncompMax)+3], data.frame(LambdaIndex), mean))
+     resCV <- with(res_cv1, aggregate(res_cv1[,(1:nc)+3], data.frame(LambdaIndex), sum))
+     resCVbis <- with(res_cv2, aggregate(res_cv2[,(1:nc)+3], data.frame(LambdaIndex), mean))
      
      resCV <- resCV[order(resCV$LambdaIndex),]
      resCVbis <- resCVbis[order(resCVbis$LambdaIndex),]
@@ -238,12 +253,15 @@ rpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores
           Lambda <- LambdaRange[LambdaIndex[(aux-1)%%nl+1]]
      }
      
-     ncompRange = 1:ncompMax
-     cv.grid = melt(ResCVbis, id=c(LambdaRange, ncompRange))
-     cv.grid = data.frame(t(sapply(1:nrow(cv.grid), function(ind) {
+     ncompRange <- 1:ncompMax
+     if(ncompMax==0) {
+          ncompRange <- 0
+     }
+     cv.grid <- melt(ResCVbis, id=c(LambdaRange, ncompRange))
+     cv.grid <- data.frame(t(sapply(1:nrow(cv.grid), function(ind) {
           return(c(LambdaRange[cv.grid[ind,1]], ncompRange[cv.grid[ind,2]], cv.grid[ind,3]))
      })))
-     colnames(cv.grid) = c("lambda", "ncomp", "error")
+     colnames(cv.grid) <- c("lambda", "ncomp", "error")
      
      return(list(ncomp=ncomp, Lambda=Lambda, cv.grid=cv.grid))
 
