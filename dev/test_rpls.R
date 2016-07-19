@@ -3,6 +3,7 @@
      
 # sources
 source("pkg/R/sample.bin.R")
+source("pkg/R/wirrls.R")
 source("pkg/R/rpls.R")
 
 # sample
