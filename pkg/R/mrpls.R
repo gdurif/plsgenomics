@@ -54,12 +54,20 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
      ##  TEST ON INPUT VARIABLES
      ##############################
      #On Xtrain
+     Xtrain <- as.matrix(Xtrain)
      if ((is.matrix(Xtrain)==FALSE)||(is.numeric(Xtrain)==FALSE)) {
           stop("Message from mrpls.R: Xtrain is not of valid type")
      }
      
+     if (ncomp > dim(Xtrain)[2]) {
+          warning("Message from rpls: ncomp>p is not valid, ncomp is set to p")
+          ncomp <- dim(Xtrain)[2]
+     }
+     
      if (dim(Xtrain)[2]==1) {
-          stop("Message from mrpls.R: p=1 is not valid")
+          # stop("Message from mrpls: p=1 is not valid")
+          warning("Message from mrpls: p=1 is not valid, ncomp is set to 0")
+          ncomp <- 0
      }
      
      ntrain <- dim(Xtrain)[1]
@@ -68,8 +76,10 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
      #On Xtest
      if (is.null(Xtest)==FALSE) {
           if (is.vector(Xtest)==TRUE) {
-               Xtest <- matrix(Xtest,nrow=1)
+               Xtest <- matrix(Xtest,ncol=p)
           }
+          
+          Xtest <- as.matrix(Xtest)
           
           if ((is.matrix(Xtest)==FALSE)||(is.numeric(Xtest)==FALSE)) {
                stop("Message from mrpls.R: Xtest is not of valid type")
@@ -83,7 +93,8 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
      }
      
      #On Ytrain
-     if ((is.vector(Ytrain)==FALSE)||(is.numeric(Ytrain)==FALSE)) {
+     Ytrain <- as.matrix(Ytrain)
+     if ((ncol(Ytrain)>1)||(is.numeric(Ytrain)==FALSE)) {
           stop("Message from mrpls.R: Ytrain is not of valid type")
      }
      
@@ -140,8 +151,8 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
                stop("Message from mrpls.R: the procedure stops because number of predictor variables with no null variance is less than 1.")
           }
           warning("There are covariables with nul variance")
-          Xtrain <- Xtrain[,which(Sigma2train!=0)]
-          Xtest <- Xtest[,which(Sigma2train!=0)]
+          Xtrain <- as.matrix(Xtrain[,which(Sigma2train!=0)])
+          Xtest <- as.matrix(Xtest[,which(Sigma2train!=0)])
           if (is.vector(Xtest)==TRUE) {
                Xtest <- matrix(Xtest,nrow=1)
           }
@@ -349,12 +360,16 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
      }
      
      if (p<=ntrain) {
-          Coefficients[-1,] <- diag(c(1/sqrt(Sigma2train)))%*%GAMMA[-1,]
+          if(p > 1) {
+               Coefficients[-1,] <- diag(c(1/sqrt(Sigma2train)))%*%GAMMA[-1,]
+          } else {
+               Coefficients[-1,] <- (1/sqrt(Sigma2train))%*%GAMMA[-1,]
+          }
      }
      
      Coefficients[1,] <- GAMMA[1,]-MeanXtrain%*%Coefficients[-1,]
      
-     List <- list(Coefficients=Coefficients,Ytest=NULL,DeletedCol=DeletedCol)
+     List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, DeletedCol=DeletedCol)
      
      if (is.null(Xtest)==FALSE) {
           if ((ncomp==0)|(ncomp==1)) {
