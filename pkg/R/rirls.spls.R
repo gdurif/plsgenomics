@@ -63,21 +63,29 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	}
 	
 	if (p==1) {
-		stop("Message from rirls.spls: p=1 is not valid")
+	     # stop("Message from rirls.spls: p=1 is not valid")
+	     warning("Message from rirls.spls: p=1 is not valid, ncomp is set to 0")
+	     ncomp <- 0
+	}
+	
+	if (ncomp > p) {
+	     warning("Message from rirls.spls: ncomp>p is not valid, ncomp is set to p")
+	     ncomp <- p
 	}
 	
 	# On Xtest if necessary
 	if (!is.null(Xtest)) {
 		
 		if (is.vector(Xtest)==TRUE) {
-			Xtest <- matrix(Xtest,nrow=1)
+			Xtest <- matrix(Xtest,ncol=p)
 		}
-		
-		Xtest <- as.matrix(Xtest)
+          
+          Xtest <- as.matrix(Xtest)
 		ntest <- nrow(Xtest) 
 		
 		if ((!is.matrix(Xtest)) || (!is.numeric(Xtest))) {
-			stop("Message from rirls.spls: Xtest is not of valid type")}
+			stop("Message from rirls.spls: Xtest is not of valid type")
+		}
 		
 		if (p != ncol(Xtest)) {
 			stop("Message from rirls.spls: columns of Xtest and columns of Xtrain must be equal")
@@ -180,7 +188,7 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	sXtrain.nosvd <- sXtrain # keep in memory if svd decomposition
 	
 	# Compute the svd when necessary -> case p > ntrain (high dim)
-	if ((p > ntrain) && (svd.decompose)) {
+	if ((p > ntrain) && (svd.decompose) && (p>1)) {
 		# svd de sXtrain
 		svd.sXtrain <- svd(t(sXtrain))
 		# number of singular value non null
@@ -284,6 +292,8 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 		
 		BETA = resSPLS$betahat.nc
 		
+	} else {
+	     resSPLS = list(A=NULL, X.score=NULL, X.weight=NULL, sXtrain=sXtrain, sYtrain=NULL, V=NULL)
 	}
 	
 	
@@ -317,7 +327,11 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	
 	Coefficients=BETA
 	
-	Coefficients[-1] <- diag(c(1/sqrt(sigma2train)))%*%BETA[-1]
+	if(p > 1) {
+	     Coefficients[-1] <- diag(c(1/sqrt(sigma2train)))%*%BETA[-1]
+	} else {
+	     Coefficients[-1] <- (1/sqrt(sigma2train))%*%BETA[-1]
+	}
 	
 	Coefficients[1] <- BETA[1] - meanXtrain %*% Coefficients[-1]
 	
