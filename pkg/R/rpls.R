@@ -56,7 +56,6 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
      ##############################
      #On Xtrain
      Xtrain <- as.matrix(Xtrain)
-     Ytrain <- as.matrix(Ytrain)
      if ((is.matrix(Xtrain)==FALSE)||(is.numeric(Xtrain)==FALSE)) {
           stop("Message from rpls.R: Xtrain is not of valid type")
      }
@@ -96,6 +95,7 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
      }
      
      #On Ytrain
+     Ytrain <- as.matrix(Ytrain)
      if ((ncol(Ytrain)>1)||(is.numeric(Ytrain)==FALSE)) {
           stop("Message from rpls.R: Ytrain is not of valid type")
      }
@@ -152,8 +152,8 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
                stop("Message from rpls.R: the procedure stops because number of predictor variables with no null variance is less than 1.")
           }
           warning("There are covariables with nul variance")
-          Xtrain <- Xtrain[,which(Sigma2train!=0)]
-          Xtest <- Xtest[,which(Sigma2train!=0)]
+          Xtrain <- as.matrix(Xtrain[,which(Sigma2train!=0)])
+          Xtest <- as.matrix(Xtest[,which(Sigma2train!=0)])
           if (is.vector(Xtest)==TRUE) {
                Xtest <- matrix(Xtest,nrow=1)
           }
