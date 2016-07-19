@@ -71,7 +71,9 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
      }
      
      if (p==1) {
-          stop("Message from rirls.spls.tune: p=1 is not valid")
+          # stop("Message from rirls.spls.tune: p=1 is not valid")
+          warning("Message from rirls.spls.tune: p=1 is not valid, ncomp.range is set to 0")
+          ncomp.range <- 0
      }
      
      # On Y
@@ -249,7 +251,7 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
           sXtrain.nosvd = sXtrain # keep in memory if svd decomposition
           
           # Compute the svd when necessary -> case p > ntrain (high dim)
-          if ((p > ntrain) && (svd.decompose)) {
+          if ((p > ntrain) && (svd.decompose) && (p>1)) {
                # svd de sXtrain
                svd.sXtrain <- svd(t(sXtrain))
                # number of singular value non null
@@ -328,12 +330,12 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
                              error = function(e) { print(e); warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
           
           ## results
-          res = numeric(7)
+          res = numeric(8)
           
           if(!is.null(model)) {
-               res = c(gridRow$fold, gridRow$run, gridRow$lambdaL1, gridRow$lambdaL2, gridRow$ncomp, model$converged, sum(model$hatYtest != Ytest) / ntest)
+               res = c(gridRow$fold, gridRow$run, gridRow$lambdaL1, gridRow$lambdaL2, gridRow$ncomp, model$lenA, model$converged, sum(model$hatYtest != Ytest) / ntest)
           } else {
-               res = c(gridRow$fold, gridRow$run, gridRow$lambdaL1, gridRow$lambdaL2, gridRow$ncomp, NA, NA)
+               res = c(gridRow$fold, gridRow$run, gridRow$lambdaL1, gridRow$lambdaL2, gridRow$ncomp, 0, NA, NA)
           }
           
           return(res)
@@ -341,8 +343,8 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
      }, mc.cores=ncores, mc.silent=!verbose))
      rownames(res_cv) <- paste(1:nrow(res_cv))
      res_cv = data.frame(res_cv)
-     colnames(res_cv) = c("nfold", "nrun", "lambda.l1", "lambda.ridge", "ncomp", "converged", "error")
-     # rownames(res_cv) = paste(1:nrow(res_cv))
+     colnames(res_cv) = c("nfold", "nrun", "lambda.l1", "lambda.ridge", "ncomp", "lenA", "converged", "error")
+     
      
      #####################################################################
      #### Find the optimal point in the grid
@@ -372,14 +374,19 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
      cv.grid1 <- merge(cv.grid.error, cv.grid.conv, by = c("lambda.ridge", "lambda.l1", "ncomp"))
      cv.grid <- merge(cv.grid1, cv.grid.fails, by = c("lambda.ridge", "lambda.l1", "ncomp"))
      
+     index_min <- which.min(cv.grid$error)
+     lambdaL1.opt <- cv.grid$lambda.l1[index_min]
+     lambdaL2.opt <- cv.grid$lambda.ridge[index_min]
+     ncomp.opt <- cv.grid$ncomp[index_min]
+     
      ##### return
      if(return.grid) {
-          
-          return( list(lambda.ridge.opt = cv.grid$lambda.ridge[which.min(cv.grid$error)], lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], conv.per=conv.per, cv.grid=cv.grid) )
+
+          return( list(lambda.ridge.opt=lambdaL2.opt, lambda.l1.opt=lambdaL1.opt, ncomp.opt=ncomp.opt, conv.per=conv.per, cv.grid=cv.grid) )
           
      } else {
           
-          return( list(lambda.ridge.opt = cv.grid$lambda.ridge[which.min(cv.grid$error)], lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], conv.per=conv.per, cv.grid=NULL) )
+          return( list(lambda.ridge.opt=lambdaL2.opt, lambda.l1.opt=lambdaL1.opt, ncomp.opt=ncomp.opt, conv.per=conv.per, cv.grid=NULL) )
           
      }
 
