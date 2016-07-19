@@ -62,15 +62,15 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 		stop("Message from rirls.spls: Xtrain is not of valid type")
 	}
 	
+	if (ncomp > p) {
+	     warning("Message from rirls.spls: ncomp>p is not valid, ncomp is set to p")
+	     ncomp <- p
+	}
+	
 	if (p==1) {
 	     # stop("Message from rirls.spls: p=1 is not valid")
 	     warning("Message from rirls.spls: p=1 is not valid, ncomp is set to 0")
 	     ncomp <- 0
-	}
-	
-	if (ncomp > p) {
-	     warning("Message from rirls.spls: ncomp>p is not valid, ncomp is set to p")
-	     ncomp <- p
 	}
 	
 	# On Xtest if necessary
