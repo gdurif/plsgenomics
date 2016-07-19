@@ -59,8 +59,15 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
           stop("Message from rpls.R: Xtrain is not of valid type")
      }
      
+     if (ncomp > dim(Xtrain)[2]) {
+          warning("Message from rpls: ncomp>p is not valid, ncomp is set to p")
+          ncomp <- p
+     }
+     
      if (dim(Xtrain)[2]==1) {
-          stop("Message from rpls.R: p=1 is not valid")
+          # stop("Message from rpls: p=1 is not valid")
+          warning("Message from rpls: p=1 is not valid, ncomp is set to 0")
+          ncomp <- 0
      }
      
      ntrain <- dim(Xtrain)[1]
@@ -70,8 +77,10 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
      if (is.null(Xtest)==FALSE) {
           
           if (is.vector(Xtest)==TRUE) {
-               Xtest <- matrix(Xtest,nrow=1)
+               Xtest <- matrix(Xtest,nrow=p)
           }
+          
+          Xtest <- as.matrix(Xtest)
           
           if ((is.matrix(Xtest)==FALSE)||(is.numeric(Xtest)==FALSE)) {
                stop("Message from rpls.R: Xtest is not of valid type")
@@ -85,7 +94,7 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
      }
      
      #On Ytrain
-     if ((is.vector(Ytrain)==FALSE)||(is.numeric(Ytrain)==FALSE)) {
+     if (((is.vector(Ytrain)==FALSE)&&(is.matrix(Ytrain)==FALSE))||(is.numeric(Ytrain)==FALSE)) {
           stop("Message from rpls.R: Ytrain is not of valid type")
      }
      
