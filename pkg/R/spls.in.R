@@ -26,7 +26,7 @@
 ### MA 02111-1307, USA
 
 
-spls.in <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, adapt=TRUE) {
+spls.in <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, adapt=TRUE, center.X=TRUE, center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE) {
      
      #####################################################################
      #### Initialisation
@@ -46,12 +46,86 @@ spls.in <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, adapt=TRU
      
      
      #####################################################################
+     #### centering and scaling
+     #####################################################################
+     if (!weighted.center) {
+          
+          # Xtrain mean
+          meanXtrain <- apply(Xtrain, 2, mean)
+          
+          # Xtrain sd
+          sigmaXtrain <- apply(Xtrain, 2, sd)
+          # test if predictors with null variance
+          if ( any( sigmaXtrain < .Machine$double.eps )) {
+               stop("Some of the columns of the predictor matrix have zero variance.")
+          }
+          
+          # centering & eventually scaling X
+          if(center.X && scale.X) {
+               sXtrain <- scale( Xtrain, center=meanXtrain, scale=sigmaXtrain)
+          } else if(center.X && !scale.X) {
+               sXtrain <- scale( Xtrain, center=meanXtrain, scale=FALSE)
+          } else {
+               sXtrain <- Xtrain
+          }
+          
+          # Y mean
+          meanYtrain <- apply(Ytrain, 2, mean)
+          
+          # Y sd
+          sigmaYtrain <- apply(Ytrain, 2, sd)
+          # test if predictors with null variance
+          if ( any( sigmaYtrain < .Machine$double.eps )) {
+               stop("The response matrix has zero variance.")
+          }
+          # centering & eventually scaling Y
+          if(center.Y && scale.Y) {
+               sYtrain <- scale( Ytrain, center=meanYtrain, scale=sigmaYtrain )
+          } else if(center.Y && !scale.Y) {
+               sYtrain <- scale( Ytrain, center=meanYtrain, scale=FALSE )
+          } else {
+               sYtrain <- Ytrain
+          }
+          
+          
+     } else { # weighted scaling
+          
+          sumV <- sum(diag(V))
+          
+          # X mean
+          meanXtrain <- matrix(diag(V), nrow=1) %*% Xtrain / sumV
+          
+          # X sd
+          sigmaXtrain <- apply(Xtrain, 2, sd)
+          # test if predictors with null variance
+          if ( any( sigmaXtrain < .Machine$double.eps ) ) {
+               stop("Some of the columns of the predictor matrix have zero variance.")
+          }
+          # centering & eventually scaling X
+          sXtrain <- scale( Xtrain, center=meanXtrain, scale=FALSE )
+          
+          # Y mean
+          meanYtrain <- matrix(diag(V), nrow=1) %*% Ytrain / sumV
+          
+          # Y sd
+          sigmaYtrain <- apply(Ytrain, 2, sd)
+          # test if predictors with null variance
+          if ( any( sigmaYtrain < .Machine$double.eps ) ) {
+               stop("The response matrix have zero variance.")
+          }
+          # centering & eventually scaling Y
+          sYtrain <- scale( Ytrain, center=meanYtrain, scale=FALSE )
+          
+     }
+     
+     
+     #####################################################################
      #### Result objects
      #####################################################################
      betahat <- matrix(0, nrow=p, ncol=1)
      betamat <- list()
-     X1 <- Xtrain
-     Y1 <- Ytrain
+     X1 <- sXtrain
+     Y1 <- sYtrain
      
      W <- matrix(data=NA, nrow=p, ncol=ncomp) # spls weight over each component
      T <- matrix(data=NA, nrow=ntrain, ncol=ncomp) # spls components
@@ -98,8 +172,8 @@ spls.in <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, adapt=TRU
           new2A <- index.p[ what!=0 & betahat[,1]==0 ]
           
           #### fit pls with selected predictors (meaning in A)
-          X.A <- Xtrain[ , A, drop=FALSE ]           
-          plsfit <- wpls( Xtrain=X.A, Ytrain=Ytrain, weight.mat=V, ncomp=min(k,length(A)), type="pls1", center.X=FALSE, scale.X=FALSE, center.Y=FALSE, scale.Y=FALSE, weighted.center=FALSE )
+          X.A <- sXtrain[ , A, drop=FALSE ]           
+          plsfit <- wpls( Xtrain=X.A, Ytrain=sYtrain, weight.mat=V, ncomp=min(k,length(A)), type="pls1", center.X=FALSE, scale.X=FALSE, center.Y=FALSE, scale.Y=FALSE, weighted.center=FALSE )
           
           
           #### output storage
@@ -124,9 +198,9 @@ spls.in <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, adapt=TRU
           
           ## update
           
-          Y1 <- Ytrain - plsfit$T %*% plsfit$Q
-          X1 <- Xtrain
-          X1[,A] <- Xtrain[,A] - plsfit$T %*% plsfit$P
+          Y1 <- sYtrain - plsfit$T %*% plsfit$Q
+          X1 <- sXtrain
+          X1[,A] <- sXtrain[,A] - plsfit$T %*% plsfit$P
           
           
           betahat <- matrix( 0, p, q )
@@ -144,12 +218,27 @@ spls.in <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, adapt=TRU
      ## components in lower subspace of selected variables
      T.low <- plsfit$T
      
-     #### return object
-     result <- list( betahat=betahat, 
-                     X.score=T, X.score.low=T.low, X.loading=P, Y.loading=Q, X.weight=W, 
-                     A=A)
+     #### betahat for non centered and non scaled data
+     if((!scale.X) || (weighted.center)) { # if X non scaled, betahat don't have to be corrected regards sd.x
+          sd.X <- rep(1, p)
+     } else { # if X is scaled, it has to
+          sd.X <- sigmaXtrain
+     }
+     if((!scale.Y) || (weighted.center)) {
+          sd.Y <- 1
+     } else {
+          sd.Y <- sigmaYtrain
+     }
      
-     class(result) <- "spls.adapt"
+     betahat.nc <- sd.Y * betahat / sd.X
+     intercept <- meanYtrain - ( sd.Y * (drop( (meanXtrain / sd.X) %*% betahat)) )
+     betahat.nc <- as.matrix(c(intercept, betahat.nc))
+     
+     #### return object
+     result <- list( betahat=betahat, betahat.nc=betahat.nc, 
+                     X.score=T, X.score.low=T.low, X.loading=P, Y.loading=Q, X.weight=W, 
+                     A=A, lenA=length(A))
+     
      return(result)
      
      
