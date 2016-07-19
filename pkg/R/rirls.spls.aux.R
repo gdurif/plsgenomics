@@ -103,10 +103,12 @@ rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, la
 		VmeansXtrain <- t(diagV)%*%sXtrain/sumV
 		
 		# SPLS(X, pseudo-var, weighting = V)
-		resSPLS = spls.adapt(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt, center.X=center.X, scale.X=scale.X, center.Y=TRUE, scale.Y=FALSE, weighted.center=weighted.center)
+		resSPLS = spls.in(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt, center.X=center.X, scale.X=scale.X, center.Y=TRUE, scale.Y=FALSE, weighted.center=weighted.center)
 		
 		BETA = resSPLS$betahat.nc
 		
+	}  else {
+          resSPLS = list(lenA=0)
 	}
 	
 	
@@ -124,14 +126,18 @@ rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, la
 	
 	Coefficients=BETA
 	
-	Coefficients[-1] <- diag(c(1/sqrt(sigma2train)))%*%BETA[-1]
+	if(p > 1) {
+	     Coefficients[-1] <- diag(c(1/sqrt(sigma2train)))%*%BETA[-1]
+	} else {
+	     Coefficients[-1] <- (1/sqrt(sigma2train))%*%BETA[-1]
+	}
 	
 	Coefficients[1] <- BETA[1] - meanXtrain %*% Coefficients[-1]
 	
 	
 	#### RETURN
 	
-	result <- list(Coefficients=Coefficients, hatYtest=hatYtest, converged=converged)
+	result <- list(Coefficients=Coefficients, hatYtest=hatYtest, converged=converged, lenA=resSPLS$lenA)
 	class(result) <- "rirls.spls.aux"
 	return(result)
 		
