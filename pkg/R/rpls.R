@@ -56,6 +56,7 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
      ##############################
      #On Xtrain
      Xtrain <- as.matrix(Xtrain)
+     Ytrain <- as.matrix(Ytrain)
      if ((is.matrix(Xtrain)==FALSE)||(is.numeric(Xtrain)==FALSE)) {
           stop("Message from rpls.R: Xtrain is not of valid type")
      }
@@ -95,7 +96,7 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
      }
      
      #On Ytrain
-     if (((is.vector(Ytrain)==FALSE)&&(is.matrix(Ytrain)==FALSE))||(is.numeric(Ytrain)==FALSE)) {
+     if ((ncol(Ytrain)>1)||(is.numeric(Ytrain)==FALSE)) {
           stop("Message from rpls.R: Ytrain is not of valid type")
      }
      
