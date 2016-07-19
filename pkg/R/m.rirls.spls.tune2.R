@@ -73,7 +73,9 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
      }
      
      if (p==1) {
-          stop("Message from m.rirls.spls.tune: p=1 is not valid")
+          # stop("Message from m.rirls.spls.tune: p=1 is not valid")
+          warning("Message from m.rirls.spls.tune: p=1 is not valid, ncomp.range is set to 0")
+          ncomp.range <- 0
      }
      
      # On Y
@@ -264,7 +266,7 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
           sXtrain.nosvd = sXtrain # keep in memory if svd decomposition
           
           # Compute the svd when necessary -> case p > ntrain (high dim)
-          if ((p > ntrain) && (svd.decompose)) {
+          if ((p > ntrain) && (svd.decompose) && (p>1)) {
                # svd de sXtrain
                svd.sXtrain <- svd(t(sXtrain))
                # number of singular value non null
@@ -344,21 +346,21 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
           
           
           ## results
-          res = numeric(7)
+          res = numeric(8)
           
           if(!is.null(model)) {
-               res = c(gridRow$fold, gridRow$run, gridRow$lambdaL1, gridRow$lambdaL2, gridRow$ncomp, model$converged, sum(model$hatYtest != Ytest) / ntest)
+               res = c(gridRow$fold, gridRow$run, gridRow$lambdaL1, gridRow$lambdaL2, gridRow$ncomp, model$lenA, model$converged, sum(model$hatYtest != Ytest) / ntest)
           } else {
-               res = c(gridRow$fold, gridRow$run, gridRow$lambdaL1, gridRow$lambdaL2, gridRow$ncomp, NA, NA)
+               res = c(gridRow$fold, gridRow$run, gridRow$lambdaL1, gridRow$lambdaL2, gridRow$ncomp, 0, NA, NA)
           }
           
           return(res)
           
      }, mc.cores=ncores, mc.silent=!verbose))
-     
      rownames(res_cv) <- paste(1:nrow(res_cv))
      res_cv = data.frame(res_cv)
-     colnames(res_cv) = c("nfold", "nrun", "lambda.l1", "lambda.ridge", "ncomp", "converged", "error")
+     colnames(res_cv) = c("nfold", "nrun", "lambda.l1", "lambda.ridge", "ncomp", "lenA", "converged", "error")
+     
      
      #####################################################################
      #### Find the optimal point in the grid
@@ -370,7 +372,7 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
      
      ## check number of NAs (=fails)
      if(sum(cv.grid.fails$nb.fail>0.8*nrun*nfolds) > (0.8*nrow(paramGrid))) {
-          warnings("Message from m.rirls.spls.tune: too many errors during the cross-validation process, the grid is not enough filled")
+          warnings("Message from rirls.spls.tune: too many errors during the cross-validation process, the grid is not enough filled")
      }     
      
      ## compute the mean error over the folds for each point of the grid
@@ -388,14 +390,19 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
      cv.grid1 <- merge(cv.grid.error, cv.grid.conv, by = c("lambda.ridge", "lambda.l1", "ncomp"))
      cv.grid <- merge(cv.grid1, cv.grid.fails, by = c("lambda.ridge", "lambda.l1", "ncomp"))
      
+     index_min <- which.min(cv.grid$error)
+     lambdaL1.opt <- cv.grid$lambda.l1[index_min]
+     lambdaL2.opt <- cv.grid$lambda.ridge[index_min]
+     ncomp.opt <- cv.grid$ncomp[index_min]
+     
      ##### return
      if(return.grid) {
           
-          return( list(lambda.ridge.opt = cv.grid$lambda.ridge[which.min(cv.grid$error)], lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], conv.per=conv.per, cv.grid=cv.grid) )
+          return( list(lambda.ridge.opt=lambdaL2.opt, lambda.l1.opt=lambdaL1.opt, ncomp.opt=ncomp.opt, conv.per=conv.per, cv.grid=cv.grid) )
           
      } else {
           
-          return( list(lambda.ridge.opt = cv.grid$lambda.ridge[which.min(cv.grid$error)], lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], conv.per=conv.per, cv.grid=NULL) )
+          return( list(lambda.ridge.opt=lambdaL2.opt, lambda.l1.opt=lambdaL1.opt, ncomp.opt=ncomp.opt, conv.per=conv.per, cv.grid=NULL) )
           
      }
      

@@ -21,7 +21,7 @@ library(MASS)
 
 # sample
 n = 100
-p = 500
+p = 50
 nb.class=3
 kstar = 12
 lstar = 3

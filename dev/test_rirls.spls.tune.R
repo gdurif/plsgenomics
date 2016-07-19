@@ -8,6 +8,7 @@ setwd("/home/durif/source_code/plsgenomics")
 
 source("pkg/R/sample.bin.R")
 source("pkg/R/spls.adapt.R")
+source("pkg/R/spls.in.R")
 source("pkg/R/spls.adapt.aux.R")
 source("pkg/R/ust.adapt.R")
 source("pkg/R/ust.R")
@@ -22,9 +23,9 @@ source("pkg/R/rirls.spls.tune2.R")
 
 # sample
 n = 50
-p = 100
+p = 50
 kstar = 10
-lstar = 3
+lstar = 10
 beta.min = 5
 beta.max = 10
 mean.H=0

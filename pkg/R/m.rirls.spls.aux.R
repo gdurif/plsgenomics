@@ -161,7 +161,8 @@ m.rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, 
           }
           
           # SPLS(X, pseudo-var, weighting = V)
-          resSPLS = spls.in(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt)
+          resSPLS = spls.in(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt,
+                            center.X=FALSE, center.Y=FALSE, scale.X=FALSE, scale.Y=FALSE, weighted.center=FALSE)
           
           #Express regression coefficients w.r.t. the columns of [1 sX] for ncomp
           BETA <- matrix(0, nrow=G*(r+1), ncol=1)
@@ -184,10 +185,25 @@ m.rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, 
      hatYtest <- as.matrix(apply(proba.test,1,which.max)-1)
      
      
+     #####################################################################
+     #### Conclude
+     #####################################################################
+     
+     ##Compute the coefficients w.r.t. [1 X]
+     Beta <- t(matrix(BETA,nrow=G,byrow=TRUE))
+     Coefficients <- t(matrix(0, nrow=G, ncol=(p+1)))
+     if(p > 1) {
+          Coefficients[-1,] <- diag(c(1/sqrt(sigma2train))) %*% Beta[-1,]
+     } else {
+          Coefficients[-1,] <- (1/sqrt(sigma2train))%*%Beta[-1,]
+     }
+     Coefficients[1,] <- Beta[1,] - meanXtrain %*% Coefficients[-1,]
+     
+     
      
      #### RETURN
      
-     result <- list(hatYtest=hatYtest, converged=converged)
+     result <- list(Coefficients=Coefficients, hatYtest=hatYtest, converged=converged, lenA=resSPLS$lenA)
      class(result) <- "m.rirls.spls.aux"
      return(result)
      
