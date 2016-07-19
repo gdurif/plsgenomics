@@ -63,8 +63,15 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           stop("Message from m.rirls.spls: Xtrain is not of valid type")
      }
      
+     if (ncomp > p) {
+          warning("Message from rirls.spls: ncomp>p is not valid, ncomp is set to p")
+          ncomp <- p
+     }
+     
      if (p==1) {
-          stop("Message from m.rirls.spls: p=1 is not valid")
+          # stop("Message from m.rirls.spls.tune: p=1 is not valid")
+          warning("Message from m.rirls.spls.tune: p=1 is not valid, ncomp is set to 0")
+          ncomp <- 0
      }
      
      # On Xtest if necessary
@@ -354,6 +361,8 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           A <- NULL
           X.score <- NULL
           X.weight <- NULL
+          
+          resSPLS = list(X.score=NULL, X.weight=NULL)
      }
      
      
@@ -383,17 +392,23 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           hatYtest <- NULL
           Eta.test <- NULL
           proba.test <- NULL
+          
+          resSPLS = list(X.score=NULL, X.weight=NULL)
      }
      
      
      #####################################################################
      #### Conclude
      #####################################################################
-
+     
      ##Compute the coefficients w.r.t. [1 X]
      Beta <- t(matrix(BETA,nrow=G,byrow=TRUE))
      Coefficients <- t(matrix(0, nrow=G, ncol=(p+1)))
-     Coefficients[-1,] <- diag(c(1/sqrt(sigma2train))) %*% Beta[-1,]
+     if(p > 1) {
+          Coefficients[-1,] <- diag(c(1/sqrt(sigma2train))) %*% Beta[-1,]
+     } else {
+          Coefficients[-1,] <- (1/sqrt(sigma2train))%*%Beta[-1,]
+     }
      Coefficients[1,] <- Beta[1,] - meanXtrain %*% Coefficients[-1,]
      
      # comute X.score, X.weight, active set for original variables
@@ -414,8 +429,12 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
      
      
      #### RETURN
+     A.full <- NULL
+     if(!is.null(A)) {
+          A.full <- sort(unique(unlist(A)))
+     }
      
-     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=sort(unique(unlist(A))), converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, V=V, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain, hatBeta=Beta)
+     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=A.full, converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain, hatBeta=Beta)
      class(result) <- "m.rirls.spls"
      return(result)
      
