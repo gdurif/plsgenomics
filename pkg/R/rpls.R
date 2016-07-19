@@ -55,13 +55,14 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
      ##  TEST ON INPUT VARIABLES
      ##############################
      #On Xtrain
+     Xtrain <- as.matrix(Xtrain)
      if ((is.matrix(Xtrain)==FALSE)||(is.numeric(Xtrain)==FALSE)) {
           stop("Message from rpls.R: Xtrain is not of valid type")
      }
      
      if (ncomp > dim(Xtrain)[2]) {
           warning("Message from rpls: ncomp>p is not valid, ncomp is set to p")
-          ncomp <- p
+          ncomp <- dim(Xtrain)[2]
      }
      
      if (dim(Xtrain)[2]==1) {
@@ -77,7 +78,7 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
      if (is.null(Xtest)==FALSE) {
           
           if (is.vector(Xtest)==TRUE) {
-               Xtest <- matrix(Xtest,nrow=p)
+               Xtest <- matrix(Xtest,ncol=p)
           }
           
           Xtest <- as.matrix(Xtest)
@@ -314,7 +315,11 @@ rpls <- function (Ytrain,Xtrain,Lambda,ncomp,Xtest=NULL,NbIterMax=50) {
           Coefficients[-1] <- diag(c(1/sqrt(Sigma2train)))%*%V%*%GAMMA[-1]
      }
      if (p<=ntrain) {
-          Coefficients[-1] <- diag(c(1/sqrt(Sigma2train)))%*%GAMMA[-1]
+          if(p > 1) {
+               Coefficients[-1] <- diag(c(1/sqrt(Sigma2train)))%*%GAMMA[-1]
+          } else {
+               Coefficients[-1] <- (1/sqrt(Sigma2train))%*%GAMMA[-1]
+          }
      }
      Coefficients[1] <- GAMMA[1]-MeanXtrain%*%Coefficients[-1]
      List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, DeletedCol=DeletedCol)
