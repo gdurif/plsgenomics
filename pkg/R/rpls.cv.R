@@ -29,7 +29,7 @@ rpls.cv <- function (Ytrain, Xtrain, LambdaRange, ncompMax, NbIterMax=50, ncores
      ##  Xtrain   : matrix ntrain x p
      ##      train data matrix
      ##  Ytrain   : vector ntrain
-     ##      response variable {1,2}-valued vector
+     ##      response variable {0,1}-valued vector
      ##  LambdaRange : vector nLambda
      ##      possible values for the regularization parameter Lambda
      ##  NbIterMax : positive integer
