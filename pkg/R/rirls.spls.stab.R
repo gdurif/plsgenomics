@@ -61,71 +61,68 @@ rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1,
      
      # if multicategorical response
      if(length(table(Y)) > 2) {
-          warning("message from rirls.spls.tune: multicategorical response")
-          results = m.rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
-                                      lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
+          warning("message from rirls.spls.stab: multicategorical response")
+          results = m.rirls.spls.stab(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, lambda.l1.range=lambda.l1.range, ncomp=ncomp, 
                                       adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
-                                      return.grid=return.grid, ncores=ncores, 
-                                      nfolds=nfolds, nrun=nrun, 
-                                      center.X=center.X, scale.X=scale.X, 
-                                      weighted.center=weighted.center, 
+                                      ncores=ncores, nresamp=nresamp, nfolds=nfolds, 
+                                      center.X=center.X, scale.X=scale.X, weighted.center=weighted.center, 
                                       seed=seed, verbose=verbose)
           return(results)
      }
      
      # On X
      if ((!is.matrix(X)) || (!is.numeric(X))) {
-          stop("Message from rirls.spls.tune: X is not of valid type")
+          stop("message from rirls.spls.stab: X is not of valid type")
      }
      
      if (p==1) {
-          stop("Message from rirls.spls.tune: p=1 is not valid")
+          stop("message from rirls.spls.stab: p=1 is not valid")
      }
      
      # On Y
      if ((!is.matrix(Y)) || (!is.numeric(Y))) {
-          stop("Message from rirls.spls.tune: Y is not of valid type")
+          stop("message from rirls.spls.stab: Y is not of valid type")
      }
      
      if (q != 1) {
-          stop("Message from rirls.spls.tune: Y must be univariate")
+          stop("message from rirls.spls.stab: Y must be univariate")
      }
      
      if (nrow(Y)!=n) {
-          stop("Message from rirls.spls.tune: the number of observations in Y is not equal to the number of row in X")
+          stop("message from rirls.spls.stab: the number of observations in Y is not equal to the number of row in X")
      }
      
      # On Ytrain value
      if (sum(is.na(Y))!=0) {
-          stop("Message from rirls.spls.tune: NA values in Ytrain")
+          stop("message from rirls.spls.stab: NA values in Ytrain")
      }
      
      if (sum(!(Y %in% c(0,1)))!=0) {
-          stop("Message from rirls.spls.tune: Y is not of valid type")
+          stop("message from rirls.spls.stab: Y is not of valid type")
      }
      
      if (sum(as.numeric(table(Y))==0)!=0) {
-          stop("Message from rirls.spls.tune: there are empty classes")
+          stop("message from rirls.spls.stab: there are empty classes")
      }
      
      
      # maxIter
      if ((!is.numeric(maxIter)) || (round(maxIter)-maxIter!=0) || (maxIter<1)) {
-          stop("Message from rirls.spls.tune: maxIter is not of valid type")
+          stop("message from rirls.spls.stab: maxIter is not of valid type")
      }
      
      # ncores
      if ((!is.numeric(ncores)) || (round(ncores)-ncores!=0) || (ncores<1)) {
-          stop("Message from rirls.spls.tune: ncores is not of valid type")
+          stop("message from rirls.spls.stab: ncores is not of valid type")
      }
      
      # nfolds
      if ((!is.numeric(nfolds)) || (round(nfolds)-nfolds!=0) || (nfolds<1)) {
-          stop("Message from rirls.spls.tune: nfolds is not of valid type")
+          stop("message from rirls.spls.stab: nfolds is not of valid type")
      }
      # necessary to insure that both classes are represented in each folds
      if( any(as.vector(table(Y))<nfolds)) {
-          stop("Message from rirls.spls.tune: there is a class defined by Y that has less members than the number of folds nfold")
+          stop("message from rirls.spls.stab: there is a class defined by Y that has less members than the number of folds nfold")
      }
      
      
@@ -137,7 +134,7 @@ rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1,
      grid.resampling <- as.matrix( Reduce("rbind", mclapply(1:nresamp, function(id.samp) {
           
           #### train and test variable
-          ntrain = floor(0.7*n)
+          ntrain = floor(0.5*n)
           ntest = n - ntrain
           
           index.train = sort(sample(1:n, size=ntrain))
@@ -148,6 +145,26 @@ rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1,
           
           Xtest = X[index.test,]
           Ytest = Y[index.test]
+          
+          condition = any(table(Ytrain)==0)
+          test = 0
+          while(condition & test<100) {
+               index.train = sort(sample(1:n, size=ntrain))
+               index.test = (1:n)[-index.train]
+               
+               Xtrain = X[index.train,]
+               Ytrain = Y[index.train]
+               
+               Xtest = X[index.test,]
+               Ytest = Y[index.test]
+               
+               condition = any(table(Ytrain)==0)
+               test = tes+1
+          }
+          
+          if(test==100) {
+               warning("message from rirls.spls.stab: empty classe in a resampling")
+          }
           
           #### fit the model for the different lambda.l1
           grid_out <- sapply(lambda.l1.range, function(lambda) {
