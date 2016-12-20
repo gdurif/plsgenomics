@@ -225,6 +225,10 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
           }
      }
      
+     WCtrsXtrain <- NULL
+     Scores <- NULL
+     Omega <- NULL
+     
      if (ncomp!=0) {
           #Compute Weight and pseudo variable
           #Pseudovar = Eta + W^-1 Psi
@@ -373,12 +377,14 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
      
      if (is.null(Xtest)==FALSE) {
           if ((ncomp==0)|(ncomp==1)) {
-               List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test,DeletedCol=DeletedCol)
+               List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test,DeletedCol=DeletedCol, 
+                            Xtrain=WCtrsXtrain, X.score=Scores, X.weight=Omega)
           }
           if ((ncomp!=0)&(ncomp!=1)) {
                colnames(hatYtest_k)=1:ncomp
                rownames(hatYtest_k)=1:ntest
-               List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, hatYtest_k=hatYtest_k, DeletedCol=DeletedCol)
+               List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, hatYtest_k=hatYtest_k, DeletedCol=DeletedCol, 
+                            Xtrain=WCtrsXtrain, X.score=Scores, X.weight=Omega)
           }
      }
      
