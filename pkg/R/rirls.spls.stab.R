@@ -24,7 +24,7 @@
 
 rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1, 
                             adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-                            ncores=1, nresamp=100, nfolds=10, 
+                            ncores=1, nresamp=100, nfolds=5, 
                             center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
                             seed=NULL, verbose=TRUE) {
      
@@ -146,7 +146,7 @@ rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1,
           Xtest = X[index.test,]
           Ytest = Y[index.test]
           
-          condition = any(table(Ytrain)==0)
+          condition = any(table(Ytrain)<nfolds)
           test = 0
           while(condition & test<100) {
                index.train = sort(sample(1:n, size=ntrain))
@@ -158,8 +158,8 @@ rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1,
                Xtest = X[index.test,]
                Ytest = Y[index.test]
                
-               condition = any(table(Ytrain)==0)
-               test = tes+1
+               condition = any(table(Ytrain)<nfolds)
+               test = test+1
           }
           
           if(test==100) {
