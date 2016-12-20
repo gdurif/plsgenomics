@@ -225,7 +225,7 @@ rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1,
      tmp_qLambda <- data.frame(tmp_qLambda)
      colnames(tmp_qLambda) <- c("lambda", "id", "qLambda")
      
-     qLambda <- ddply(tmp_qLambda, .(lambda), function(x) colMeans(x[c("qLambda")], na.rm=TRUE))
+     qLambda <- ddply(tmp_qLambda, "lambda", function(x) colMeans(x[c("qLambda")], na.rm=TRUE))
      o.lambda2 <- order(qLambda$lambda, decreasing=TRUE)
      qLambda <- qLambda[o.lambda2,]
      
@@ -233,7 +233,7 @@ rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1,
      #### Compute p_j(lambda)
      #####################################################################
      
-     probs_lambda <- ddply(grid.resampling, .(lambda), function(x) colMeans(x[cnames], na.rm=TRUE))
+     probs_lambda <- ddply(grid.resampling, "lambda", function(x) colMeans(x[cnames], na.rm=TRUE))
      probs_lambda <- probs_lambda[o.lambda2,]
      
      # select variables in another function
