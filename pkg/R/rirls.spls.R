@@ -154,6 +154,7 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	
 	# test on sigma2train
 	# predictor with null variance ?
+	DeletedCol <- NULL
 	if (sum(sigma2train < .Machine$double.eps)!=0){
 		
 		# predicteur with non null variance < 2 ?
@@ -180,7 +181,9 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 		r <- min(p,ntrain)
 	}
 	
-	cnames <- cnames[-DeletedCol]
+	if(!is.null(DeletedCol)) {
+	     cnames <- cnames[-DeletedCol]
+	}
 	
 	# mean of Xtrain
 	meanXtrain <- apply(Xtrain,2,mean)
