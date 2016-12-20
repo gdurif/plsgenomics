@@ -26,12 +26,14 @@ stab_sel <- function(stab_out, piThreshold=0.6, rhoError=10) {
      qLambda <- stab_out$qLambda
      probs_lambda <- stab_out$probs_lambda
      
+     p <- ncol(probs_lambda[,-1])
+     
      ## select variables
      qLambdaMax = sqrt((2*piThreshold-1) * p * rhoError)
      
      lambda_ok <- qLambda$lambda[which(qLambda$qLambda <= qLambdaMax)]
      
-     tmp_probs <- subset(probs_lambda, lambda %in% lambda_ok)
+     tmp_probs <- probs_lambda[probs_lambda$lambda %in% lambda_ok,]
      
      which_var <-  apply(tmp_probs[,-1], 2, function(x) max(x) >= piThreshold)
      
