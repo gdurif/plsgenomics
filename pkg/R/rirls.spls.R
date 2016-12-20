@@ -42,6 +42,13 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	q <- ncol(Ytrain)
 	one <- matrix(1,nrow=1,ncol=ntrain)
 	
+	cnames <- NULL
+	if(!is.null(colnames(X))) {
+	     cnames <- colnames(X)
+	} else {
+	     cnames <- paste0(1:p)
+	}
+	
 	
 	#####################################################################
 	#### Tests on type input
@@ -172,6 +179,8 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 		p <- ncol(Xtrain)
 		r <- min(p,ntrain)
 	}
+	
+	cnames <- cnames[-DeletedCol]
 	
 	# mean of Xtrain
 	meanXtrain <- apply(Xtrain,2,mean)
@@ -338,8 +347,10 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	
 	#### RETURN
 	
+	Anames <- cnames[resSPLS$A]
+	
 	result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, 
-	               A=resSPLS$A, converged=converged, 
+	               A=resSPLS$A, Anames=Anames, converged=converged, 
 	               X.score=resSPLS$X.score, X.weight=resSPLS$X.weight, 
 	               sXtrain=resSPLS$sXtrain, sPseudoVar=resSPLS$sYtrain, 
 	               lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, 
