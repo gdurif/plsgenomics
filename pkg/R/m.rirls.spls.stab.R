@@ -165,7 +165,7 @@ m.rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1
           }
           
           if(test==100) {
-               warning("message from rirls.spls.stab: empty classe in a resampling")
+               return(NULL)
           }
           
           #### fit the model for the different lambda.l1
@@ -203,6 +203,11 @@ m.rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1
      
      o.lambda <- order(grid.resampling$lambda, decreasing=TRUE)
      grid.resampling <- grid.resampling[o.lambda,]
+     
+     if(any(table(grid.resampling$lambda)<nresamp)) {
+          warning("message from rirls.spls.stab: empty classe in a resampling")
+          print(table(grid.resampling$lambda))
+     }
      
      #####################################################################
      #### Compute q_lambda
