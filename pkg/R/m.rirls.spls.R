@@ -43,6 +43,12 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
      q <- ncol(Ytrain)
      one <- matrix(1,nrow=1,ncol=ntrain)
      
+     cnames <- NULL
+     if(!is.null(colnames(X))) {
+          cnames <- colnames(X)
+     } else {
+          cnames <- paste0(1:p)
+     }
      
      #####################################################################
      #### Tests on type input
@@ -172,6 +178,10 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           # new number of predictor
           p <- ncol(Xtrain)
           r <- p
+     }
+     
+     if(!is.null(DeletedCol)) {
+          cnames <- cnames[-DeletedCol]
      }
      
      # mean of Xtrain
@@ -434,7 +444,9 @@ m.rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=N
           A.full <- sort(unique(unlist(A)))
      }
      
-     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=A.full, converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain, hatBeta=Beta)
+     Anames <- cnames[A.full]
+     
+     result <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, DeletedCol=DeletedCol, A=A, A.full=A.full, Anames=Anames, converged=converged, X.score=X.score, X.weight=X.weight, X.score.full=resSPLS$X.score, X.weight.full=resSPLS$X.weight, lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain, hatBeta=Beta)
      class(result) <- "m.rirls.spls"
      return(result)
      
