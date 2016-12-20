@@ -154,7 +154,6 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	
 	# test on sigma2train
 	# predictor with null variance ?
-	DeletedCol <- NULL
 	if (sum(sigma2train < .Machine$double.eps)!=0){
 		
 		# predicteur with non null variance < 2 ?
