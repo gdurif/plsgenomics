@@ -43,8 +43,8 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	one <- matrix(1,nrow=1,ncol=ntrain)
 	
 	cnames <- NULL
-	if(!is.null(colnames(X))) {
-	     cnames <- colnames(X)
+	if(!is.null(colnames(Xtrain))) {
+	     cnames <- colnames(Xtrain)
 	} else {
 	     cnames <- paste0(1:p)
 	}
