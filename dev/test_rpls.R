@@ -25,7 +25,7 @@ Y = sample1$Y
 
 ##### test without Xtest
 
-model1 = rpls(Ytrain=Y, Xtrain=X[,1], Lambda=2, ncomp=2, Xtest=NULL, NbIterMax=50)
+model1 = rpls(Ytrain=Y, Xtrain=X, Lambda=2, ncomp=2, Xtest=NULL, NbIterMax=50)
 
 str(model1)
 
