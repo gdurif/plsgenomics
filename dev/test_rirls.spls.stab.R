@@ -54,7 +54,7 @@ svd.decompose=TRUE
 return.grid=FALSE
 ncores=2
 nresamp=2
-nfolds=10
+nfolds=5
 center.X=TRUE
 scale.X=FALSE
 weighted.center=TRUE
@@ -63,7 +63,7 @@ verbose=TRUE
 
 time1 <- system.time( stab1 <- rirls.spls.stab(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, lambda.l1.range=lambda.l1.range, ncomp=1, 
                                                adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-                                               ncores=5, nresamp=50, nfolds=10, 
+                                               ncores=5, nresamp=50, nfolds=5, 
                                                center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
                                                seed=NULL, verbose=TRUE) )
 
@@ -73,8 +73,4 @@ stab_sel(stab_out=stab1, piThreshold=0.6, rhoError=15)
 
 sample1$sel
 
-str(cv1)
-str(cv2)
-
 time1
-time2
