@@ -9,7 +9,8 @@ import(
   MASS,
   boot,
   parallel,
-  reshape2
+  reshape2,
+  plyr
 )
 
 importFrom("stats", "median", "predict", "rbinom", "rnorm", "runif",
