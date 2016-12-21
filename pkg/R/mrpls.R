@@ -373,7 +373,8 @@ mrpls <- function(Ytrain, Xtrain, Lambda, ncomp, Xtest=NULL, NbIterMax=50) {
      
      Coefficients[1,] <- GAMMA[1,]-MeanXtrain%*%Coefficients[-1,]
      
-     List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, DeletedCol=DeletedCol)
+     List <- list(Coefficients=Coefficients, hatY=hatY, hatYtest=hatYtest, proba=proba, proba.test=proba.test, DeletedCol=DeletedCol, 
+                  Xtrain=WCtrsXtrain, X.score=Scores, X.weight=Omega)
      
      if (is.null(Xtest)==FALSE) {
           if ((ncomp==0)|(ncomp==1)) {
