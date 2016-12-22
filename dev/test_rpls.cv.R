@@ -10,10 +10,10 @@ source("pkg/R/rplsaux.R")
 library(reshape2)
 
 # sample
-n = 100
-p = 50
+n = 300
+p = 500
 kstar = 12
-lstar = 12
+lstar = 1
 beta.min = 0.5
 beta.max = 1
 mean.H=0
@@ -28,6 +28,6 @@ Y = sample1$Y
 
 ##### test without Xtest
 
-cv1 = rpls.cv(Ytrain=Y, Xtrain=X, LambdaRange=c(1,10), ncompMax=2, NbIterMax=50, ncores=8)
+cv1 = rpls.cv(Ytrain=Y, Xtrain=X, LambdaRange=c(1,5,10,100), ncompMax=4, NbIterMax=50, ncores=4)
 
 str(cv1)
