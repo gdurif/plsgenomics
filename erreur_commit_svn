@@ -1,0 +1,30 @@
+perl: warning: Setting locale failed.
+perl: warning: Please check that your locale settings:
+	LANGUAGE = (unset),
+	LC_ALL = (unset),
+	LC_PAPER = "fr_FR.UTF-8",
+	LC_ADDRESS = "fr_FR.UTF-8",
+	LC_MONETARY = "fr_FR.UTF-8",
+	LC_NUMERIC = "fr_FR.UTF-8",
+	LC_TELEPHONE = "fr_FR.UTF-8",
+	LC_IDENTIFICATION = "fr_FR.UTF-8",
+	LC_MEASUREMENT = "fr_FR.UTF-8",
+	LC_TIME = "fr_FR.UTF-8",
+	LC_NAME = "fr_FR.UTF-8",
+	LANG = "en_US.UTF-8"
+    are supported and installed on your system.
+perl: warning: Falling back to the standard locale ("C").
+Envoi          pkg/DESCRIPTION
+Envoi          pkg/MD5
+Envoi          pkg/man/gsim.Rd
+Envoi          pkg/man/gsim.cv.Rd
+Envoi          pkg/man/leukemia.Rd
+Envoi          pkg/man/mgsim.Rd
+Envoi          pkg/man/mgsim.cv.Rd
+Envoi          pkg/man/mrpls.Rd
+Envoi          pkg/man/mrpls.cv.Rd
+Envoi          pkg/man/preprocess.Rd
+Envoi          pkg/man/rpls.Rd
+Envoi          pkg/man/rpls.cv.Rd
+Transmission des données ............
+Révision 13 propagée.
