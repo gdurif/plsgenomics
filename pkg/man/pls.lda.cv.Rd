@@ -62,9 +62,8 @@ pls.lda.cv(Xtrain, Ytrain,  ncomp, nruncv=20, alpha=2/3, priors=NULL)
 }
 
 \author{
-  Anne-Laure Boulesteix 
-  (\url{http://www.ibe.med.uni-muenchen.de/organisation/mitarbeiter/
-  020_professuren/boulesteix/index.html}) 
+Anne-Laure Boulesteix 
+(\url{http://www.ibe.med.uni-muenchen.de/organisation/mitarbeiter/020_professuren/boulesteix/eng.html}) 
    
  
 
