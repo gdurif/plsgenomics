@@ -1,4 +1,4 @@
-75dafb75dfc71b974dfd74bfd87d4a6c *DESCRIPTION
+b97d30e40a09c316a0708348f6476292 *DESCRIPTION
 81bcece21748c91ba9992349a91ec11d *LICENCE.note
 ad40ee2cb47b7b6ba81b8ce6c291e0a0 *NAMESPACE
 2042e3e16c3d4a1d66112ddf50809d61 *R/TFA.estimate.R
@@ -13,7 +13,7 @@ f660a3909caa38a6f41ef98153831c76 *R/mrpls.R
 b11a371ac082476b9e37445a7b11bba4 *R/mrpls.cv.R
 8f01f0e3588f2d12d0fbf1959fb6f248 *R/mrplsaux.R
 9efa3699fe8af36851ea2bb64cdfb47b *R/mwirrls.R
-9c59a8d699e3cf0d66b840b4a5edde12 *R/pls.lda.R
+283407b43e6d3c5d229f51788f566343 *R/pls.lda.R
 4b4c3471ad035b094808486fe8ed2058 *R/pls.lda.cv.R
 c0cacddfc968459e5c569d3a432717fb *R/pls.regression.R
 cb12228de7005dc3584cd61dd522f427 *R/pls.regression.cv.R
