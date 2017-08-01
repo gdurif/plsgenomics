@@ -1,6 +1,7 @@
-### spls.adapt.tune.R  (2014-10)
+### spls.cv.R  (2014-10)
 ###
-###    Tuning parameters (ncomp, lambda.l1) for adaptive sparse PLS regression for continuous response, by K-fold cross-validation
+###    Tuning parameters (ncomp, lambda.l1) for adaptive sparse PLS regression 
+###    for continuous response, by K-fold cross-validation
 ###
 ### Copyright 2014-10 Ghislain DURIF
 ###
@@ -22,7 +23,10 @@
 ### MA 02111-1307, USA
 
 
-spls.adapt.tune <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, adapt=TRUE, center.X=TRUE, center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, return.grid=FALSE, ncores=1, nfolds=10) {
+spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, 
+                    adapt=TRUE, center.X=TRUE, center.Y=TRUE, 
+                    scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
+                    return.grid=FALSE, ncores=1, nfolds=10) {
 	
 	#####################################################################
 	#### Initialisation
@@ -248,7 +252,7 @@ spls.adapt.tune <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 		### sur chaque fold, on calcule pour tout lambda.ridge.range
 		cv.grid.byfold <- matrix( sapply( split(grid, f=row.names(grid)), function(grid.line) {
 			
-			model <- tryCatch( spls.adapt.aux(Xtrain=Xtrain, sXtrain=sXtrain, Ytrain=Ytrain, sYtrain=sYtrain, lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, weight.mat=weight.mat, Xtest=Xtest, sXtest=sXtest, adapt=adapt, meanXtrain=meanXtrain, meanYtrain=meanYtrain, sigmaXtrain=sigmaXtrain, sigmaYtrain=sigmaYtrain, center.X=center.X, center.Y=center.Y, scale.X=scale.X, scale.Y=scale.Y, weighted.center=weighted.center), error = function(e) { warnings("Message from spls.adapt.tune: error when fitting a model in crossvalidation"); return(NULL);} )
+			model <- tryCatch( spls.adapt.aux(Xtrain=Xtrain, sXtrain=sXtrain, Ytrain=Ytrain, sYtrain=sYtrain, lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, weight.mat=weight.mat, Xtest=Xtest, sXtest=sXtest, adapt=adapt, meanXtrain=meanXtrain, meanYtrain=meanYtrain, sigmaXtrain=sigmaXtrain, sigmaYtrain=sigmaYtrain, center.X=center.X, center.Y=center.Y, scale.X=scale.X, scale.Y=scale.Y, weighted.center=weighted.center), error = function(e) { warnings("Message from spls.adapt.cv: error when fitting a model in crossvalidation"); return(NULL);} )
 			
 			## resutls
 			res <- numeric(4)
@@ -294,4 +298,3 @@ spls.adapt.tune <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	
 	
 }
-	
