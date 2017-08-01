@@ -2,8 +2,7 @@
 % Please edit documentation in R/spls.R
 \name{spls}
 \alias{spls}
-\title{Classification by Ridge Iteratively Reweighted Least Squares 
-followed by Adaptive Sparse PLS regression for binary response}
+\title{Adaptive Sparse Partial Least Squares (SPLS) regression}
 \usage{
 spls(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat = NULL, Xtest = NULL,
   adapt = TRUE, center.X = TRUE, center.Y = TRUE, scale.X = TRUE,
@@ -45,6 +44,10 @@ step sould be adaptive or not (see details).}
 \item{center.Y}{a boolean value indicating whether the response values 
 \code{Ytrain} set should be centered or not.}
 
+\item{scale.X}{a boolean value indicating whether the data matrices 
+\code{Xtrain} and \code{Xtest} (if provided) should be scaled or not 
+(\code{scale.X=TRUE} implies \code{center.X=TRUE}).}
+
 \item{scale.Y}{a boolean value indicating whether the response values 
 \code{Ytrain} should be scaled or not (\code{scale.Y=TRUE} implies 
 \code{center.Y=TRUE}).}
@@ -52,16 +55,12 @@ step sould be adaptive or not (see details).}
 \item{weighted.center}{a boolean value indicating whether the centering 
 should take into account the weighted l2 metric or not 
 (if TRUE, it requires that weighted.mat is non NULL).}
-
-\item{scale.X}{aa}{boolean value indicating whether the data matrices 
-\code{Xtrain} and \code{Xtest} (if provided) should be scaled or not 
-(\code{scale.X=TRUE} implies \code{center.X=TRUE}).}
 }
 \value{
 An object of class \code{spls} with the following attributes
-\item{Xtrain}{the ntrain x p data matrix.}
+\item{Xtrain}{the ntrain x p predictor matrix.}
 \item{Ytrain}{the response observations.}
-\item{sXtrain}{the centered if so and scaled if so data matrix.}
+\item{sXtrain}{the centered if so and scaled if so predictor matrix.}
 \item{sYtrain}{the centered if so and scaled if so response.}
 \item{betahat}{the linear coefficients in model 
 \code{sYtrain = sXtrain \%*\% betahat + residuals}.}
@@ -120,17 +119,16 @@ the sparse PLS step.}
 step was adaptive or not.}
 }
 \description{
-The function \code{spls.adapt} performs compression, variable selection 
-in regression context (with possible prediction) using Durif et al. (2017) 
-adaptive SPLS algorithm, based on sparse PLS developped 
-by Chun and Keles (2010).
+The function \code{spls.adapt} performs compression and variable selection 
+in the context of linear regression (with possible prediction) 
+using Durif et al. (2017) adaptive SPLS algorithm.
 }
 \details{
 The columns of the data matrices \code{Xtrain} and \code{Xtest} may 
 not be standardized, since standardizing can be performed by the function 
 \code{spls} as a preliminary step before the algorithm is run.
 
-The procedure described in Durif et al. (2017) is used to determine 
+The procedure described in Durif et al. (2017) is used to compute 
 latent sparse components that are used in a regression model.
 In addition, when a matrix \code{Xtest} is supplied, the procedure 
 predicts the response associated to these new values of the predictors.
@@ -193,13 +191,9 @@ Chun, H., & Keles, S. (2010). Sparse partial least squares regression for
 simultaneous dimension reduction and variable selection.  Journal of the 
 Royal Statistical Society. Series B (Methodological), 72(1), 3-25. 
 doi:10.1111/j.1467-9868.2009.00723.x
-
-Chung, D., & Keles, S. (2010). Sparse partial least squares classification 
-for high dimensional data. Statistical Applications in Genetics and 
-Molecular Biology, 9, Article17. doi:10.2202/1544-6115.1492
 }
 \seealso{
-\code{\link{logit.spls.cv}}
+\code{\link{spls.cv}}
 }
 \author{
 Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}). 

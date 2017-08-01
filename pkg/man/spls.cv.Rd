@@ -2,8 +2,8 @@
 % Please edit documentation in R/spls.cv.R
 \name{spls.cv}
 \alias{spls.cv}
-\title{Tuning parameters (ncomp, lambda.l1) for Adaptive Sparse PLS regression for 
-continuous response, by K-fold cross-validation}
+\title{Cross-validation procedure to calibrate the parameters (ncomp, lambda.l1) 
+of the Adaptive Sparse PLS regression}
 \usage{
 spls.cv(X, Y, lambda.l1.range, ncomp.range, weight.mat = NULL, adapt = TRUE,
   center.X = TRUE, center.Y = TRUE, scale.X = TRUE, scale.Y = TRUE,
@@ -134,22 +134,10 @@ Durif G., Modolo L., Michaelsson J., Mold J. E., Lambert-Lacroix S.,
 Picard F. (2017). High Dimensional Classification with combined Adaptive 
 Sparse PLS and Logistic Regression, (in prep), 
 available on (\url{http://arxiv.org/abs/1502.05933}).
-
-Chun, H., & Keles, S. (2010). Sparse partial least squares regression for 
-simultaneous dimension reduction and variable selection.  Journal of the 
-Royal Statistical Society. Series B (Methodological), 72(1), 3-25. 
-doi:10.1111/j.1467-9868.2009.00723.x
-
-Chung, D., & Keles, S. (2010). Sparse partial least squares classification 
-for high dimensional data. Statistical Applications in Genetics and 
-Molecular Biology, 9, Article17. doi:10.2202/1544-6115.1492
 }
 \seealso{
-\code{\link{logit.spls.cv}}
+\code{\link{spls}}
 }
 \author{
-Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}). 
-
-Adapted in part from spls code by H. Chun, D. Chung and S.Keles 
-(\url{http://cran.r-project.org/web/packages/spls/index.html}).
+Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}).
 }
