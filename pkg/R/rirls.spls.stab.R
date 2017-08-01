@@ -22,7 +22,8 @@
 ### MA 02111-1307, USA
 
 
-rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1, 
+rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, 
+                            ncomp.range=1, 
                             adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
                             ncores=1, nresamp=100, nfolds=5, 
                             center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
@@ -62,7 +63,8 @@ rirls.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp=1,
      # if multicategorical response
      if(length(table(Y)) > 2) {
           warning("message from rirls.spls.stab: multicategorical response")
-          results = m.rirls.spls.stab(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, lambda.l1.range=lambda.l1.range, ncomp=ncomp, 
+          results = m.rirls.spls.stab(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, lambda.l1.range=lambda.l1.range, 
+                                      ncomp.range=ncomp.range, 
                                       adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
                                       ncores=ncores, nresamp=nresamp, nfolds=nfolds, 
                                       center.X=center.X, scale.X=scale.X, weighted.center=weighted.center, 
