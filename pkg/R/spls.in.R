@@ -25,8 +25,80 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-
-spls.in <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, adapt=TRUE, center.X=TRUE, center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE) {
+#' @title 
+#' Light version for \code{spls} function (for internal calls in 
+#' \code{logit.spls})
+#' 
+#' @keywords internal
+#' 
+#' @description 
+#' Internal function
+#' 
+#' @details
+#' No detail
+#' 
+#' @param Xtrain a (ntrain x p) data matrix of predictor values. 
+#' \code{Xtrain} must be a matrix. Each row corresponds to an observation 
+#' and each column to a predictor variable.
+#' @param Ytrain a (ntrain) vector of (continuous) responses. \code{Ytrain} 
+#' must be a vector or a one column matrix, and contains the response variable 
+#' for each observation.
+#' @param lambda.l1 a positive real value, in [0,1]. \code{lambda.l1} is the 
+#' sparse penalty parameter for the dimension reduction step by sparse PLS 
+#' (see details).
+#' @param ncomp a positive integer. \code{ncomp} is the number of PLS 
+#' components.
+#' @param weight.mat a (ntrain x ntrain) matrix used to weight the l2 metric 
+#' in the observation space, it can be the covariance inverse of the Ytrain 
+#' observations in a heteroskedastic context. If NULL, the l2 metric is the 
+#' standard one, corresponding to homoskedastic model (\code{weight.mat} is the 
+#' identity matrix).
+#' @param Xtest a (ntest x p) matrix containing the predictor values for the 
+#' test data set. \code{Xtest} may also be a vector of length p 
+#' (corresponding to only one test observation). Default value is NULL, 
+#' meaning that no prediction is performed.
+#' @param adapt a boolean value, indicating whether the sparse PLS selection 
+#' step sould be adaptive or not (see details).
+#' @param center.X a boolean value indicating whether the data matrices 
+#' \code{Xtrain} and \code{Xtest} (if provided) should be centered or not.
+#' @param scale.X}{aa boolean value indicating whether the data matrices 
+#' \code{Xtrain} and \code{Xtest} (if provided) should be scaled or not 
+#' (\code{scale.X=TRUE} implies \code{center.X=TRUE}).
+#' @param center.Y a boolean value indicating whether the response values 
+#' \code{Ytrain} set should be centered or not.
+#' @param scale.Y a boolean value indicating whether the response values 
+#' \code{Ytrain} should be scaled or not (\code{scale.Y=TRUE} implies 
+#' \code{center.Y=TRUE}).
+#' @param weighted.center a boolean value indicating whether the centering 
+#' should take into account the weighted l2 metric or not 
+#' (if TRUE, it requires that weighted.mat is non NULL).
+#' 
+#' @return An object with the following attributes
+#' \item{betahat}{the linear coefficients in model 
+#' \code{sYtrain = sXtrain \%*\% betahat + residuals}.}
+#' \item{betahat.nc}{the (p+1) vector containing the coefficients and intercept 
+#' for the non centered and non scaled model 
+#' \code{Ytrain = cbind(rep(1,ntrain),Xtrain) \%*\% betahat.nc + residuals.nc}.}
+#' \item{X.score}{a (n x ncomp) matrix being the observations coordinates or 
+#' scores in the new component basis produced by the compression step 
+#' (sparse PLS). Each column t.k of \code{X.score} is a SPLS component.}
+#' \item{X.score.low}{a (n x ncomp) matrix being the PLS components only 
+#' computed with the selected predictors.}
+#' \item{X.loading}{the (ncomp x p) matrix of coefficients in regression of 
+#' Xtrain over the new components \code{X.score}.}
+#' \item{Y.loading}{the (ncomp) vector of coefficients in regression of Ytrain 
+#' over the SPLS components \code{X.score}.}
+#' \item{X.weight}{a (p x ncomp) matrix being the coefficients of predictors 
+#' in each components produced by sparse PLS. Each column w.k of 
+#' \code{X.weight} verifies t.k = Xtrain x w.k (as a matrix product).}
+#' \item{A}{the active set of predictors selected by the procedures. \code{A} 
+#' is a subset of \code{1:p}.}
+#' \item{lenA}{Number of selected variables in \code{A}.}
+#' 
+#' @export
+spls.in <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, 
+                    adapt=TRUE, center.X=TRUE, center.Y=TRUE, 
+                    scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE) {
      
      #####################################################################
      #### Initialisation
