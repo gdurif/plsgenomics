@@ -64,12 +64,12 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	
 	# ncores
 	if ((!is.numeric(ncores)) || (round(ncores)-ncores!=0) || (ncores<1)) {
-		stop("Message from rirls.spls.tune: ncores is not of valid type")
+		stop("Message from spls.cv: ncores is not of valid type")
 	}
 	
 	# nfolds
 	if ((!is.numeric(nfolds)) || (round(nfolds)-nfolds!=0) || (nfolds<1)) {
-		stop("Message from rirls.spls.tune: nfolds is not of valid type")
+		stop("Message from spls.cv: nfolds is not of valid type")
 	}
 	
 	
@@ -252,7 +252,20 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 		### sur chaque fold, on calcule pour tout lambda.ridge.range
 		cv.grid.byfold <- matrix( sapply( split(grid, f=row.names(grid)), function(grid.line) {
 			
-			model <- tryCatch( spls.adapt.aux(Xtrain=Xtrain, sXtrain=sXtrain, Ytrain=Ytrain, sYtrain=sYtrain, lambda.l1=grid.line$lambda.l1, ncomp=grid.line$ncomp, weight.mat=weight.mat, Xtest=Xtest, sXtest=sXtest, adapt=adapt, meanXtrain=meanXtrain, meanYtrain=meanYtrain, sigmaXtrain=sigmaXtrain, sigmaYtrain=sigmaYtrain, center.X=center.X, center.Y=center.Y, scale.X=scale.X, scale.Y=scale.Y, weighted.center=weighted.center), error = function(e) { warnings("Message from spls.adapt.cv: error when fitting a model in crossvalidation"); return(NULL);} )
+			model <- tryCatch( spls.aux(Xtrain=Xtrain, sXtrain=sXtrain, 
+			                            Ytrain=Ytrain, sYtrain=sYtrain, 
+			                            lambda.l1=grid.line$lambda.l1, 
+			                            ncomp=grid.line$ncomp, 
+			                            weight.mat=weight.mat, 
+			                            Xtest=Xtest, sXtest=sXtest, 
+			                            adapt=adapt, meanXtrain=meanXtrain, 
+			                            meanYtrain=meanYtrain, 
+			                            sigmaXtrain=sigmaXtrain, 
+			                            sigmaYtrain=sigmaYtrain, 
+			                            center.X=center.X, center.Y=center.Y,
+			                            scale.X=scale.X, scale.Y=scale.Y, 
+			                            weighted.center=weighted.center), 
+			                   error = function(e) { warnings("Message from spls.adapt.cv: error when fitting a model in crossvalidation"); return(NULL);} )
 			
 			## resutls
 			res <- numeric(4)
