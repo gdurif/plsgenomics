@@ -1,6 +1,8 @@
-### rirls.spls.tune.R  (2014-10)
+### logit.spls.tune.R  (2014-10)
 ###
-###    Tuning parameters (ncomp, lambda.l1, lambda.ridge) for Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for binary response, by K-fold cross-validation
+###    Tuning parameters (ncomp, lambda.l1, lambda.ridge) for Ridge Iteratively 
+###    Reweighted Least Squares followed by Adaptive Sparse PLS regression for 
+###    binary response, by K-fold cross-validation
 ###
 ### Copyright 2014-10 Ghislain DURIF
 ###
@@ -22,10 +24,12 @@
 ### MA 02111-1307, USA
 
 
-rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-                            return.grid=FALSE, ncores=1, nfolds=10, nrun=1, 
-                            center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
-                            seed=NULL, verbose=TRUE) {
+logit.spls.cv <- function(X, Y, lambda.ridge.range, lambda.l1.range, 
+                          ncomp.range, adapt=TRUE, maxIter=100, 
+                          svd.decompose=TRUE, return.grid=FALSE, 
+                          ncores=1, nfolds=10, nrun=1, 
+                          center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
+                          seed=NULL, verbose=TRUE) {
      
      #####################################################################
      #### Initialisation
@@ -53,83 +57,83 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
      
      # if multicategorical response
      if(length(table(Y)) > 2) {
-          warning("message from rirls.spls.tune: multicategorical response")
-          results = m.rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
-                                      lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
-                                      adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
-                                      return.grid=return.grid, ncores=ncores, 
-                                      nfolds=nfolds, nrun=nrun, 
-                                      center.X=center.X, scale.X=scale.X, 
-                                      weighted.center=weighted.center, 
-                                      seed=seed, verbose=verbose)
+          warning("message from logit.spls.cv: multicategorical response")
+          results = m.logit.spls.cv(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
+                                    lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
+                                    adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
+                                    return.grid=return.grid, ncores=ncores, 
+                                    nfolds=nfolds, nrun=nrun, 
+                                    center.X=center.X, scale.X=scale.X, 
+                                    weighted.center=weighted.center, 
+                                    seed=seed, verbose=verbose)
           return(results)
      }
      
      # On X
      if ((!is.matrix(X)) || (!is.numeric(X))) {
-          stop("Message from rirls.spls.tune: X is not of valid type")
+          stop("Message from logit.spls.cv: X is not of valid type")
      }
      
      if (p==1) {
-          # stop("Message from rirls.spls.tune: p=1 is not valid")
-          warning("Message from rirls.spls.tune: p=1 is not valid, ncomp.range is set to 0")
+          # stop("Message from logit.spls.cv: p=1 is not valid")
+          warning("Message from logit.spls.cv: p=1 is not valid, ncomp.range is set to 0")
           ncomp.range <- 0
      }
      
      # On Y
      if ((!is.matrix(Y)) || (!is.numeric(Y))) {
-          stop("Message from rirls.spls.tune: Y is not of valid type")
+          stop("Message from logit.spls.cv: Y is not of valid type")
      }
      
      if (q != 1) {
-          stop("Message from rirls.spls.tune: Y must be univariate")
+          stop("Message from logit.spls.cv: Y must be univariate")
      }
      
      if (nrow(Y)!=n) {
-          stop("Message from rirls.spls.tune: the number of observations in Y is not equal to the number of row in X")
+          stop("Message from logit.spls.cv: the number of observations in Y is not equal to the number of row in X")
      }
      
      # On Ytrain value
      if (sum(is.na(Y))!=0) {
-          stop("Message from rirls.spls.tune: NA values in Ytrain")
+          stop("Message from logit.spls.cv: NA values in Ytrain")
      }
      
      if (sum(!(Y %in% c(0,1)))!=0) {
-          stop("Message from rirls.spls.tune: Y is not of valid type")
+          stop("Message from logit.spls.cv: Y is not of valid type")
      }
      
      if (sum(as.numeric(table(Y))==0)!=0) {
-          stop("Message from rirls.spls.tune: there are empty classes")
+          stop("Message from logit.spls.cv: there are empty classes")
      }
      
      # On hyper parameter: lambda.ridge, lambda.l1
      if (any(!is.numeric(lambda.ridge.range)) || any(lambda.ridge.range<0) || any(!is.numeric(lambda.l1.range)) || any(lambda.l1.range<0)) {
-          stop("Message from rirls.spls.tune: lambda is not of valid type")
+          stop("Message from logit.spls.cv: lambda is not of valid type")
      }
      
      # ncomp type
      if (any(!is.numeric(ncomp.range)) || any(round(ncomp.range)-ncomp.range!=0) || any(ncomp.range<0) || any(ncomp.range>p)) {
-          stop("Message from rirls.spls.tune: ncomp is not of valid type")
+          stop("Message from logit.spls.cv: ncomp is not of valid type")
      }
      
      
      # maxIter
      if ((!is.numeric(maxIter)) || (round(maxIter)-maxIter!=0) || (maxIter<1)) {
-          stop("Message from rirls.spls.tune: maxIter is not of valid type")
+          stop("Message from logit.spls.cv: maxIter is not of valid type")
      }
      
      # ncores
      if ((!is.numeric(ncores)) || (round(ncores)-ncores!=0) || (ncores<1)) {
-          stop("Message from rirls.spls.tune: ncores is not of valid type")
+          stop("Message from logit.spls.cv: ncores is not of valid type")
      }
      
      # nfolds
      if ((!is.numeric(nfolds)) || (round(nfolds)-nfolds!=0) || (nfolds<1)) {
-          stop("Message from rirls.spls.tune: nfolds is not of valid type")
+          stop("Message from logit.spls.cv: nfolds is not of valid type")
      }
      # necessary to insure that both classes are represented in each folds
      if( any(as.vector(table(Y))<nfolds)) {
-          stop("Message from rirls.spls.tune: there is a class defined by Y that has less members than the number of folds nfold")
+          stop("Message from logit.spls.cv: there is a class defined by Y that has less members than the number of folds nfold")
      }
      
      
@@ -214,7 +218,7 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
                
                # predicteur with non null variance < 2 ?
                if (sum(sigma2train < .Machine$double.eps)>(p-2)){
-                    stop("Message from rirls.spls.tune: the procedure stops because number of predictor variables with no null variance is less than 1.")
+                    stop("Message from logit.spls.cv: the procedure stops because number of predictor variables with no null variance is less than 1.")
                }
                
                warning("There are covariables with nul variance")
@@ -317,7 +321,7 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
           Ytest <- subset(Y, folds.obs[,run] == k)
           
           ### computations
-          model <- tryCatch( rirls.spls.aux(sXtrain=get(paste0("sXtrain_", k, "_", run)), 
+          model <- tryCatch( logit.spls.aux(sXtrain=get(paste0("sXtrain_", k, "_", run)), 
                                             sXtrain.nosvd=get(paste0("sXtrain.nosvd_", k, "_", run)), 
                                             Ytrain=Ytrain, lambda.ridge=gridRow$lambdaL2, 
                                             lambda.l1=gridRow$lambdaL1, ncomp=gridRow$ncomp, 
@@ -327,7 +331,7 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
                                             meanXtrain=meanXtrain_values[[k + (run-1)*nfolds]], 
                                             sigma2train=sigma2train_values[[k + (run-1)*nfolds]], 
                                             center.X=center.X, scale.X=scale.X, weighted.center=weighted.center), 
-                             error = function(e) { print(e); warnings("Message from rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
+                             error = function(e) { print(e); warnings("Message from logit.spls.cv: error when fitting a model in crossvalidation"); return(NULL);} )
           
           ## results
           res = numeric(8)
@@ -356,7 +360,7 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
      
      ## check number of NAs (=fails)
      if(sum(cv.grid.fails$nb.fail>0.8*nrun*nfolds) > (0.8*nrow(paramGrid))) {
-          warnings("Message from rirls.spls.tune: too many errors during the cross-validation process, the grid is not enough filled")
+          warnings("Message from logit.spls.cv: too many errors during the cross-validation process, the grid is not enough filled")
      }     
      
      ## compute the mean error over the folds for each point of the grid
@@ -389,8 +393,6 @@ rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.ran
           return( list(lambda.ridge.opt=lambdaL2.opt, lambda.l1.opt=lambdaL1.opt, ncomp.opt=ncomp.opt, conv.per=conv.per, cv.grid=NULL) )
           
      }
-
-
 
 }
 

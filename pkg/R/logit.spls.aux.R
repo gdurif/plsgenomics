@@ -1,4 +1,4 @@
-### rirls.spls.aux.R  (2014-10)
+### logit.spls.aux.R  (2014-10)
 ###
 ###    Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for binary responser
 ###    Short version for multiple call in cross-validation procedure
@@ -24,7 +24,9 @@
 ### MA 02111-1307, USA
 
 
-rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, lambda.l1, ncomp, sXtest, sXtest.nosvd=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+logit.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, 
+                           lambda.l1, ncomp, sXtest, sXtest.nosvd=NULL, 
+                           adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
                            meanXtrain, sigma2train, 
                            center.X=TRUE, scale.X=FALSE, weighted.center=TRUE) {
 	
@@ -52,7 +54,7 @@ rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, la
 	
 	#  Check WIRRLS convergence
 	if (converged==0) {
-		warning("Message from rirls.spls : Ridge IRLS did not converge; try another lambda.ridge value")
+		warning("Message from logit.spls.aux : Ridge IRLS did not converge; try another lambda.ridge value")
 	}
 	
 	# if ncomp == 0 then wirrls without spls step
@@ -138,7 +140,7 @@ rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, la
 	#### RETURN
 	
 	result <- list(Coefficients=Coefficients, hatYtest=hatYtest, converged=converged, lenA=resSPLS$lenA)
-	class(result) <- "rirls.spls.aux"
+	class(result) <- "logit.spls.aux"
 	return(result)
 		
 }
