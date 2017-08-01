@@ -26,3 +26,4 @@ URL: https://CRAN.R-project.org/package=plsgenomics
 Packaged: 2012-10-29 08:59:27 UTC; ripley
 Repository: CRAN
 Date/Publication: 2012-10-29 08:59:27
+RoxygenNote: 6.0.1

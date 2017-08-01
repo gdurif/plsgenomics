@@ -1,4 +1,4 @@
-### deprecated.R  (2014-10)
+### deprecated.R  (2017-08)
 ###
 ###    Deprecated functions (that are now renamed) from the 'plsgenomics'
 ###    package
