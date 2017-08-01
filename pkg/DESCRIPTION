@@ -4,9 +4,10 @@ Version: 1.4
 Title: PLS Analyses for Genomics
 Author: Anne-Laure Boulesteix <boulesteix@ibe.med.uni-muenchen.de>,
         Ghislain Durif <gd.dev@libertymail.net>,
-        Sophie Lambert-Lacroix <Sophie.Lambert@imag.fr>, Julie Peyre
-        <Julie.Peyre@imag.fr>, and Korbinian Strimmer
-        <strimmer@uni-leipzig.de>.
+        Sophie Lambert-Lacroix 
+        <sophie.lambert-lacroix@univ-grenoble-alpes.fr>, Julie Peyre
+        <Julie.Peyre@univ-grenoble-alpes.fr>, and Korbinian Strimmer
+        <k.strimmer@imperial.ac.uk>.
 Maintainer: Ghislain Durif <gd.dev@libertymail.net>
 Depends: R (>= 3.0), MASS, boot, parallel, reshape2, plyr
 Suggests:
