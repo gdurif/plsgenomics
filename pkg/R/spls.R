@@ -26,22 +26,20 @@
 ### MA 02111-1307, USA
 
 #' @title 
-#' Classification by Ridge Iteratively Reweighted Least Squares 
-#' followed by Adaptive Sparse PLS regression for binary response
+#' Adaptive Sparse Partial Least Squares (SPLS) regression
 #' @aliases spls
 #' 
 #' @description 
-#' The function \code{spls.adapt} performs compression, variable selection 
-#' in regression context (with possible prediction) using Durif et al. (2017) 
-#' adaptive SPLS algorithm, based on sparse PLS developped 
-#' by Chun and Keles (2010).
+#' The function \code{spls.adapt} performs compression and variable selection 
+#' in the context of linear regression (with possible prediction) 
+#' using Durif et al. (2017) adaptive SPLS algorithm.
 #' 
 #' @details 
 #' The columns of the data matrices \code{Xtrain} and \code{Xtest} may 
 #' not be standardized, since standardizing can be performed by the function 
 #' \code{spls} as a preliminary step before the algorithm is run.
 #' 
-#' The procedure described in Durif et al. (2017) is used to determine 
+#' The procedure described in Durif et al. (2017) is used to compute 
 #' latent sparse components that are used in a regression model.
 #' In addition, when a matrix \code{Xtest} is supplied, the procedure 
 #' predicts the response associated to these new values of the predictors.
@@ -70,7 +68,7 @@
 #' step sould be adaptive or not (see details).
 #' @param center.X a boolean value indicating whether the data matrices 
 #' \code{Xtrain} and \code{Xtest} (if provided) should be centered or not.
-#' @param scale.X}{aa boolean value indicating whether the data matrices 
+#' @param scale.X a boolean value indicating whether the data matrices 
 #' \code{Xtrain} and \code{Xtest} (if provided) should be scaled or not 
 #' (\code{scale.X=TRUE} implies \code{center.X=TRUE}).
 #' @param center.Y a boolean value indicating whether the response values 
@@ -83,9 +81,9 @@
 #' (if TRUE, it requires that weighted.mat is non NULL).
 #' 
 #' @return An object of class \code{spls} with the following attributes
-#' \item{Xtrain}{the ntrain x p data matrix.}
+#' \item{Xtrain}{the ntrain x p predictor matrix.}
 #' \item{Ytrain}{the response observations.}
-#' \item{sXtrain}{the centered if so and scaled if so data matrix.}
+#' \item{sXtrain}{the centered if so and scaled if so predictor matrix.}
 #' \item{sYtrain}{the centered if so and scaled if so response.}
 #' \item{betahat}{the linear coefficients in model 
 #' \code{sYtrain = sXtrain \%*\% betahat + residuals}.}
@@ -154,17 +152,13 @@
 #' Royal Statistical Society. Series B (Methodological), 72(1), 3-25. 
 #' doi:10.1111/j.1467-9868.2009.00723.x
 #' 
-#' Chung, D., & Keles, S. (2010). Sparse partial least squares classification 
-#' for high dimensional data. Statistical Applications in Genetics and 
-#' Molecular Biology, 9, Article17. doi:10.2202/1544-6115.1492
-#' 
 #' @author
 #' Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}). 
 #' 
 #' Adapted in part from spls code by H. Chun, D. Chung and S.Keles 
 #' (\url{http://cran.r-project.org/web/packages/spls/index.html}).
 #' 
-#' @seealso \code{\link{logit.spls.cv}}
+#' @seealso \code{\link{spls.cv}}
 #' 
 #' @examples
 #' ### load plsgenomics library
