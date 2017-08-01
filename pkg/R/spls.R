@@ -28,7 +28,7 @@
 #' @title 
 #' Classification by Ridge Iteratively Reweighted Least Squares 
 #' followed by Adaptive Sparse PLS regression for binary response
-#' @aliases spls.adapt
+#' @aliases spls
 #' 
 #' @description 
 #' The function \code{spls.adapt} performs compression, variable selection 
@@ -39,7 +39,8 @@
 #' @details 
 #' The columns of the data matrices \code{Xtrain} and \code{Xtest} may 
 #' not be standardized, since standardizing can be performed by the function 
-#' \code{spls} as a preliminary step before the algorithm is run. 
+#' \code{spls} as a preliminary step before the algorithm is run.
+#' 
 #' The procedure described in Durif et al. (2017) is used to determine 
 #' latent sparse components that are used in a regression model.
 #' In addition, when a matrix \code{Xtest} is supplied, the procedure 
