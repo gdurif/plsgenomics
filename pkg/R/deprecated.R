@@ -31,13 +31,19 @@
 #' @name plsgenomics-deprecated
 #' @param ... Parameters to be passed to the modern version of the function
 #' @docType package
-#' @export  spls.adapt.tune
-#' @aliases spls.adapt.tune
+#' @export spls.adapt spls.adapt.tune
+#' @aliases spls.adapt spls.adapt.tune
 #' @section Details:
 #' \tabular{rl}{
+#'     \code{spls.adapt} \tab is replaced by \code{\link{spls}}\cr
 #'     \code{spls.adapt.tune} \tab is replaced by \code{\link{spls.cv}}\cr
 #' }
-#'  
+#'
+spls.adapt <- function(...) {
+     .Deprecated("spls", package="plsgenomics")
+     spls(...)
+}
+
 spls.adapt.tune <- function(...) {
      .Deprecated("spls.cv", package="plsgenomics")
      spls.cv(...)

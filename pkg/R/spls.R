@@ -1,4 +1,4 @@
-### spls.adapt.R  (2014-10)
+### spls.R  (2014-10)
 ###
 ###    Adaptive Sparse PLS regression for continuous response
 ###
@@ -26,7 +26,9 @@
 ### MA 02111-1307, USA
 
 
-spls.adapt <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, adapt=TRUE, center.X=TRUE, center.Y=TRUE, scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE) {
+spls <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL, 
+                 adapt=TRUE, center.X=TRUE, center.Y=TRUE, 
+                 scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE) {
 	
 	#####################################################################
 	#### Initialisation
@@ -48,11 +50,11 @@ spls.adapt <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=
 	#####################################################################
 	# On Xtrain
 	if ((!is.matrix(Xtrain)) || (!is.numeric(Xtrain))) {
-		stop("Message from spls.adapt: Xtrain is not of valid type")
+		stop("Message from spls: Xtrain is not of valid type")
 	}
 	
 	if (p==1) {
-		stop("Message from spls.adapt: p=1 is not valid")}
+		stop("Message from spls: p=1 is not valid")}
 	
 	# On Xtest if necessary
 	if (!is.null(Xtest)) {
@@ -65,24 +67,24 @@ spls.adapt <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=
 		ntest <- nrow(Xtest) 
 		
 		if ((!is.matrix(Xtest)) || (!is.numeric(Xtest))) {
-			stop("Message from spls.adapt: Xtest is not of valid type")}
+			stop("Message from spls: Xtest is not of valid type")}
 		
 		if (p != ncol(Xtest)) {
-			stop("Message from spls.adapt: columns of Xtest and columns of Xtrain must be equal")
+			stop("Message from spls: columns of Xtest and columns of Xtrain must be equal")
 		}	
 	}
 	
 	# On Ytrain
 	if ((!is.matrix(Ytrain)) || (!is.numeric(Ytrain))) {
-		stop("Message from spls.adapt: Ytrain is not of valid type")
+		stop("Message from spls: Ytrain is not of valid type")
 	}
 	
 	if (q != 1) {
-		stop("Message from spls.adapt: Ytrain must be univariate")
+		stop("Message from spls: Ytrain must be univariate")
 	}
 	
 	if (nrow(Ytrain)!=ntrain) {
-		stop("Message from spls.adapt: the number of observations in Ytrain is not equal to the Xtrain row number")
+		stop("Message from spls: the number of observations in Ytrain is not equal to the Xtrain row number")
 	}
 	
 	# On weighting matrix V
@@ -90,10 +92,10 @@ spls.adapt <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=
 		V <- as.matrix(weight.mat) 
 		
 		if ((!is.matrix(V)) || (!is.numeric(V))) {
-			stop("Message from spls.adapt: V is not of valid type")}
+			stop("Message from spls: V is not of valid type")}
 		
 		if ((ntrain != ncol(V)) || (ntrain != nrow(V))) {
-			stop("Message from spls.adapt: wrong dimension for V, must be a square matrix of size the number of observations in Xtrain")
+			stop("Message from spls: wrong dimension for V, must be a square matrix of size the number of observations in Xtrain")
 		}
 	} else { # no weighting in scalar product
 		V <- diag(rep(1, ntrain), nrow=ntrain, ncol=ntrain)
@@ -101,17 +103,17 @@ spls.adapt <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=
 	
 	# On hyper parameter: lambda.ridge, lambda.l1
 	if ((!is.numeric(lambda.l1)) || (lambda.l1<0) || (lambda.l1>1)) {
-		stop("Message from spls.adapt: lambda is not of valid type")
+		stop("Message from spls: lambda is not of valid type")
 	}
 	
 	# ncomp type
 	if ((!is.numeric(ncomp)) || (round(ncomp)-ncomp!=0) || (ncomp<1) || (ncomp>p)) {
-		stop("Message from spls.adapt: ncomp is not of valid type")
+		stop("Message from spls: ncomp is not of valid type")
 	}
 	
 	# On weighted.center
 	if ( (weighted.center) && (is.null(weight.mat))) {
-		stop("Message from spls.adapt: if the centering is weighted, the weighting matrix V should be provided")
+		stop("Message from spls: if the centering is weighted, the weighting matrix V should be provided")
 	}
 	
 	
@@ -363,7 +365,7 @@ spls.adapt <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=
 				 lambda.l1=lambda.l1, ncomp=ncomp,
 				 V=V, adapt=adapt)
 	
-	class(result) <- "spls.adapt"
+	class(result) <- "spls"
 	return(result)
 	
 	
