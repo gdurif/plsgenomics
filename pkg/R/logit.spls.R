@@ -1,4 +1,4 @@
-### rirls.spls.R  (2014-10)
+### logit.spls.R  (2014-10)
 ###
 ###    Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for binary response
 ###
@@ -23,7 +23,8 @@
 ### MA 02111-1307, USA
 
 
-rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+logit.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, 
+                       Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
                        center.X=TRUE, scale.X=FALSE, weighted.center=TRUE) {
 	
 	
@@ -56,8 +57,8 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	
 	# if multicategorical response
 	if(length(table(Ytrain)) > 2) {
-	     warning("message from rirls.spls: multicategorical response")
-	     results = m.rirls.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=lambda.ridge, 
+	     warning("message from logit.spls: multicategorical response")
+	     results = m.logit.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=lambda.ridge, 
 	                            lambda.l1=lambda.l1, ncomp=ncomp, Xtest=Xtest, adapt=adapt, 
 	                            maxIter=maxIter, svd.decompose=svd.decompose, 
 	                            center.X=center.X, scale.X=scale.X, weighted.center=weighted.center)
@@ -66,17 +67,17 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	
 	# On Xtrain
 	if ((!is.matrix(Xtrain)) || (!is.numeric(Xtrain))) {
-		stop("Message from rirls.spls: Xtrain is not of valid type")
+		stop("Message from logit.spls: Xtrain is not of valid type")
 	}
 	
 	if (ncomp > p) {
-	     warning("Message from rirls.spls: ncomp>p is not valid, ncomp is set to p")
+	     warning("Message from logit.spls: ncomp>p is not valid, ncomp is set to p")
 	     ncomp <- p
 	}
 	
 	if (p==1) {
-	     # stop("Message from rirls.spls: p=1 is not valid")
-	     warning("Message from rirls.spls: p=1 is not valid, ncomp is set to 0")
+	     # stop("Message from logit.spls: p=1 is not valid")
+	     warning("Message from logit.spls: p=1 is not valid, ncomp is set to 0")
 	     ncomp <- 0
 	}
 	
@@ -91,53 +92,53 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 		ntest <- nrow(Xtest) 
 		
 		if ((!is.matrix(Xtest)) || (!is.numeric(Xtest))) {
-			stop("Message from rirls.spls: Xtest is not of valid type")
+			stop("Message from logit.spls: Xtest is not of valid type")
 		}
 		
 		if (p != ncol(Xtest)) {
-			stop("Message from rirls.spls: columns of Xtest and columns of Xtrain must be equal")
+			stop("Message from logit.spls: columns of Xtest and columns of Xtrain must be equal")
 		}	
 	}
 	
 	# On Ytrain
 	if ((!is.matrix(Ytrain)) || (!is.numeric(Ytrain))) {
-		stop("Message from rirls.spls: Ytrain is not of valid type")
+		stop("Message from logit.spls: Ytrain is not of valid type")
 	}
 	
 	if (q != 1) {
-		stop("Message from rirls.spls: Ytrain must be univariate")
+		stop("Message from logit.spls: Ytrain must be univariate")
 	}
 	
 	if (nrow(Ytrain)!=ntrain) {
-		stop("Message from rirls.spls: the number of observations in Ytrain is not equal to the Xtrain row number")
+		stop("Message from logit.spls: the number of observations in Ytrain is not equal to the Xtrain row number")
 	}
 	
 	# On Ytrain value
 	if (sum(is.na(Ytrain))!=0) {
-		stop("Message from rirls.spls: NA values in Ytrain")
+		stop("Message from logit.spls: NA values in Ytrain")
 	}
 	
 	if (sum(!(Ytrain %in% c(0,1)))!=0) {
-		stop("Message from rirls.spls: Ytrain is not of valid type")
+		stop("Message from logit.spls: Ytrain is not of valid type")
 	}
 	
 	if (sum(as.numeric(table(Ytrain))==0)!=0) {
-		stop("Message from rirls.spls: there are empty classes")
+		stop("Message from logit.spls: there are empty classes")
 	}
 	
 	# On hyper parameter: lambda.ridge, lambda.l1
 	if ((!is.numeric(lambda.ridge)) || (lambda.ridge<0) || (!is.numeric(lambda.l1)) || (lambda.l1<0)) {
-		stop("Message from rirls.spls: lambda is not of valid type")
+		stop("Message from logit.spls: lambda is not of valid type")
 	}
 	
 	# ncomp type
 	if ((!is.numeric(ncomp)) || (round(ncomp)-ncomp!=0) || (ncomp<0) || (ncomp>p)) {
-		stop("Message from rirls.spls: ncomp is not of valid type")
+		stop("Message from logit.spls: ncomp is not of valid type")
 	}
 	
 	# maxIter
 	if ((!is.numeric(maxIter)) || (round(maxIter)-maxIter!=0) || (maxIter<1)) {
-		stop("Message from rirls.spls: maxIter is not of valid type")
+		stop("Message from logit.spls: maxIter is not of valid type")
 	}
 	
 	
@@ -158,7 +159,7 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 		
 		# predicteur with non null variance < 2 ?
 		if (sum(sigma2train < .Machine$double.eps)>(p-2)){
-			stop("Message from rirls.spls: the procedure stops because number of predictor variables with no null variance is less than 1.")
+			stop("Message from logit.spls: the procedure stops because number of predictor variables with no null variance is less than 1.")
 		}
 		
 		warning("There are covariables with nul variance")
@@ -246,7 +247,7 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	
 	#  Check WIRRLS convergence
 	if (converged==0) {
-		warning("Message from rirls.spls : Ridge IRLS did not converge; try another lambda.ridge value")
+		warning("Message from logit.spls : Ridge IRLS did not converge; try another lambda.ridge value")
 	}
 	
 	# if ncomp == 0 then wirrls without spls step
@@ -357,7 +358,7 @@ rirls.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest=NUL
 	               sXtrain=resSPLS$sXtrain, sPseudoVar=resSPLS$sYtrain, 
 	               lambda.ridge=lambda.ridge, lambda.l1=lambda.l1, ncomp=ncomp, 
 	               V=resSPLS$V, proba=proba, proba.test=proba.test, Xtrain=Xtrain, Ytrain=Ytrain)
-	class(result) <- "rirls.spls"
+	class(result) <- "logit.spls"
 	return(result)
 	
 	
