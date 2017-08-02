@@ -118,7 +118,6 @@
 #' @seealso \code{\link{logit.spls}}
 #' 
 #' @examples
-#' \dontrun{
 #' ## between 5~15 seconds
 #' ### load plsgenomics library
 #' library(plsgenomics)
@@ -148,7 +147,6 @@
 #'                        return.grid=TRUE, ncores=1, nfolds=10)
 #'                        
 #' str(cv1)
-#' }
 #' 
 #' @export
 logit.spls.cv <- function(X, Y, lambda.ridge.range, lambda.l1.range, 

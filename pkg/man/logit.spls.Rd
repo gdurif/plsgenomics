@@ -102,7 +102,6 @@ In addition, when a matrix \code{Xtest} is supplied, the procedure
 predicts the response associated to these new values of the predictors.
 }
 \examples{
-\dontrun{
 ### load plsgenomics library
 library(plsgenomics)
 
@@ -133,7 +132,6 @@ str(model1)
 
 ### prediction error rate
 sum(model1$hatYtest!=Ytest) / length(index.test)
-}
 
 }
 \references{

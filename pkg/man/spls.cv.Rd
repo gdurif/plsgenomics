@@ -101,7 +101,6 @@ available on GNU/Linux and MacOS. Users of Microsoft Windows can refer to
 the README file in the source to be able to use a mclapply type function.
 }
 \examples{
-\dontrun{
 ### load plsgenomics library
 library(plsgenomics)
 
@@ -126,7 +125,6 @@ str(cv1)
 ### otpimal values
 cv1$lambda.l1.opt
 cv1$ncomp.opt
-}
 
 }
 \references{
