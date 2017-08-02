@@ -93,7 +93,7 @@ logit.spls.cv <- function(X, Y, lambda.ridge.range, lambda.l1.range,
           stop("Message from logit.spls.cv: the number of observations in Y is not equal to the number of row in X")
      }
      
-     # On Ytrain value
+     # On Y value
      if (sum(is.na(Y))!=0) {
           stop("Message from logit.spls.cv: NA values in Ytrain")
      }
@@ -131,6 +131,12 @@ logit.spls.cv <- function(X, Y, lambda.ridge.range, lambda.l1.range,
      if ((!is.numeric(nfolds)) || (round(nfolds)-nfolds!=0) || (nfolds<1)) {
           stop("Message from logit.spls.cv: nfolds is not of valid type")
      }
+     
+     # nrun
+     if ((!is.numeric(nrun)) || (round(nrun)-nrun!=0) || (nrun<1)) {
+          stop("Message from logit.spls.cv: nrun is not of valid type")
+     }
+     
      # necessary to insure that both classes are represented in each folds
      if( any(as.vector(table(Y))<nfolds)) {
           stop("Message from logit.spls.cv: there is a class defined by Y that has less members than the number of folds nfold")
