@@ -2,7 +2,6 @@
 % Please edit documentation in R/logit.spls.R
 \name{logit.spls}
 \alias{logit.spls}
-\alias{spls}
 \title{Classification procedure for binary response based on a logistic model, 
 solved by a combination of the Ridge Iteratively Reweighted Least Squares 
 RIRLS) algorithm and the Adaptive Sparse PLS (SPLS) regression}
@@ -95,7 +94,7 @@ using Durif et al. (2015) RIRLS and SPLS-based algorithm.
 \details{
 The columns of the data matrices \code{Xtrain} and \code{Xtest} may 
 not be standardized, since standardizing can be performed by the function 
-\code{logit.spls} as a preliminary step before the algorithm is run.
+\code{logit.spls} as a preliminary step.
 
 The procedure described in Durif et al. (2017) is used to compute
 latent sparse components that are used in a logistic regression model.
@@ -142,17 +141,10 @@ Durif G., Modolo L., Michaelsson J., Mold J. E., Lambert-Lacroix S.,
 Picard F. (2017). High Dimensional Classification with combined Adaptive 
 Sparse PLS and Logistic Regression, (in prep), 
 available on (\url{http://arxiv.org/abs/1502.05933}).
-
-Chung, D., & Keles, S. (2010). Sparse partial least squares classification 
-for high dimensional data. Statistical Applications in Genetics and 
-Molecular Biology, 9, Article17. doi:10.2202/1544-6115.1492
 }
 \seealso{
 \code{\link{spls}}, \code{\link{logit.spls.cv}}
 }
 \author{
-Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}). 
-
-Adapted in part from spls code by H. Chun, D. Chung and S.Keles 
-(\url{http://cran.r-project.org/web/packages/spls/index.html}).
+Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}).
 }
