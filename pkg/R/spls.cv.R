@@ -161,6 +161,33 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	#### Tests on type input
 	#####################################################################
 	
+	# On X
+	if ((!is.matrix(X)) || (!is.numeric(X))) {
+	     stop("Message from spls.cv: X is not of valid type")
+	}
+	
+	if (p==1) {
+	     stop("Message from spls.cv: p=1 is not valid")
+	}
+	
+	# On Y
+	if ((!is.matrix(Y)) || (!is.numeric(Y))) {
+	     stop("Message from spls.cv: Y is not of valid type")
+	}
+	
+	if (q != 1) {
+	     stop("Message from spls.cv: Y must be univariate")
+	}
+	
+	if (nrow(Y)!=n) {
+	     stop("Message from spls.cv: the number of observations in Y is not equal to the number of row in X")
+	}
+	
+	# On Y value
+	if (sum(is.na(Y))!=0) {
+	     stop("Message from spls.cv: NA values in Ytrain")
+	}
+	
 	# On weighting matrix V
 	if(!is.null(weight.mat)) { # weighting in scalar product (in observation space of dimension n)
 		Vfull <- as.matrix(weight.mat) 
@@ -190,19 +217,44 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 		stop("Message from spls.cv: nfolds is not of valid type")
 	}
 	
+	# nrun
+	if ((!is.numeric(nrun)) || (round(nrun)-nrun!=0) || (nrun<1)) {
+	     stop("Message from spls.cv: nfolds is not of valid type")
+	}
+	
+	# On hyper parameter: lambda.ridge, lambda.l1
+	if ( (sum(!is.numeric(lambda.l1.range))) || (sum(lambda.l1.range<0)) || (sum(lambda.l1.range>1)) ) {
+	     stop("Message from spls.adapt: lambda is not of valid type")
+	}
+	
+	# ncomp type
+	if ( (sum(!is.numeric(ncomp.range))) || (sum(round(ncomp.range)-ncomp.range!=0)) || (sum(ncomp.range<1)) || (sum(ncomp.range>p)) ) {
+	     stop("Message from spls.adapt: ncomp is not of valid type")
+	}
+	
 	
 	#####################################################################
 	#### Cross-validation: computation on each fold over the entire grid
 	#####################################################################
 	
 	## the train set is partitioned into nfolds part, each observation is assigned into a fold
-	fold.obs <- sort(rep(1:nfolds, length.out = n))
+	## draw nrun nfolds partition
+	folds.obs = sapply(1:nrun, function(run) {
+	     return(sample(x=rep(1:nfolds, length.out = n), size=n, replace=FALSE))
+	})
 	
 	## hyper-parameter grid
 	grid <- expand.grid(lambda.l1=lambda.l1.range, ncomp=ncomp.range, KEEP.OUT.ATTRS=FALSE)
 	
-	cv.grid.allfolds <- matrix( unlist( mclapply(1:nfolds, function(k) {
+	## folds x run grid
+	folds.grid = expand.grid(fold=1:nfolds, run=1:nrun, KEEP.OUT.ATTRS=FALSE)
+	
+	## cv grid
+	cv.grid.allfolds <- matrix( unlist( mclapply(split(folds.grid, f=row.names(paramGrid)), function(gridRow) {
 		
+	     k <- gridRow$fold
+	     run <- gridRow$run
+	     
 		
 		#### train and test variable
 		Xtrain <- subset(X, fold.obs != k)
@@ -215,57 +267,14 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 		
 		ntest <- nrow(Xtest)
 		
-		V <- Vfull[fold.obs == k, fold.obs == k]
+		V <- Vfull[fold.obs != k, fold.obs != k]
 		
-		#####################################################################
-		#### Tests on type input
-		#####################################################################
-		# On Xtrain
-		if ((!is.matrix(Xtrain)) || (!is.numeric(Xtrain))) {
-			stop("Message from spls.adapt: Xtrain is not of valid type")
-		}
-		
-		if (p==1) {
-			stop("Message from spls.adapt: p=1 is not valid")}
-		
-		# On Xtest if necessary	
 		if (is.vector(Xtest)==TRUE) {
 			Xtest <- matrix(Xtest,nrow=1)
 		}
 		
 		Xtest <- as.matrix(Xtest)
-		ntest <- nrow(Xtest) 
-		
-		if ((!is.matrix(Xtest)) || (!is.numeric(Xtest))) {
-			stop("Message from spls.adapt: Xtest is not of valid type")}
-		
-		if (p != ncol(Xtest)) {
-			stop("Message from spls.adapt: columns of Xtest and columns of Xtrain must be equal")
-		}
-		
-		# On Ytrain
-		if ((!is.matrix(Ytrain)) || (!is.numeric(Ytrain))) {
-			stop("Message from spls.adapt: Ytrain is not of valid type")
-		}
-		
-		if (q != 1) {
-			stop("Message from spls.adapt: Ytrain must be univariate")
-		}
-		
-		if (nrow(Ytrain)!=ntrain) {
-			stop("Message from spls.adapt: the number of observations in Ytrain is not equal to the Xtrain row number")
-		}
-		
-		# On hyper parameter: lambda.ridge, lambda.l1
-		if ( (sum(!is.numeric(lambda.l1.range))) || (sum(lambda.l1.range<0)) || (sum(lambda.l1.range>1)) ) {
-			stop("Message from spls.adapt: lambda is not of valid type")
-		}
-		
-		# ncomp type
-		if ( (sum(!is.numeric(ncomp.range))) || (sum(round(ncomp.range)-ncomp.range!=0)) || (sum(ncomp.range<1)) || (sum(ncomp.range>p)) ) {
-			stop("Message from spls.adapt: ncomp is not of valid type")
-		}
-		
+		ntest <- nrow(Xtest)
 		
 		#####################################################################
 		#### centering and scaling
@@ -386,25 +395,25 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 			                   error = function(e) { warnings("Message from spls.adapt.cv: error when fitting a model in crossvalidation"); return(NULL);} )
 			
 			## resutls
-			res <- numeric(4)
+			res <- numeric(5)
 			
 			if(!is.null(model)) {
-				res <- c(grid.line$lambda.l1, grid.line$ncomp, k, sum((model$hatYtest - sYtest)^2) / ntest)
+				res <- c(grid.line$lambda.l1, grid.line$ncomp, run, k, sum((model$hatYtest - sYtest)^2) / ntest)
 			} else {
-				res <- c(grid.line$lambda.l1, grid.line$ncomp, k, NA)
+				res <- c(grid.line$lambda.l1, grid.line$ncomp, run, k, NA)
 			}
 			
 			return(res)
 			
-		}), ncol=4, byrow=TRUE)
+		}), ncol=5, byrow=TRUE)
 		
 		return( t(cv.grid.byfold) )
 		
 		
-	}, mc.cores = ncores, mc.silent=TRUE)), ncol=4, byrow=TRUE)
+	}, mc.cores = ncores, mc.silent=TRUE)), ncol=5, byrow=TRUE)
 	
 	cv.grid.allfolds <- data.frame(cv.grid.allfolds)
-	colnames(cv.grid.allfolds) <- c("lambda.l1", "ncomp", "nfold", "error")
+	colnames(cv.grid.allfolds) <- c("lambda.l1", "ncomp", "run", "fold", "error")
 	
 	#####################################################################
 	#### Find the optimal point in the grid
