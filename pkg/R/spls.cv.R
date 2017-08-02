@@ -28,15 +28,15 @@
 #' @aliases spls.cv
 #' 
 #' @description 
-#' The function \code{spls.cv} tuns the hyper-parameter values used 
-#' in the \code{spls} procedure, by minimizing the mean squared error 
-#' of prediction over the hyper-parameter grid, 
+#' The function \code{spls.cv} chooses the optimal values for the 
+#' hyper-parameter of the \code{spls} procedure, by minimizing the mean 
+#' squared error of prediction over the hyper-parameter grid, 
 #' using Durif et al. (2017) adaptive SPLS algorithm.
 #' 
 #' @details 
 #' The columns of the data matrices \code{Xtrain} and \code{Xtest} may not 
 #' be standardized, since standardizing can be performed by the function 
-#' \code{spls.cv} as a preliminary step before the algorithm is run.
+#' \code{spls.cv} as a preliminary step.
 #' 
 #' The procedure is described in Durif et al. (2015). The K-fold 
 #' cross-validation can be summarize as follow: the train set is partitioned 
@@ -58,10 +58,10 @@
 #' each observation.
 #' @param lambda.l1.range a vecor of positive real values, in [0,1]. 
 #' \code{lambda.l1} is the sparse penalty parameter for the dimension 
-#' reduction step by sparse PLS (see details), the optimal values will be 
+#' reduction step by sparse PLS (see details), the optimal value will be 
 #' chosen among \code{lambda.l1.range}.
 #' @param ncomp.range a vector of positive integers. \code{ncomp} is the 
-#' number of PLS components. The optimal values will be chosen 
+#' number of PLS components. The optimal value will be chosen 
 #' among \code{ncomp.range}.
 #' @param weight.mat a (ntrain x ntrain) matrix used to weight the l2 metric 
 #' in the observation space, it can be the covariance inverse of the Ytrain 
@@ -128,11 +128,11 @@
 #' Y <- sample1$Y
 #' 
 #' ### tuning the hyper-parameters
-#' cv1 <- spls.adapt.tune(X=X, Y=Y, lambda.l1.range=seq(0.05, 0.95, by=0.1), 
-#'                        ncomp.range=1:2, weight.mat=NULL, adapt=TRUE, 
-#'                        center.X=TRUE, center.Y=TRUE, 
-#'                        scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
-#'                        return.grid=TRUE, ncores=1, nfolds=10, nrun=1)
+#' cv1 <- spls.cv(X=X, Y=Y, lambda.l1.range=seq(0.05, 0.95, by=0.1), 
+#'                ncomp.range=1:10, weight.mat=NULL, adapt=TRUE, 
+#'                center.X=TRUE, center.Y=TRUE, 
+#'                scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
+#'                return.grid=TRUE, ncores=1, nfolds=10, nrun=1)
 #' str(cv1)
 #' 
 #' ### otpimal values

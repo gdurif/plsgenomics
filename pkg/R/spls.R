@@ -37,7 +37,7 @@
 #' @details 
 #' The columns of the data matrices \code{Xtrain} and \code{Xtest} may 
 #' not be standardized, since standardizing can be performed by the function 
-#' \code{spls} as a preliminary step before the algorithm is run.
+#' \code{spls} as a preliminary step.
 #' 
 #' The procedure described in Durif et al. (2017) is used to compute 
 #' latent sparse components that are used in a regression model.
