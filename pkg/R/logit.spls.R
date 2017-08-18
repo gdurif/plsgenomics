@@ -428,7 +428,11 @@ logit.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp,
 		VmeansXtrain <- t(diagV)%*%sXtrain/sumV
 		
 		# SPLS(X, pseudo-var, weighting = V)
-		resSPLS = spls.adapt(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, weight.mat=V, lambda.l1=lambda.l1, adapt=adapt, center.X=center.X, scale.X=scale.X, center.Y=TRUE, scale.Y=FALSE, weighted.center=weighted.center)
+		resSPLS = spls(Xtrain=sXtrain, Ytrain=pseudoVar, ncomp=ncomp, 
+		               weight.mat=V, lambda.l1=lambda.l1, adapt=adapt, 
+		               center.X=center.X, scale.X=scale.X, 
+		               center.Y=TRUE, scale.Y=FALSE, 
+		               weighted.center=weighted.center)
 		
 		BETA = resSPLS$betahat.nc
 		
