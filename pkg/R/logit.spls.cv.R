@@ -232,7 +232,8 @@ logit.spls.cv <- function(X, Y, lambda.ridge.range, lambda.l1.range,
      }
      
      # On hyper parameter: lambda.ridge, lambda.l1
-     if (any(!is.numeric(lambda.ridge.range)) || any(lambda.ridge.range<0) || any(!is.numeric(lambda.l1.range)) || any(lambda.l1.range<0)) {
+     if (any(!is.numeric(lambda.ridge.range)) || any(lambda.ridge.range<0) 
+         || any(!is.numeric(lambda.l1.range)) || any(lambda.l1.range<0) || any(lambda.l1.range>1)) {
           stop("Message from logit.spls.cv: lambda is not of valid type")
      }
      
