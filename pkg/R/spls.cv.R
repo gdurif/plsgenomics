@@ -38,7 +38,7 @@
 #' be standardized, since standardizing can be performed by the function 
 #' \code{spls.cv} as a preliminary step.
 #' 
-#' The procedure is described in Durif et al. (2015). The K-fold 
+#' The procedure is described in Durif et al. (2017). The K-fold 
 #' cross-validation can be summarize as follow: the train set is partitioned 
 #' into K folds, for each value of hyper-parameters the model is fit K times, 
 #' using each fold to compute the prediction error rate, and fitting the 
