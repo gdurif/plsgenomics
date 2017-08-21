@@ -39,7 +39,7 @@
 #' since standardizing is performed by the function \code{logit.spls.cv} 
 #' as a preliminary step. 
 #' 
-#' The procedure is described in Durif et al. (2015). The K-fold 
+#' The procedure is described in Durif et al. (2017). The K-fold 
 #' cross-validation can be summarize as follow: the train set is partitioned 
 #' into K folds, for each value of hyper-parameters the model is fit K times, 
 #' using each fold to compute the prediction error rate, and fitting the 
@@ -115,17 +115,16 @@
 #' @author
 #' Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}).
 #' 
-#' @seealso \code{\link{logit.spls}}
+#' @seealso \code{\link{logit.spls}}, \code{\link{logit.spls.stab}}
 #' 
 #' @examples
-#' ## between 5~15 seconds
 #' ### load plsgenomics library
 #' library(plsgenomics)
 #' 
 #' ### generating data
 #' n <- 100
-#' p <- 1000
-#' sample1 <- sample.bin(n=n, p=p, kstar=20, lstar=2, 
+#' p <- 100
+#' sample1 <- sample.bin(n=n, p=p, kstar=10, lstar=2, 
 #'                       beta.min=0.25, beta.max=0.75, mean.H=0.2, 
 #'                       sigma.H=10, sigma.F=5)
 #' 
@@ -140,11 +139,11 @@
 #' lambda.ridge.range <- signif(logspace(d1 <- -2, d2 <- 3, n=21), digits=3)
 #' 
 #' ### tuning the hyper-parameters
-#' cv1 <- rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
-#'                        lambda.l1.range=lambda.l1.range, 
-#'                        ncomp.range=ncomp.range, 
-#'                        adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-#'                        return.grid=TRUE, ncores=1, nfolds=10)
+#' cv1 <- logit.spls.cv(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
+#'                      lambda.l1.range=lambda.l1.range, 
+#'                      ncomp.range=ncomp.range, 
+#'                      adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+#'                      return.grid=TRUE, ncores=1, nfolds=10)
 #'                        
 #' str(cv1)
 #' 
@@ -183,14 +182,14 @@ logit.spls.cv <- function(X, Y, lambda.ridge.range, lambda.l1.range,
      # if multicategorical response
      if(length(table(Y)) > 2) {
           warning("message from logit.spls.cv: multicategorical response")
-          results = m.logit.spls.cv(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
-                                    lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
-                                    adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
-                                    return.grid=return.grid, ncores=ncores, 
-                                    nfolds=nfolds, nrun=nrun, 
-                                    center.X=center.X, scale.X=scale.X, 
-                                    weighted.center=weighted.center, 
-                                    seed=seed, verbose=verbose)
+          results = multinom.spls.cv(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
+                                     lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
+                                     adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
+                                     return.grid=return.grid, ncores=ncores, 
+                                     nfolds=nfolds, nrun=nrun, 
+                                     center.X=center.X, scale.X=scale.X, 
+                                     weighted.center=weighted.center, 
+                                     seed=seed, verbose=verbose)
           return(results)
      }
      

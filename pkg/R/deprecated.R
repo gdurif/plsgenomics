@@ -46,11 +46,15 @@ rirls.spls <- function(...) {
      logit.spls(...)
 }
 
+rirls.spls.stab <- function(...) {
+     .Deprecated("logit.spls.stab", package="plsgenomics")
+     logit.spls.stab(...)
+}
+
 rirls.spls.tune <- function(...) {
      .Deprecated("logit.spls", package="plsgenomics")
      logit.spls.cv(...)
 }
-
 
 spls.adapt <- function(...) {
      .Deprecated("spls", package="plsgenomics")
