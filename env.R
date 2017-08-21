@@ -3,6 +3,8 @@ library(boot)
 library(plyr)
 library(fields)
 library(RhpcBLASctl)
+blas_set_num_threads(1)
+omp_set_num_threads(1)
 
 source("sourceDir.R")
 sourceDir("pkg/R")
