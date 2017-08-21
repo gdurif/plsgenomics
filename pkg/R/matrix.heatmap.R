@@ -16,21 +16,42 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-#' @title matrixHeatmap
-#'
-#' @description
-#' plot the entries of a matrix as a heatmap
-#'
+#' @title
+#' Heatmap visualization for matrix
+#' @aliases matrix.heatmap
+#' 
+#' @description 
+#' Visualization of matrix entries in heatmap format, the color scale 
+#' depends on the numerical values.
+#' 
 #' @details
-#' hello world
-#'
+#' The function \code{matrix.heatmap} is a wrapper for the function 
+#' \code{\link[fields]{image.plot}} from the 'fields' package.
+#' 
+#' @param mat the matrix to visualize
+#' @param ... any argument that could be pass to the functions 
+#' \code{\link[fields]{image.plot}} or \code{\link[graphics]{image}}.
+#' 
+#' @return No return, just plot the heatmap in the current graphic window.
+#' 
 #' @author
-#' Ghislain Durif, \email{gd.dev@libertymail.net}
-#'
-#' @importFrom fields image.plot
-#'
-#' @param mat the matrix to plot
-#'
+#' Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}).
+#' 
+#' @seealso \code{\link{logit.spls}}, \code{\link{stability.selection}}, 
+#' \code{\link{stability.selection.heatmap}}
+#' 
+#' @examples
+#' ### load plsgenomics library
+#' library(plsgenomics)
+#' 
+#' ### generate a matrix
+#' A = matrix(runif(10*10), ncol=10)
+#' 
+#' ### heatmap of estimated probabilities
+#' \dontrun{
+#' matrix.heatmap(A)
+#' }
+#' 
 #' @export
 matrix.heatmap <- function(mat, ...) {
      image.plot(t(apply(mat, 2, rev)), xaxt="n", yaxt="n", ...)
