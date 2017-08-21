@@ -13,5 +13,9 @@ import(
   plyr
 )
 
+importFrom("fields", "image.plot")
+
+importFrom("RhpcBLASctl", "blas_set_num_threads", "omp_set_num_threads")
+
 importFrom("stats", "median", "predict", "rbinom", "rnorm", "runif",
              "sd", "var")

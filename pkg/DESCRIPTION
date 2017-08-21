@@ -9,7 +9,7 @@ Author: Anne-Laure Boulesteix <boulesteix@ibe.med.uni-muenchen.de>,
         <Julie.Peyre@univ-grenoble-alpes.fr>, and Korbinian Strimmer
         <k.strimmer@imperial.ac.uk>.
 Maintainer: Ghislain Durif <gd.dev@libertymail.net>
-Depends: R (>= 3.0), MASS, boot, parallel, reshape2, plyr
+Depends: R (>= 3.0), MASS, boot, parallel, reshape2, plyr, fields, RhpcBLASctl
 Suggests:
 Encoding: latin1
 Description: Routines for PLS-based genomic analyses,
