@@ -31,7 +31,7 @@
 #' @description 
 #' The function \code{logit.spls} performs compression and variable selection 
 #' in the context of binary classification (with possible prediction) 
-#' using Durif et al. (2015) RIRLS and SPLS-based algorithm.
+#' using Durif et al. (2017) algorithm based on Ridge IRLS and sparse PLS.
 #' 
 #' @details 
 #' The columns of the data matrices \code{Xtrain} and \code{Xtest} may 
