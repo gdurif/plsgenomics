@@ -88,7 +88,7 @@ The columns of the data matrices \code{Xtrain} and \code{Xtest} may not
 be standardized, since standardizing can be performed by the function 
 \code{spls.cv} as a preliminary step.
 
-The procedure is described in Durif et al. (2015). The K-fold 
+The procedure is described in Durif et al. (2017). The K-fold 
 cross-validation can be summarize as follow: the train set is partitioned 
 into K folds, for each value of hyper-parameters the model is fit K times, 
 using each fold to compute the prediction error rate, and fitting the 
@@ -106,17 +106,21 @@ library(plsgenomics)
 
 ### generating data
 n <- 100
-p <- 1000
-sample1 <- sample.cont(n=100, p=1000, kstar=20, lstar=2, 
+p <- 100
+sample1 <- sample.cont(n=100, p=1000, kstar=10, lstar=2, 
                        beta.min=0.25, beta.max=0.75, mean.H=0.2, 
                        sigma.H=10, sigma.F=5, sigma.E=5)
                        
 X <- sample1$X
 Y <- sample1$Y
 
+### hyper-parameters values to test
+lambda.l1.range <- seq(0.05,0.95,by=0.1) # between 0 and 1
+ncomp.range <- 1:10
+
 ### tuning the hyper-parameters
-cv1 <- spls.cv(X=X, Y=Y, lambda.l1.range=seq(0.05, 0.95, by=0.1), 
-               ncomp.range=1:10, weight.mat=NULL, adapt=TRUE, 
+cv1 <- spls.cv(X=X, Y=Y, lambda.l1.range=lambda.l1.range, 
+               ncomp.range=ncomp.range, weight.mat=NULL, adapt=TRUE, 
                center.X=TRUE, center.Y=TRUE, 
                scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
                return.grid=TRUE, ncores=1, nfolds=10, nrun=1)
