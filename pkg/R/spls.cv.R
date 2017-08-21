@@ -118,17 +118,21 @@
 #' 
 #' ### generating data
 #' n <- 100
-#' p <- 1000
-#' sample1 <- sample.cont(n=100, p=1000, kstar=20, lstar=2, 
+#' p <- 100
+#' sample1 <- sample.cont(n=100, p=1000, kstar=10, lstar=2, 
 #'                        beta.min=0.25, beta.max=0.75, mean.H=0.2, 
 #'                        sigma.H=10, sigma.F=5, sigma.E=5)
 #'                        
 #' X <- sample1$X
 #' Y <- sample1$Y
 #' 
+#' ### hyper-parameters values to test
+#' lambda.l1.range <- seq(0.05,0.95,by=0.1) # between 0 and 1
+#' ncomp.range <- 1:10
+#' 
 #' ### tuning the hyper-parameters
-#' cv1 <- spls.cv(X=X, Y=Y, lambda.l1.range=seq(0.05, 0.95, by=0.1), 
-#'                ncomp.range=1:10, weight.mat=NULL, adapt=TRUE, 
+#' cv1 <- spls.cv(X=X, Y=Y, lambda.l1.range=lambda.l1.range, 
+#'                ncomp.range=ncomp.range, weight.mat=NULL, adapt=TRUE, 
 #'                center.X=TRUE, center.Y=TRUE, 
 #'                scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
 #'                return.grid=TRUE, ncores=1, nfolds=10, nrun=1)
