@@ -10,8 +10,8 @@ source("sourceDir.R")
 sourceDir("pkg/R")
 
 # sample
-n = 100
-p = 1000
+n = 500
+p = 5000
 kstar = 12
 lstar = 3
 beta.min = 0.5

@@ -3,9 +3,7 @@
 # sources
 RDIR <- system("git rev-parse --show-toplevel", intern=TRUE)
 setwd(RDIR)
-source("sourceDir.R")
-
-sourceDir("pkg/R")
+source("env.R")
 
 # sample
 n = 100
