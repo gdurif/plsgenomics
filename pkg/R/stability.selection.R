@@ -1,4 +1,4 @@
-### stab_sel.R  (2016-12)
+### stability.selection.R  (2016-12)
 ###
 ###
 ### Copyright 2016-12 Ghislain DURIF
@@ -21,10 +21,10 @@
 ### MA 02111-1307, USA
 
 
-stab_sel <- function(stab_out, piThreshold=0.6, rhoError=10) {
+stability.selection <- function(stab.out, piThreshold=0.6, rhoError=10) {
      
-     qLambda <- stab_out$qLambda
-     probs_lambda <- stab_out$probs_lambda
+     qLambda <- stab.out$q.Lambda
+     probs_lambda <- stab.out$probs.lambda
      
      p <- ncol(probs_lambda[,-1])
      
@@ -37,7 +37,14 @@ stab_sel <- function(stab_out, piThreshold=0.6, rhoError=10) {
      
      which_var <-  apply(tmp_probs[,-1], 2, function(x) max(x) >= piThreshold)
      
-     sel_var <- colnames(probs_lambda[,-1])[which_var]
+     selected.variables <- colnames(probs_lambda[,-1])[which_var]
      
-     return(sel_var)
+     return(selected.variables)
+}
+
+
+stability.selection.heatmap <- function(stab_out, ...) {
+     matrix.heatmap(as.matrix(stab_out$probs_lambda[,-c(1:3)]),
+                    xlab="covariates", ylab="hyper-param. values",
+                    ...)
 }
