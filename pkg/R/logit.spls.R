@@ -25,7 +25,7 @@
 #' @title 
 #' Classification procedure for binary response based on a logistic model, 
 #' solved by a combination of the Ridge Iteratively Reweighted Least Squares 
-#' RIRLS) algorithm and the Adaptive Sparse PLS (SPLS) regression
+#' (RIRLS) algorithm and the Adaptive Sparse PLS (SPLS) regression
 #' @aliases logit.spls
 #' 
 #' @description 
@@ -84,6 +84,8 @@
 #' variance in \code{Xtrain} that were skipped in the procedure.}
 #' \item{A}{the active set of predictors selected by the procedures. 
 #' \code{A} is a subset of 1:p.}
+#' \item{Anames}{Vector of selected predictor names, i.e. the names of the 
+#' columns from \code{Xtrain} that are in \code{A}.}
 #' \item{converged}{a \{0,1\} value indicating whether the RIRLS algorithm did
 #' converge in less than \code{maxIter} iterations or not.}
 #' \item{X.score}{a (n x ncomp) matrix being the observations coordinates or 
@@ -103,6 +105,9 @@
 #' \item{V}{the (ntrain x ntrain) matrix used to weight the metric in the 
 #' sparse PLS step. \code{V} is the inverse of the covariance matrix of the 
 #' pseudo-response produced by the RIRLS step.}
+#' \item{proba}{the (ntrain) vector of estimated probabilities for the 
+#' observations in code \code{Xtrain}, that are used to estimate the 
+#' \code{hatY} labels.}
 #' \item{proba.test}{the (ntest) vector of predicted probabilities for the 
 #' new observations in \code{Xtest}, that are used to predict the 
 #' \code{hatYtest} labels.}
@@ -124,7 +129,7 @@
 #' 
 #' ### generating data
 #' n <- 100
-#' p <- 1000
+#' p <- 100
 #' sample1 <- sample.bin(n=n, p=p, kstar=20, lstar=2, 
 #'                       beta.min=0.25, beta.max=0.75, 
 #'                       mean.H=0.2, sigma.H=10, sigma.F=5)
@@ -186,10 +191,10 @@ logit.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp,
 	# if multicategorical response
 	if(length(table(Ytrain)) > 2) {
 	     warning("message from logit.spls: multicategorical response")
-	     results = m.logit.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=lambda.ridge, 
-	                            lambda.l1=lambda.l1, ncomp=ncomp, Xtest=Xtest, adapt=adapt, 
-	                            maxIter=maxIter, svd.decompose=svd.decompose, 
-	                            center.X=center.X, scale.X=scale.X, weighted.center=weighted.center)
+	     results = multinom.spls(Xtrain=Xtrain, Ytrain=Ytrain, lambda.ridge=lambda.ridge, 
+	                             lambda.l1=lambda.l1, ncomp=ncomp, Xtest=Xtest, adapt=adapt, 
+	                             maxIter=maxIter, svd.decompose=svd.decompose, 
+	                             center.X=center.X, scale.X=scale.X, weighted.center=weighted.center)
 	     return(results)
 	}
 	
