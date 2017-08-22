@@ -3,14 +3,18 @@
 \docType{package}
 \name{plsgenomics-deprecated}
 \alias{plsgenomics-deprecated}
+\alias{m.rirls.spls}
 \alias{rirls.spls}
 \alias{rirls.spls.tune}
+\alias{rirls.spls.stab}
+\alias{m.rirls.spls.tune}
+\alias{m.rirls.spls.stab}
 \alias{spls.adapt}
 \alias{spls.adapt.tune}
 \alias{plsgenomics-deprecated-package}
 \title{Deprecated function(s) in the 'plsgenomics' package}
 \usage{
-rirls.spls(...)
+m.rirls.spls(...)
 }
 \arguments{
 \item{...}{Parameters to be passed to the modern version of the function}
@@ -25,6 +29,10 @@ removed.
 \tabular{rl}{
     \code{rirls.spls} \tab is replaced by \code{\link{logit.spls}}\cr
     \code{rirls.spls.tune} \tab is replaced by \code{\link{logit.spls.cv}}\cr
+    \code{rirls.spls.stab} \tab is replaced by \code{\link{logit.spls.stab}}\cr
+    \code{m.rirls.spls} \tab is replaced by \code{\link{multinom.spls}}\cr
+    \code{m.rirls.spls.tune} \tab is replaced by \code{\link{multinom.spls.cv}}\cr
+    \code{m.rirls.spls.stab} \tab is replaced by \code{\link{multinom.spls.stab}}\cr
     \code{spls.adapt} \tab is replaced by \code{\link{spls}}\cr
     \code{spls.adapt.tune} \tab is replaced by \code{\link{spls.cv}}\cr
 }
