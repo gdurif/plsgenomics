@@ -56,7 +56,7 @@
 #' predictor variable.
 #' @param Y a (n) vector of (continuous) responses. \code{Y} must be a 
 #' vector or a one column matrix. It contains the response variable for 
-#' each observation.
+#' each observation. \code{Y} should take values in \{0,1\}.
 #' @param lambda.ridge.range a vector of positive real values. 
 #' \code{lambda.ridge} is the Ridge regularization parameter for the 
 #' RIRLS algorithm (see details), the optimal value will be chosen among

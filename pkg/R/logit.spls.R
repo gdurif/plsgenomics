@@ -48,7 +48,7 @@
 #' and each column to a predictor variable.
 #' @param Ytrain a (ntrain) vector of (continuous) responses. \code{Ytrain} 
 #' must be a vector or a one column matrix, and contains the response variable 
-#' for each observation.
+#' for each observation. \code{Ytrain} should take values in \{0,1\}.
 #' @param lambda.ridge a positive real value. \code{lambda.ridge} is the Ridge 
 #' regularization parameter for the RIRLS algorithm (see details).
 #' @param lambda.l1 a positive real value, in [0,1]. \code{lambda.l1} is the 
