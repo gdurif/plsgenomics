@@ -21,21 +21,21 @@
 ### MA 02111-1307, USA
 
 
-stability.selection <- function(stab.out, piThreshold=0.6, rhoError=10) {
+stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
      
-     qLambda <- stab.out$q.Lambda
+     q_Lambda <- stab.out$q.Lambda
      probs_lambda <- stab.out$probs.lambda
      
-     p <- ncol(probs_lambda[,-1])
+     p <- ncol(probs_lambda[,-c(1:3)])
      
      ## select variables
-     qLambdaMax = sqrt((2*piThreshold-1) * p * rhoError)
+     q_LambdaMax <- sqrt((2*piThreshold-1) * p * rhoError)
      
-     lambda_ok <- qLambda$lambda[which(qLambda$qLambda <= qLambdaMax)]
+     lambda_ok <- (1:nrow(q_Lambda))[which(q_Lambda$qLambda <= q_LambdaMax)]
      
-     tmp_probs <- probs_lambda[probs_lambda$lambda %in% lambda_ok,]
+     tmp_probs <- as.matrix(probs_lambda[lambda_ok,-c(1:3)])
      
-     which_var <-  apply(tmp_probs[,-1], 2, function(x) max(x) >= piThreshold)
+     which_var <- apply(tmp_probs, 2, function(x) max(x) >= piThreshold)
      
      selected.variables <- colnames(probs_lambda[,-1])[which_var]
      
@@ -43,8 +43,8 @@ stability.selection <- function(stab.out, piThreshold=0.6, rhoError=10) {
 }
 
 
-stability.selection.heatmap <- function(stab_out, ...) {
-     matrix.heatmap(as.matrix(stab_out$probs_lambda[,-c(1:3)]),
-                    xlab="covariates", ylab="hyper-param. values",
+stability.selection.heatmap <- function(stab.out, ...) {
+     matrix.heatmap(as.matrix(stab.out$probs.lambda[,-c(1:3)]),
+                    xlab="covariates", ylab="selection sharpness",
                     ...)
 }
