@@ -188,6 +188,7 @@ multinom.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp,
      }
      Ytrain <- as.integer(Ytrain)
      Ytrain <- as.matrix(Ytrain)
+     nclass <- length(unique(Ytrain))
      q <- ncol(Ytrain)
      one <- matrix(1,nrow=1,ncol=ntrain)
      
@@ -266,6 +267,10 @@ multinom.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp,
      
      if((sum(floor(Ytrain)-Ytrain)!=0)||(sum(Ytrain<0)>0)) {
           stop("Message from multinom.spls: Ytrain is not of valid type")
+     }
+     
+     if(any(!Ytrain %in% c(0:(nclass-1)))) {
+          stop("Message from multinom.spls: Ytrain should be in {0,...,nclass-1}")
      }
      
      if (sum(as.numeric(table(Ytrain))==0)!=0) {
