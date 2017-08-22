@@ -47,7 +47,7 @@
 #' the optimal hyper-parameters values, meaning the one that minimize 
 #' the averaged error of prediction averaged over all the folds.
 #' 
-#' This procedures uses the \code{mclapply} from the \code{parallel} package, 
+#' This procedures uses \code{mclapply} from the \code{parallel} package, 
 #' available on GNU/Linux and MacOS. Users of Microsoft Windows can refer to 
 #' the README file in the source to be able to use a mclapply type function.
 #' 

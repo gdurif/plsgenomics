@@ -1,6 +1,6 @@
 ### logit.spls.aux.R  (2014-10)
 ###
-###    Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for binary responser
+###    Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for binary response
 ###    Short version for multiple call in cross-validation procedure
 ###
 ### Copyright 2014-10 Ghislain DURIF
