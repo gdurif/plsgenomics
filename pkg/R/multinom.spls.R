@@ -51,7 +51,8 @@
 #' and each column to a predictor variable.
 #' @param Ytrain a (ntrain) vector of (continuous) responses. \code{Ytrain} 
 #' must be a vector or a one column matrix, and contains the response variable 
-#' for each observation.
+#' for each observation. \code{Ytrain} should take values in 
+#' \{0,...,nclass-1\}, where nclass is the number of class.
 #' @param lambda.ridge a positive real value. \code{lambda.ridge} is the Ridge 
 #' regularization parameter for the RIRLS algorithm (see details).
 #' @param lambda.l1 a positive real value, in [0,1]. \code{lambda.l1} is the 
@@ -144,9 +145,10 @@
 #' ### generating data
 #' n <- 100
 #' p <- 100
-#' sample1 = sample.multinom(n, p, nb.class=3, kstar=20, lstar=2, 
-#'                           beta.min=0.25, beta.max=0.75, 
-#'                           mean.H=0.2, sigma.H=10, sigma.F=5)
+#' nclass <- 3
+#' sample1 <- sample.multinom(n, p, nb.class=nclass, kstar=20, lstar=2, 
+#'                            beta.min=0.25, beta.max=0.75, 
+#'                            mean.H=0.2, sigma.H=10, sigma.F=5)
 #' X <- sample1$X
 #' Y <- sample1$Y
 #' 
