@@ -31,8 +31,23 @@
 #' @name plsgenomics-deprecated
 #' @param ... Parameters to be passed to the modern version of the function
 #' @docType package
-#' @export rirls.spls rirls.spls.tune rirls.spls.stab m.rirls.spls m.rirls.spls.tune m.rirls.spls.stab spls.adapt spls.adapt.tune
-#' @aliases rirls.spls rirls.spls.tune rirls.spls.stab m.rirls.spls m.rirls.spls.tune m.rirls.spls.stab spls.adapt spls.adapt.tune
+#' @export rirls.spls
+#' @export rirls.spls.tune
+#' @export rirls.spls.stab
+#' @export m.rirls.spls
+#' @export m.rirls.spls.tune
+#' @export m.rirls.spls.stab
+#' @export spls.adapt
+#' @export spls.adapt.tune
+#' @aliases
+#' rirls.spls
+#' rirls.spls.tune
+#' rirls.spls.stab
+#' m.rirls.spls
+#' m.rirls.spls.tune
+#' m.rirls.spls.stab
+#' spls.adapt
+#' spls.adapt.tune
 #' @section Details:
 #' \tabular{rl}{
 #'     \code{rirls.spls} \tab is replaced by \code{\link{logit.spls}}\cr
