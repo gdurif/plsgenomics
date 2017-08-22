@@ -1,4 +1,4 @@
-### rirls.spls.tune.R  (2015-10)
+### multinom.spls.cv.R  (2015-10)
 ###
 ###    Tuning parameters (ncomp, lambda.l1, lambda.ridge) for Ridge Iteratively Reweighted 
 ###    Least Squares followed by Adaptive Sparse PLS regression for multicategorial response, 
@@ -23,11 +23,137 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-
-m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-                              return.grid=FALSE, ncores=1, nfolds=10, nrun=1, 
-                              center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
-                              seed=NULL, verbose=TRUE) {
+#' @title
+#' Cross-validation procedure to calibrate the parameters (ncomp, lambda.l1, 
+#' lambda.ridge) for the multinomial-SPLS method
+#' @aliases multinom.spls.cv
+#' 
+#' @description 
+#' The function \code{multinom.spls.cv} chooses the optimal values for the 
+#' hyper-parameter of the \code{multinom.spls} procedure, by minimizing the 
+#' averaged error of prediction over the hyper-parameter grid, 
+#' using Durif et al. (2017) multinomial-SPLS algorithm.
+#' 
+#' @details
+#' The columns of the data matrices \code{X} may not be standardized, 
+#' since standardizing is performed by the function \code{multinom.spls.cv} 
+#' as a preliminary step. 
+#' 
+#' The procedure is described in Durif et al. (2017). The K-fold 
+#' cross-validation can be summarize as follow: the train set is partitioned 
+#' into K folds, for each value of hyper-parameters the model is fit K times, 
+#' using each fold to compute the prediction error rate, and fitting the 
+#' model on the remaining observations. The cross-validation procedure returns 
+#' the optimal hyper-parameters values, meaning the one that minimize 
+#' the averaged error of prediction averaged over all the folds.
+#' 
+#' This procedures uses \code{mclapply} from the \code{parallel} package, 
+#' available on GNU/Linux and MacOS. Users of Microsoft Windows can refer to 
+#' the README file in the source to be able to use a mclapply type function.
+#' 
+#' @param X a (n x p) data matrix of predictors. \code{X} must be a matrix. 
+#' Each row corresponds to an observation and each column to a 
+#' predictor variable.
+#' @param Y a (n) vector of (continuous) responses. \code{Y} must be a 
+#' vector or a one column matrix. It contains the response variable for 
+#' each observation. \code{Y} should take values in \{0,...,nclass-1\},
+#' where nclass is the number of class.
+#' @param lambda.ridge.range a vector of positive real values. 
+#' \code{lambda.ridge} is the Ridge regularization parameter for the 
+#' RIRLS algorithm (see details), the optimal value will be chosen among
+#' \code{lambda.ridge.range}.
+#' @param lambda.l1.range a vecor of positive real values, in [0,1]. 
+#' \code{lambda.l1} is the sparse penalty parameter for the dimension 
+#' reduction step by sparse PLS (see details), the optimal value will be 
+#' chosen among \code{lambda.l1.range}.
+#' @param ncomp.range a vector of positive integers. \code{ncomp} is the 
+#' number of PLS components. The optimal value will be chosen 
+#' among \code{ncomp.range}.
+#' @param adapt a boolean value, indicating whether the sparse PLS selection 
+#' step sould be adaptive or not (see details).
+#' @param maxIter a positive integer, the maximal number of iterations in the 
+#' RIRLS algorithm (see details).
+#' @param svd.decompose a boolean parameter. \code{svd.decompose} indicates 
+#' wether or not the predictor matrix \code{Xtrain} should be decomposed by 
+#' SVD (singular values decomposition) for the RIRLS step (see details).
+#' @param return.grid a boolean values indicating whether the grid of 
+#' hyper-parameters values with corresponding mean prediction error rate over 
+#' the folds should be returned or not.
+#' @param ncores a positve integer, indicating the number of cores that the 
+#' cross-validation is allowed to use for parallel computation (see details).
+#' @param nfolds a positive integer indicating the number of folds in the 
+#' K-folds cross-validation procedure, \code{nfolds=n} corresponds 
+#' to the leave-one-out cross-validation, default is 10.
+#' @param nrun a positive integer indicating how many times the K-folds cross-
+#' validation procedure should be repeated, default is 1.
+#' @param center.X a boolean value indicating whether the data matrices 
+#' \code{Xtrain} and \code{Xtest} (if provided) should be centered or not.
+#' @param scale.X a boolean value indicating whether the data matrices 
+#' \code{Xtrain} and \code{Xtest} (if provided) should be scaled or not 
+#' (\code{scale.X=TRUE} implies \code{center.X=TRUE}) in the spls step.
+#' @param weighted.center a boolean value indicating whether the centering 
+#' should take into account the weighted l2 metric or not in the SPLS step.
+#' @param seed a positive integer value (default is NULL). If non NULL, 
+#' the seed for pseudo-random number generation is set accordingly.
+#' @param verbose a boolean parameter indicating the verbosity.
+#' 
+#' @return An object of class \code{multinom.spls} with the following attributes
+#' \item{lambda.ridge.opt}{the optimal value in \code{lambda.ridge.range}.}
+#' \item{lambda.l1.opt}{the optimal value in \code{lambda.l1.range}.}
+#' \item{ncomp.opt}{the optimal value in \code{ncomp.range}.}
+#' \item{conv.per}{the overall percentage of models that converge during the 
+#' cross-validation procedure.}
+#' \item{cv.grid}{the grid of hyper-parameters and corresponding prediction 
+#' error rate averaged over the folds. \code{cv.grid} is NULL if 
+#' \code{return.grid} is set to FALSE.}
+#' 
+#' @references 
+#' Durif G., Modolo L., Michaelsson J., Mold J. E., Lambert-Lacroix S., 
+#' Picard F. (2017). High Dimensional Classification with combined Adaptive 
+#' Sparse PLS and Logistic Regression, (in prep), 
+#' available on (\url{http://arxiv.org/abs/1502.05933}).
+#' 
+#' @author
+#' Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}).
+#' 
+#' @seealso \code{\link{multinom.spls}}, \code{\link{multinom.spls.stab}}
+#' 
+#' @examples
+#' ### load plsgenomics library
+#' library(plsgenomics)
+#' 
+#' ### generating data
+#' n <- 100
+#' p <- 100
+#' nclass <- 3
+#' sample1 <- sample.multinom(n=n, p=p, nb.class=nclass, kstar=10, lstar=2, 
+#'                            beta.min=0.25, beta.max=0.75, mean.H=0.2, 
+#'                            sigma.H=10, sigma.F=5)
+#' 
+#' X <- sample1$X
+#' Y <- sample1$Y
+#' 
+#' ### hyper-parameters values to test
+#' lambda.l1.range <- seq(0.05,0.95,by=0.1) # between 0 and 1
+#' ncomp.range <- 1:10
+#' # log-linear range between 0.01 a,d 1000 for lambda.ridge.range
+#' logspace <- function( d1, d2, n) exp(log(10)*seq(d1, d2, length.out=n))
+#' lambda.ridge.range <- signif(logspace(d1 <- -2, d2 <- 3, n=21), digits=3)
+#' 
+#' ### tuning the hyper-parameters
+#' cv1 <- multinom.spls.cv(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
+#'                         lambda.l1.range=lambda.l1.range, 
+#'                         ncomp.range=ncomp.range, 
+#'                         adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+#'                         return.grid=TRUE, ncores=1, nfolds=10)
+#'                        
+#' str(cv1)
+#' 
+#' @export
+multinom.spls.cv <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+                             return.grid=FALSE, ncores=1, nfolds=10, nrun=1, 
+                             center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
+                             seed=NULL, verbose=TRUE) {
      
      #####################################################################
      #### Initialisation
@@ -41,6 +167,7 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
      }
      Y <- as.integer(Y)
      Y <- as.matrix(Y)
+     nclass <- length(unique(Y))
      q <- ncol(Y)
      one <- matrix(1,nrow=1,ncol=n)
      
@@ -55,90 +182,94 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
      
      # if Binary response
      if(length(table(Y)) == 2) {
-          warning("message from m.rirls.spls.tune: binary response")
-          results = rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
-                                    lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
-                                    adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
-                                    return.grid=return.grid, ncores=ncores, 
-                                    nfolds=nfolds, nrun=nrun, 
-                                    center.X=center.X, scale.X=scale.X, 
-                                    weighted.center=weighted.center, 
-                                    seed=seed, verbose=verbose)
+          warning("message from multinom.spls.cv: binary response")
+          results = multinom.spls.cv(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
+                                  lambda.l1.range=lambda.l1.range, ncomp.range=ncomp.range, 
+                                  adapt=adapt, maxIter=maxIter, svd.decompose=svd.decompose, 
+                                  return.grid=return.grid, ncores=ncores, 
+                                  nfolds=nfolds, nrun=nrun, 
+                                  center.X=center.X, scale.X=scale.X, 
+                                  weighted.center=weighted.center, 
+                                  seed=seed, verbose=verbose)
           return(results)
      }
      
      # On X
      if ((!is.matrix(X)) || (!is.numeric(X))) {
-          stop("Message from m.rirls.spls.tune: X is not of valid type")
+          stop("Message from multinom.spls.cv: X is not of valid type")
      }
      
      if (p==1) {
-          # stop("Message from m.rirls.spls.tune: p=1 is not valid")
-          warning("Message from m.rirls.spls.tune: p=1 is not valid, ncomp.range is set to 0")
+          # stop("Message from multinom.spls.cv: p=1 is not valid")
+          warning("Message from multinom.spls.cv: p=1 is not valid, ncomp.range is set to 0")
           ncomp.range <- 0
      }
      
      # On Y
      if ((!is.matrix(Y)) || (!is.numeric(Y))) {
-          stop("Message from m.rirls.spls: Y is not of valid type")
+          stop("Message from multinom.spls.cv: Y is not of valid type")
      }
      
      if (q != 1) {
-          stop("Message from m.rirls.spls: Y must be univariate")
+          stop("Message from multinom.spls.cv: Y must be univariate")
      }
      
      if (nrow(Y)!=n) {
-          stop("Message from m.rirls.spls: the number of observations in Y is not equal to the Xtrain row number")
+          stop("Message from multinom.spls.cv: the number of observations in Y is not equal to the Xtrain row number")
      }
      
      # On Y value
      if (sum(is.na(Y))!=0) {
-          stop("Message from m.rirls.spls: NA values in Y")
+          stop("Message from multinom.spls.cv: NA values in Y")
      }
      
      if((sum(floor(Y)-Y)!=0)||(sum(Y<0)>0)) {
-          stop("Message from m.rirls.spls: Y is not of valid type")
+          stop("Message from multinom.spls.cv: Y is not of valid type")
+     }
+     
+     if(any(!Y %in% c(0:(nclass-1)))) {
+          stop("Message from multinom.spls.cv: Y should be in {0,...,nclass-1}")
      }
      
      if (sum(as.numeric(table(Y))==0)!=0) {
-          stop("Message from m.rirls.spls: there are empty classes")
+          stop("Message from multinom.spls.cv: there are empty classes")
      }
      
      # On hyper parameter: lambda.ridge, lambda.l1
      if ( any(!is.numeric(lambda.ridge.range)) || any(lambda.ridge.range<0) || any(!is.numeric(lambda.l1.range)) || any(lambda.l1.range<0)) {
-          stop("Message from m.rirls.spls: lambda is not of valid type")
+          stop("Message from multinom.spls: lambda is not of valid type")
      }
      
      # ncomp type
      if ( any(!is.numeric(ncomp.range)) || any(round(ncomp.range)-ncomp.range!=0) || any(ncomp.range<0) || any(ncomp.range>p)) {
-          stop("Message from m.rirls.spls: ncomp.range is not of valid type")
+          stop("Message from multinom.spls: ncomp.range is not of valid type")
      }
      
      
      # maxIter
      if ((!is.numeric(maxIter)) || (round(maxIter)-maxIter!=0) || (maxIter<1)) {
-          stop("Message from m.rirls.spls.tune: maxIter is not of valid type")
+          stop("Message from multinom.spls.cv: maxIter is not of valid type")
      }
      
      # ncores
      if ((!is.numeric(ncores)) || (round(ncores)-ncores!=0) || (ncores<1)) {
-          stop("Message from m.rirls.spls.tune: ncores is not of valid type")
+          stop("Message from multinom.spls.cv: ncores is not of valid type")
      }
      
      # nfolds
      if ((!is.numeric(nfolds)) || (round(nfolds)-nfolds!=0) || (nfolds<1)) {
-          stop("Message from m.rirls.spls.tune: nfolds is not of valid type")
+          stop("Message from multinom.spls.cv: nfolds is not of valid type")
      }
      
      # necessary to insure that both classes are represented in each folds
      if( any(as.vector(table(Y))<nfolds) ) {
-          stop("Message from m.rirls.spls.tune: there is a class defined by Y that has less members than the number of folds nfold")
+          stop("Message from multinom.spls.cv: there is a class defined by Y that has less members than the number of folds nfold")
      }
      
      ## fold size
      fold.size = n %/% nfolds
      if( length(unique(Y))>fold.size ) {
-          stop("Message from m.rirls.spls.tune: there are too many classes compared to the size of folds")
+          stop("Message from multinom.spls.cv: there are too many classes compared to the size of folds")
      }
      
      
@@ -229,7 +360,7 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
                
                # predicteur with non null variance < 2 ?
                if (sum(sigma2train < .Machine$double.eps)>(p-2)){
-                    stop("Message from rirls.spls.tune: the procedure stops because number of predictor variables with no null variance is less than 1.")
+                    stop("Message from multinom.spls.cv: the procedure stops because number of predictor variables with no null variance is less than 1.")
                }
                
                warning("There are covariables with nul variance")
@@ -332,7 +463,7 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
           Ytest <- subset(Y, folds.obs[,run] == k)
           
           ### computations
-          model <- tryCatch( m.rirls.spls.aux(sXtrain=get(paste0("sXtrain_", k, "_", run)), 
+          model <- tryCatch( multinom.spls.aux(sXtrain=get(paste0("sXtrain_", k, "_", run)), 
                                               sXtrain.nosvd=get(paste0("sXtrain.nosvd_", k, "_", run)), 
                                               Ytrain=Ytrain, lambda.ridge=gridRow$lambdaL2, 
                                               lambda.l1=gridRow$lambdaL1, ncomp=gridRow$ncomp, 
@@ -342,7 +473,7 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
                                               meanXtrain=meanXtrain_values[[k + (run-1)*nfolds]], 
                                               sigma2train=sigma2train_values[[k + (run-1)*nfolds]], 
                                               center.X=center.X, scale.X=scale.X, weighted.center=weighted.center), 
-                             error = function(e) { print(e); warnings("Message from m.rirls.spls.tune: error when fitting a model in crossvalidation"); return(NULL);} )
+                             error = function(e) { print(e); warnings("Message from multinom.spls.cv: error when fitting a model in crossvalidation"); return(NULL);} )
           
           
           ## results
@@ -372,7 +503,7 @@ m.rirls.spls.tune <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.r
      
      ## check number of NAs (=fails)
      if(sum(cv.grid.fails$nb.fail>0.8*nrun*nfolds) > (0.8*nrow(paramGrid))) {
-          warnings("Message from rirls.spls.tune: too many errors during the cross-validation process, the grid is not enough filled")
+          warnings("Message from multinom.spls.cv: too many errors during the cross-validation process, the grid is not enough filled")
      }     
      
      ## compute the mean error over the folds for each point of the grid
