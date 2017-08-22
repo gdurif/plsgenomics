@@ -1,4 +1,4 @@
-### m.rirls.spls.aux.R  (2015-10)
+### multinom.spls.aux.R  (2015-10)
 ###
 ###    Ridge Iteratively Reweighted Least Squares followed by Adaptive Sparse PLS regression for 
 ###    multicategorial response
@@ -25,10 +25,10 @@
 ### MA 02111-1307, USA
 
 
-m.rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, lambda.l1, ncomp, sXtest, sXtest.nosvd=NULL, 
-                             adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-                             meanXtrain, sigma2train, 
-                             center.X=TRUE, scale.X=FALSE, weighted.center=TRUE) {
+multinom.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, lambda.l1, ncomp, sXtest, sXtest.nosvd=NULL, 
+                              adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+                              meanXtrain, sigma2train, 
+                              center.X=TRUE, scale.X=FALSE, weighted.center=TRUE) {
      
      
      #####################################################################
@@ -74,7 +74,7 @@ m.rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, 
      
      #  Check WIRRLS convergence
      if (converged==0) {
-          warning("Message from rirls.spls : Ridge IRLS did not converge; try another lambda.ridge value")
+          warning("Message from multinom.spls.aux : Ridge IRLS did not converge; try another lambda.ridge value")
      }
      
      # if ncomp == 0 then wirrls without spls step
@@ -204,7 +204,7 @@ m.rirls.spls.aux <- function(sXtrain, sXtrain.nosvd=NULL, Ytrain, lambda.ridge, 
      #### RETURN
      
      result <- list(Coefficients=Coefficients, hatYtest=hatYtest, converged=converged, lenA=resSPLS$lenA)
-     class(result) <- "m.rirls.spls.aux"
+     class(result) <- "multinom.spls.aux"
      return(result)
      
 }
