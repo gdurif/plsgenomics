@@ -1,8 +1,8 @@
-### logit.spls.stab.R  (2014-10)
+### logit.spls.stab.R  (2015-10)
 ###
 ###    Stability selection procedure for logit.spls
 ###
-### Copyright 2014-10 Ghislain DURIF
+### Copyright 2015-10 Ghislain DURIF
 ###
 ###
 ### This file is part of the `plsgenomics' library for R and related languages.
@@ -46,7 +46,7 @@
 #' procedure can be summarize as follow (c.f. Meinshausen and Buhlmann, 2010).
 #' 
 #' (i) For each candidate values \code{(ncomp, lambda.l1, lambda.ridge)} of 
-#' hyper-parameters, a logit-SPLS is #' trained on \code{nresamp} resamplings 
+#' hyper-parameters, a logit-SPLS is trained on \code{nresamp} resamplings 
 #' of the data. Then, for each triplet \code{(ncomp, lambda.l1, lambda.ridge)}, 
 #' the probability that a covariate (i.e. a column in \code{X}) is selected is 
 #' computed among the resamplings.
@@ -59,7 +59,7 @@
 #' procedure. The second step (ii) is achieved by the function 
 #' \code{\link{stability.selection}}
 #' 
-#' This procedures uses the \code{mclapply} from the \code{parallel} package, 
+#' This procedures uses \code{mclapply} from the \code{parallel} package, 
 #' available on GNU/Linux and MacOS. Users of Microsoft Windows can refer to 
 #' the README file in the source to be able to use a mclapply type function.
 #' 
@@ -300,7 +300,7 @@ logit.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range,
           Xtest = X[index.test,]
           Ytest = Y[index.test]
           
-          condition = any(table(Ytrain)<1)
+          condition = length(table(Ytrain))<2
           test = 0
           while(condition & test<100) {
                index.train = sort(sample(1:n, size=ntrain))
@@ -312,7 +312,7 @@ logit.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range,
                Xtest = X[index.test,]
                Ytest = Y[index.test]
                
-               condition = any(table(Ytrain)<1)
+               condition = length(table(Ytrain))<2
                test = test+1
           }
           
@@ -340,10 +340,6 @@ logit.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range,
           
           #### fit the model for the different lambda.l1
           grid_out <- as.matrix( Reduce("rbind", lapply(1:nrow(paramGrid), function(gridRow) {
-               
-               # lambdaL1 <- gridRow$lambdaL1
-               # lambdaL2 <- gridRow$lambdaL2
-               # ncomp <- gridRow$ncomp
                
                lambdaL1 <- paramGrid$lambdaL1[gridRow]
                lambdaL2 <- paramGrid$lambdaL2[gridRow]
