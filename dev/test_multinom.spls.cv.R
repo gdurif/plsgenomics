@@ -12,8 +12,8 @@ source("env.R")
 n = 100
 p = 50
 nb.class = 4
-kstar = 12
-lstar = 12
+kstar = 10
+lstar = 2
 beta.min = 0.05
 beta.max = 0.1
 mean.H=0
@@ -30,26 +30,23 @@ print(table(Y))
 
 ### test
 
-time1 <- system.time( cv1 <- m.rirls.spls.tune(X=X, Y=Y, lambda.ridge.range=c(1, 5, 10), lambda.l1.range=seq(0.05,0.95,by=0.3), 
-                                               ncomp.range=1:3, adapt=FALSE, maxIter=100, svd.decompose=TRUE, return.grid=TRUE, 
-                                               ncores=8, nfolds=5, nrun=1, center.X=TRUE, scale.X=FALSE, weighted.center=FALSE, seed=1) )
+time1 <- system.time( cv1 <- multinom.spls.cv(X=X, Y=Y, lambda.ridge.range=c(1, 5, 10), lambda.l1.range=seq(0.05,0.95,by=0.3), 
+                                              ncomp.range=1:3, adapt=FALSE, maxIter=100, svd.decompose=TRUE, return.grid=TRUE, 
+                                              ncores=8, nfolds=5, nrun=1, center.X=TRUE, scale.X=FALSE, weighted.center=FALSE, seed=1) )
 
-
-time2 <- system.time( cv2 <- m.rirls.spls.tune2(X=X, Y=Y, lambda.ridge.range=c(1, 5, 10), lambda.l1.range=seq(0.05,0.95,by=0.3), 
-                                                ncomp.range=1:3, adapt=FALSE, maxIter=100, svd.decompose=TRUE, return.grid=TRUE, 
-                                                ncores=8, nfolds=5, nrun=1, center.X=TRUE, scale.X=FALSE, weighted.center=FALSE, seed=1) )
 
 str(cv1)
-str(cv2)
 
 time1
-time2
 
 cv1$cv.grid
 
 ### model
 
-model1 = m.rirls.spls(Xtrain=X, Ytrain=Y, lambda.ridge=cv1$lambda.ridge.opt, lambda.l1=cv1$lambda.l1.opt, ncomp=cv1$ncomp.opt, Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, center.X=TRUE, scale.X=TRUE, weighted.center=TRUE)
+model1 = multinom.spls(Xtrain=X, Ytrain=Y, lambda.ridge=cv1$lambda.ridge.opt, 
+                       lambda.l1=cv1$lambda.l1.opt, ncomp=cv1$ncomp.opt, 
+                       Xtest=NULL, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
+                       center.X=TRUE, scale.X=TRUE, weighted.center=TRUE)
 
 sum(model1$Ytrain!=model1$hatY)/length(Y)
 

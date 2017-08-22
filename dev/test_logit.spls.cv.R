@@ -1,4 +1,4 @@
-###### testing rirls.spls.tune
+###### testing logit.spls.cv
 
 # sources
 RDIR <- system("git rev-parse --show-toplevel", intern=TRUE)

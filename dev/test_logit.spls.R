@@ -1,4 +1,4 @@
-###### testing rirls.spls
+###### testing logit.spls
 
 # sources
 RDIR <- system("git rev-parse --show-toplevel", intern=TRUE)
