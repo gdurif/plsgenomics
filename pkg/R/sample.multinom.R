@@ -1,6 +1,8 @@
-### sample.bin.R  (2015-10)
+### sample.multinom.R  (2015-10)
 ###
-###    Generates design matrix X with correlated block of covariates and a multicategorial random reponse depening on X through multinomial model
+###    Generates design matrix X with correlated block of covariates 
+###    and a multicategorial random reponse depending on X through 
+###    a multinomial model
 ###
 ### Copyright 2015-10 Ghislain DURIF
 ###
@@ -21,7 +23,112 @@
 ### Software Foundation, Inc., 59 Temple Place - Suite 330, Boston,
 ### MA 02111-1307, USA
 
-
+#' @title Generates covariate matrix X with correlated block of covariates and 
+#' a multi-label random reponse depening on X through a multinomial model
+#' @aliases sample.multinom
+#' 
+#' @description
+#' The function \code{sample.multinom} generates a random sample of n observations, 
+#' composed of p predictors, collected in the n x p matrix X, and a binary 
+#' response, in a vector Y of length n, thanks to a logistic model, where the 
+#' response Y is generated as a Bernoulli random variable of parameter 
+#' logit^\{-1\}(XB), the coefficients B are sparse. In addition, the covariate 
+#' matrix X is composed of correlated blocks of predictors.
+#' 
+#' @details
+#' The set (1:p) of predictors is partitioned into kstar block. 
+#' Each block k (k=1,...,kstar) depends on a latent variable H.k which are 
+#' independent and identically distributed following a Gaussian distribution 
+#' N(mean.H, sigma.H^2). Each columns X.j of the matrix X is generated 
+#' as H.k + F.j for j in the block k, where F.j is independent and identically 
+#' distributed gaussian noise N(0,sigma.F^2).
+#' 
+#' The coefficients B are generated as random between beta.min and beta.max 
+#' on lstar blocks, randomly chosen, and null otherwise. The variables with 
+#' non null coefficients are then relevant to explain the response, whereas 
+#' the ones with null coefficients are not.
+#' 
+#' The response is generated as by drawing one observation of n different 
+#' Bernoulli random variables of parameters logit^\{-1\}(XB).
+#' 
+#' The details of the procedure are developped by Durif et al. (2017).
+#' 
+#' @param n the number of observations in the sample.
+#' @param p the number of covariates in the sample.
+#' @param kstar the number of underlying latent variables used to generates 
+#' the covariate matrix \code{X}, \code{kstar <= p}. \code{kstar} is also the 
+#' number of blocks in the covariate matrix (see details).
+#' @param lstar the number of blocks in the covariate matrix \code{X} that are 
+#' used to generates the response \code{Y}, i.e. with non null coefficients 
+#' in vector \code{B}, \code{lstar <= kstar}.
+#' @param beta.min the inf bound for non null coefficients (see details).
+#' @param beta.max the sup bound for non null coefficients (see details).
+#' @param mean.H the mean of latent variables used to generates \code{X}.
+#' @param sigma.H the standard deviation of latent variables used to 
+#' generates \code{X}.
+#' @param sigma.F the standard deviation of the noise added to latent 
+#' variables used to generates \code{X}.
+#' @param seed an positive integer, if non NULL it fix the seed (with the 
+#' command \code{set.seed}) used for random number generation.
+#' 
+#' @return An object with the following attributes:
+#' \item{X}{the (n x p) covariate matrix, containing the \code{n} observations 
+#' for each of the \code{p} predictors.}
+#' \item{Y}{the (n) vector of Y observations.}
+#' \item{proba}{the n vector of Bernoulli parameters used to generate the 
+#' response, in particular \code{logit^{-1}(X \%*\% B)}.}
+#' \item{sel}{the index in (1:p) of covariates with non null coefficients 
+#' in \code{B}.}
+#' \item{nosel}{the index in (1:p) of covariates with null coefficients 
+#' in \code{B}.}
+#' \item{B}{the (n) vector of coefficients.}
+#' \item{block.partition}{a (p) vector indicating the block of each predictors 
+#' in (1:kstar).}
+#' \item{p}{the number of covariates in the sample.}
+#' \item{kstar}{the number of underlying latent variables used to generates 
+#' the covariate matrix \code{X}, \code{kstar <= p}. \code{kstar} is also 
+#' the number of blocks in the covariate matrix (see details).}
+#' \item{lstar}{the number of blocks in the covariate matrix \code{X} that 
+#' are used to generates the response \code{Y}, i.e. with non null 
+#' coefficients in vector \code{B}, \code{lstar <= kstar}.}
+#' \item{p0}{the number of predictors with non null coefficients in \code{B}.}
+#' \item{block.sel}{a (lstar) vector indicating the index in (1:kstar) of 
+#' blocks with predictors having non null coefficient in \code{B}.}
+#' \item{beta.min}{the inf bound for non null coefficients (see details).}
+#' \item{beta.max}{the sup bound for non null coefficients (see details).}
+#' \item{mean.H}{the mean of latent variables used to generates \code{X}.}
+#' \item{sigma.H}{the standard deviation of latent variables used to 
+#' generates \code{X}.}
+#' \item{sigma.F}{the standard deviation of the noise added to latent 
+#' variables used to generates \code{X}.}
+#' \item{seed}{an positive integer, if non NULL it fix the seed 
+#' (with the command \code{set.seed}) used for random number generation.}
+#' 
+#' @references 
+#' Durif G., Modolo L., Michaelsson J., Mold J. E., Lambert-Lacroix S., 
+#' Picard F. (2017). High Dimensional Classification with combined Adaptive 
+#' Sparse PLS and Logistic Regression, (in prep), 
+#' available on (\url{http://arxiv.org/abs/1502.05933}).
+#' 
+#' @author
+#' Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}).
+#' 
+#' @seealso \code{\link{sample.cont}}
+#' 
+#' @examples
+#' ### load plsgenomics library
+#' library(plsgenomics)
+#' 
+#' ### generating data
+#' n <- 100
+#' p <- 1000
+#' sample1 <- sample.multinom(n=n, p=p, kstar=20, lstar=2, beta.min=0.25, 
+#'                       beta.max=0.75, mean.H=0.2, 
+#'                       sigma.H=10, sigma.F=5)
+#' 
+#' str(sample1)
+#' 
+#' @export
 sample.multinom = function(n, p, nb.class=2, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, seed=NULL) {
      
      ### input
