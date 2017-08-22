@@ -22,8 +22,8 @@
 ### MA 02111-1307, USA
 
 #' @title
-#' Stability selection procedure to select covariates for the 
-#' multinomial-SPLS method
+#' Stability selection procedure  to estimate probabilities of selection of
+#' covariates for the multinomial-SPLS method
 #' @aliases multinom.spls.stab
 #' 
 #' @description 
@@ -51,6 +51,9 @@
 #' resamplings of the data. Then, for each triplet 
 #' \code{(ncomp, lambda.l1, lambda.ridge)}, the probability that a covariate 
 #' (i.e. a column in \code{X}) is selected is computed among the resamplings.
+#' 
+#' The estimated probabilities can be visualized as a heatmap with the 
+#' function \code{\link{stability.selection.heatmap}}.
 #' 
 #' (ii) Eventually, the set of "stable selected" variables corresponds to the 
 #' set of covariates that were selected by most of the training among the 
@@ -163,9 +166,7 @@
 #' str(stab1)
 #' 
 #' ### heatmap of estimated probabilities
-#' \dontrun{
-#' stab.sel.heatmap(stab1)
-#' }
+#' stability.selection.heatmap(stab1)
 #' 
 #' ### selected covariates
 #' stability.selection(stab1, piThreshold=0.6, rhoError=10)

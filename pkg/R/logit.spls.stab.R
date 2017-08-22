@@ -22,7 +22,8 @@
 ### MA 02111-1307, USA
 
 #' @title
-#' Stability selection procedure to select covariates for the LOGIT-SPLS method
+#' Stability selection procedure to estimate probabilities of selection of 
+#' covariates for the LOGIT-SPLS method
 #' @aliases logit.spls.stab
 #' 
 #' @description 
@@ -31,7 +32,7 @@
 #' on multiple sub-samplings in the data. The stability selection procedure 
 #' selects the covariates that are selected by most of the models among the 
 #' grid of hyper-parameters, following the procedure described in 
-#' Durif et al.  (2017). Candidates values for \code{ncomp}, \code{lambda.l1} 
+#' Durif et al. (2017). Candidates values for \code{ncomp}, \code{lambda.l1} 
 #' and \code{lambda.l2} are respectively given by 
 #' the input arguments \code{ncomp.range}, \code{lambda.l1.range} 
 #' and \code{lambda.l2.range}.
@@ -57,7 +58,7 @@
 #' 
 #' This function achieves the first step (i) of the stability selection 
 #' procedure. The second step (ii) is achieved by the function 
-#' \code{\link{stability.selection}}
+#' \code{\link{stability.selection}}.
 #' 
 #' This procedures uses \code{mclapply} from the \code{parallel} package, 
 #' available on GNU/Linux and MacOS. Users of Microsoft Windows can refer to 
@@ -160,9 +161,7 @@
 #' str(stab1)
 #' 
 #' ### heatmap of estimated probabilities
-#' \dontrun{
-#' stab.sel.heatmap(stab1)
-#' }
+#' stability.selection.heatmap(stab1)
 #' 
 #' ### selected covariates
 #' stability.selection(stab1, piThreshold=0.6, rhoError=10)

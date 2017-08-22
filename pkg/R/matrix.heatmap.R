@@ -48,9 +48,7 @@
 #' A = matrix(runif(10*10), ncol=10)
 #' 
 #' ### heatmap of estimated probabilities
-#' \dontrun{
 #' matrix.heatmap(A)
-#' }
 #' 
 #' @export
 matrix.heatmap <- function(mat, ...) {
