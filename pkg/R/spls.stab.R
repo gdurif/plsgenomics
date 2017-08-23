@@ -23,19 +23,18 @@
 
 #' @title
 #' Stability selection procedure to estimate probabilities of selection of 
-#' covariates for the LOGIT-SPLS method
+#' covariates for the sparse PLS method
 #' @aliases spls.stab
 #' 
 #' @description 
-#' The function \code{spls.stab} train a logit-spls model for each 
-#' candidate values \code{(ncomp, lambda.l1, lambda.ridge)} of hyper-parameters 
+#' The function \code{spls.stab} train a sparse PLS model for each 
+#' candidate values \code{(ncomp, lambda.l1)} of hyper-parameters 
 #' on multiple sub-samplings in the data. The stability selection procedure 
 #' selects the covariates that are selected by most of the models among the 
 #' grid of hyper-parameters, following the procedure described in 
-#' Durif et al. (2017). Candidates values for \code{ncomp}, \code{lambda.l1} 
-#' and \code{lambda.l2} are respectively given by 
-#' the input arguments \code{ncomp.range}, \code{lambda.l1.range} 
-#' and \code{lambda.l2.range}.
+#' Durif et al. (2017). Candidates values for \code{ncomp} and \code{lambda.l1} 
+#' are respectively given by the input arguments \code{ncomp.range} and 
+#' \code{lambda.l1.range}.
 #' 
 #' 
 #' @details
@@ -46,9 +45,9 @@
 #' The procedure is described in Durif et al. (2017). The stability selection 
 #' procedure can be summarize as follow (c.f. Meinshausen and Buhlmann, 2010).
 #' 
-#' (i) For each candidate values \code{(ncomp, lambda.l1, lambda.ridge)} of 
+#' (i) For each candidate values \code{(ncomp, lambda.l1)} of 
 #' hyper-parameters, a logit-SPLS is trained on \code{nresamp} resamplings 
-#' of the data. Then, for each triplet \code{(ncomp, lambda.l1, lambda.ridge)}, 
+#' of the data. Then, for each pair \code{(ncomp, lambda.l1)}, 
 #' the probability that a covariate (i.e. a column in \code{X}) is selected is 
 #' computed among the resamplings.
 #' 
@@ -70,10 +69,6 @@
 #' @param Y a (n) vector of (continuous) responses. \code{Y} must be a 
 #' vector or a one column matrix. It contains the response variable for 
 #' each observation. \code{Y} should take values in \{0,1\}.
-#' @param lambda.ridge.range a vector of positive real values. 
-#' \code{lambda.ridge} is the Ridge regularization parameter for the 
-#' RIRLS algorithm (see details), the optimal value will be chosen among
-#' \code{lambda.ridge.range}.
 #' @param lambda.l1.range a vecor of positive real values, in [0,1]. 
 #' \code{lambda.l1} is the sparse penalty parameter for the dimension 
 #' reduction step by sparse PLS (see details), the optimal value will be 
