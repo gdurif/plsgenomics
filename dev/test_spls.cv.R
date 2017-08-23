@@ -1,4 +1,4 @@
-###### testing spls.adapt.tune
+###### testing spls.cv
 
 # sources
 RDIR <- system("git rev-parse --show-toplevel", intern=TRUE)

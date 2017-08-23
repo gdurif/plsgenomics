@@ -120,7 +120,7 @@
 #' ### generating data
 #' n <- 100
 #' p <- 100
-#' sample1 <- sample.cont(n=100, p=1000, kstar=10, lstar=2, 
+#' sample1 <- sample.cont(n=n, p=p, kstar=10, lstar=2, 
 #'                        beta.min=0.25, beta.max=0.75, mean.H=0.2, 
 #'                        sigma.H=10, sigma.F=5, sigma.E=5)
 #'                        
@@ -158,7 +158,7 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	p <- ncol(X) # nb covariates
 	index.p <- c(1:p)
 	Y <- as.matrix(Y)
-	q = ncol(Y)
+	q <- ncol(Y)
 	one <- matrix(1,nrow=1,ncol=n)
 	
 	#####################################################################
