@@ -93,6 +93,7 @@
 #' to the leave-one-out cross-validation, default is 10.
 #' @param nrun a positive integer indicating how many times the K-folds cross-
 #' validation procedure should be repeated, default is 1.
+#' @param verbose a boolean value indicating verbosity.
 #' 
 #' @return An object with the following attributes
 #' \item{lambda.l1.opt}{the optimal value in \code{lambda.l1.range}.}
@@ -146,7 +147,8 @@
 spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, 
                     adapt=TRUE, center.X=TRUE, center.Y=TRUE, 
                     scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
-                    return.grid=FALSE, ncores=1, nfolds=10, nrun=1) {
+                    return.grid=FALSE, ncores=1, nfolds=10, nrun=1,
+                    verbose=FALSE) {
 	
 	#####################################################################
 	#### Initialisation
@@ -224,7 +226,7 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	     stop("Message from spls.cv: nfolds is not of valid type")
 	}
 	
-	# On hyper parameter: lambda.ridge, lambda.l1
+	# On hyper parameter: lambda.l1
 	if ( (sum(!is.numeric(lambda.l1.range))) || (sum(lambda.l1.range<0)) || (sum(lambda.l1.range>1)) ) {
 	     stop("Message from spls.adapt: lambda is not of valid type")
 	}
@@ -233,7 +235,6 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	if ( (sum(!is.numeric(ncomp.range))) || (sum(round(ncomp.range)-ncomp.range!=0)) || (sum(ncomp.range<1)) || (sum(ncomp.range>p)) ) {
 	     stop("Message from spls.adapt: ncomp is not of valid type")
 	}
-	
 	
 	#####################################################################
 	#### Cross-validation: computation on each fold over the entire grid
@@ -245,198 +246,247 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	     return(sample(x=rep(1:nfolds, length.out = n), size=n, replace=FALSE))
 	})
 	
-	## hyper-parameter grid
-	grid <- expand.grid(lambda.l1=lambda.l1.range, ncomp=ncomp.range, KEEP.OUT.ATTRS=FALSE)
-	
 	## folds x run grid
-	folds.grid = expand.grid(fold=1:nfolds, run=1:nrun, KEEP.OUT.ATTRS=FALSE)
+	folds.grid = expand.grid(k=1:nfolds, run=1:nrun, KEEP.OUT.ATTRS=FALSE)
 	
-	## cv grid
-	cv.grid.allfolds <- matrix( unlist( mclapply(split(folds.grid, f=row.names(paramGrid)), function(gridRow) {
-		
-	     k <- gridRow$fold
-	     run <- gridRow$run
+	### normalization of train and test set by fold
+	ntrain_values <- matrix(NA, nrow=nfolds, ncol=nrun)
+	ntest_values <- matrix(NA, nrow=nfolds, ncol=nrun)
+	meanXtrain_values <- list()
+	sigmaXtrain_values <- list()
+	meanYtrain_values <- list()
+	sigmaYtrain_values <- list()
+	
+	for(index in 1:nrow(folds.grid)) {
 	     
-		
-		#### train and test variable
-		Xtrain <- subset(X, fold.obs != k)
-		Ytrain <- subset(Y, fold.obs != k)
-		
-		ntrain <- nrow(Xtrain)
-		
-		Xtest <- subset(X, fold.obs == k)
-		Ytest <- subset(Y, fold.obs == k)
-		
-		ntest <- nrow(Xtest)
-		
-		V <- Vfull[fold.obs != k, fold.obs != k]
-		
-		if (is.vector(Xtest)==TRUE) {
-			Xtest <- matrix(Xtest,nrow=1)
-		}
-		
-		Xtest <- as.matrix(Xtest)
-		ntest <- nrow(Xtest)
-		
-		#####################################################################
-		#### centering and scaling
-		#####################################################################
-		if (!weighted.center) {
-			
-			# Xtrain mean
-			meanXtrain <- apply(Xtrain, 2, mean)
-			
-			# Xtrain sd
-			sigmaXtrain <- apply(Xtrain, 2, sd)
-			# test if predictors with null variance
-			if ( any( sigmaXtrain < .Machine$double.eps )) {
-				stop("Some of the columns of the predictor matrix have zero variance.")
-			}
-			
-			# centering & eventually scaling X
-			if(center.X && scale.X) {
-				sXtrain <- scale( Xtrain, center=meanXtrain, scale=sigmaXtrain)
-			} else if(center.X && !scale.X) {
-				sXtrain <- scale( Xtrain, center=meanXtrain, scale=FALSE)
-			} else {
-				sXtrain <- Xtrain
-			}
-			
-			# Y mean
-			meanYtrain <- apply(Ytrain, 2, mean)
-			
-			# Y sd
-			sigmaYtrain <- apply(Ytrain, 2, sd)
-			# test if predictors with null variance
-			if ( any( sigmaYtrain < .Machine$double.eps )) {
-				stop("The response matrix has zero variance.")
-			}
-			# centering & eventually scaling Y
-			if(center.Y && scale.Y) {
-				sYtrain <- scale( Ytrain, center=meanYtrain, scale=sigmaYtrain)
-			} else if(center.Y && !scale.Y) {
-				sYtrain <- scale( Ytrain, center=meanYtrain, scale=FALSE)
-			} else {
-				sYtrain <- Ytrain
-			}
-			
-			if(center.Y && scale.Y) {
-				sYtest <- scale( Ytest, center=meanYtrain, scale=sigmaYtrain)
-			} else if(center.Y && !scale.Y) {
-				sYtest <- scale( Ytest, center=meanYtrain, scale=FALSE)
-			} else {
-				sYtest <- Ytest
-			}
-			
-			# Xtest	
-			## centering and scaling depend on Xtest
-			if(center.X && scale.X) {
-				sXtest <- scale( Xtest, center=meanXtrain, scale=sigmaXtrain )
-			} else if(center.X && !scale.X) {
-				sXtest <- scale( Xtest, center=meanXtrain, scale=FALSE )
-			} else {
-				sXtest <- Xtest
-			}
-			
-		} else { # weighted scaling
-			
-			sumV <- sum(diag(V))
-			
-			# X mean
-			meanXtrain <- matrix(diag(V), nrow=1) %*% Xtrain / sumV
-			
-			# X sd
-			sigmaXtrain <- apply(Xtrain, 2, sd)
-			# test if predictors with null variance
-			if ( any( sigmaXtrain < .Machine$double.eps ) ) {
-				stop("Some of the columns of the predictor matrix have zero variance.")
-			}
-			# centering & eventually scaling X
-			sXtrain <- scale( Xtrain, center=meanXtrain, scale=FALSE )
-			
-			# Y mean
-			meanYtrain <- matrix(diag(V), nrow=1) %*% Ytrain / sumV
-			
-			# Y sd
-			sigmaYtrain <- apply(Ytrain, 2, sd)
-			# test if predictors with null variance
-			if ( any( sigmaYtrain < .Machine$double.eps ) ) {
-				stop("The response matrix have zero variance.")
-			}
-			
-			# centering & eventually scaling Y
-			sYtrain <- scale( Ytrain, center=meanYtrain, scale=FALSE )
-			sYtest <- scale( Ytest, center=meanYtrain, scale=FALSE )
-			
-			# Xtest
-			sXtest <- scale( Xtest, center=meanXtrain, scale=FALSE )
-			
-		}
-		
-		
-		#####################################################################
-		#### Computation over the entire grid
-		#####################################################################
-		
-		### sur chaque fold, on calcule pour tout lambda.ridge.range
-		cv.grid.byfold <- matrix( sapply( split(grid, f=row.names(grid)), function(grid.line) {
-			
-			model <- tryCatch( spls.aux(Xtrain=Xtrain, sXtrain=sXtrain, 
-			                            Ytrain=Ytrain, sYtrain=sYtrain, 
-			                            lambda.l1=grid.line$lambda.l1, 
-			                            ncomp=grid.line$ncomp, 
-			                            weight.mat=weight.mat, 
-			                            Xtest=Xtest, sXtest=sXtest, 
-			                            adapt=adapt, meanXtrain=meanXtrain, 
-			                            meanYtrain=meanYtrain, 
-			                            sigmaXtrain=sigmaXtrain, 
-			                            sigmaYtrain=sigmaYtrain, 
-			                            center.X=center.X, center.Y=center.Y,
-			                            scale.X=scale.X, scale.Y=scale.Y, 
-			                            weighted.center=weighted.center), 
-			                   error = function(e) { warnings("Message from spls.adapt.cv: error when fitting a model in crossvalidation"); return(NULL);} )
-			
-			## resutls
-			res <- numeric(5)
-			
-			if(!is.null(model)) {
-				res <- c(grid.line$lambda.l1, grid.line$ncomp, run, k, sum((model$hatYtest - sYtest)^2) / ntest)
-			} else {
-				res <- c(grid.line$lambda.l1, grid.line$ncomp, run, k, NA)
-			}
-			
-			return(res)
-			
-		}), ncol=5, byrow=TRUE)
-		
-		return( t(cv.grid.byfold) )
-		
-		
-	}, mc.cores = ncores, mc.silent=TRUE)), ncol=5, byrow=TRUE)
+	     k = folds.grid$k[index]
+	     run = folds.grid$run[index]
+	     
+	     #### train and test variable
+	     Xtrain <- subset(X, folds.obs[,run] != k)
+	     Ytrain <- subset(Y, folds.obs[,run] != k)
+	     
+	     ntrain <- nrow(Xtrain)
+	     
+	     Xtest <- subset(X, folds.obs[,run] == k)
+	     Ytest <- subset(Y, folds.obs[,run] == k)
+	     
+	     ntest <- nrow(Xtest)
+	     
+	     V <- Vfull[folds.obs != k, folds.obs != k]
+	     
+	     if (is.vector(Xtest)==TRUE) {
+	          Xtest <- matrix(Xtest,nrow=1)
+	     }
+	     
+	     Xtest <- as.matrix(Xtest)
+	     ntest <- nrow(Xtest)
+	     
+	     #####################################################################
+	     #### centering and scaling
+	     #####################################################################
+	     if (!weighted.center) {
+	          
+	          # Xtrain mean
+	          meanXtrain <- apply(Xtrain, 2, mean)
+	          
+	          # Xtrain sd
+	          sigmaXtrain <- apply(Xtrain, 2, sd)
+	          # test if predictors with null variance
+	          if ( any( sigmaXtrain < .Machine$double.eps )) {
+	               stop("Some of the columns of the predictor matrix have zero variance.")
+	          }
+	          
+	          # centering & eventually scaling X
+	          if(center.X && scale.X) {
+	               sXtrain <- scale( Xtrain, center=meanXtrain, scale=sigmaXtrain)
+	          } else if(center.X && !scale.X) {
+	               sXtrain <- scale( Xtrain, center=meanXtrain, scale=FALSE)
+	          } else {
+	               sXtrain <- Xtrain
+	          }
+	          
+	          # Y mean
+	          meanYtrain <- apply(Ytrain, 2, mean)
+	          
+	          # Y sd
+	          sigmaYtrain <- apply(Ytrain, 2, sd)
+	          # test if predictors with null variance
+	          if ( any( sigmaYtrain < .Machine$double.eps )) {
+	               stop("The response matrix has zero variance.")
+	          }
+	          # centering & eventually scaling Y
+	          if(center.Y && scale.Y) {
+	               sYtrain <- scale( Ytrain, center=meanYtrain, scale=sigmaYtrain)
+	          } else if(center.Y && !scale.Y) {
+	               sYtrain <- scale( Ytrain, center=meanYtrain, scale=FALSE)
+	          } else {
+	               sYtrain <- Ytrain
+	          }
+	          
+	          if(center.Y && scale.Y) {
+	               sYtest <- scale( Ytest, center=meanYtrain, scale=sigmaYtrain)
+	          } else if(center.Y && !scale.Y) {
+	               sYtest <- scale( Ytest, center=meanYtrain, scale=FALSE)
+	          } else {
+	               sYtest <- Ytest
+	          }
+	          
+	          # Xtest	
+	          ## centering and scaling depend on Xtest
+	          if(center.X && scale.X) {
+	               sXtest <- scale( Xtest, center=meanXtrain, scale=sigmaXtrain )
+	          } else if(center.X && !scale.X) {
+	               sXtest <- scale( Xtest, center=meanXtrain, scale=FALSE )
+	          } else {
+	               sXtest <- Xtest
+	          }
+	          
+	     } else { # weighted scaling
+	          
+	          sumV <- sum(diag(V))
+	          
+	          # X mean
+	          meanXtrain <- matrix(diag(V), nrow=1) %*% Xtrain / sumV
+	          
+	          # X sd
+	          sigmaXtrain <- apply(Xtrain, 2, sd)
+	          # test if predictors with null variance
+	          if ( any( sigmaXtrain < .Machine$double.eps ) ) {
+	               stop("Some of the columns of the predictor matrix have zero variance.")
+	          }
+	          # centering & eventually scaling X
+	          sXtrain <- scale( Xtrain, center=meanXtrain, scale=FALSE )
+	          
+	          # Y mean
+	          meanYtrain <- matrix(diag(V), nrow=1) %*% Ytrain / sumV
+	          
+	          # Y sd
+	          sigmaYtrain <- apply(Ytrain, 2, sd)
+	          # test if predictors with null variance
+	          if ( any( sigmaYtrain < .Machine$double.eps ) ) {
+	               stop("The response matrix have zero variance.")
+	          }
+	          
+	          # centering & eventually scaling Y
+	          sYtrain <- scale( Ytrain, center=meanYtrain, scale=FALSE )
+	          sYtest <- scale( Ytest, center=meanYtrain, scale=FALSE )
+	          
+	          # Xtest
+	          sXtest <- scale( Xtest, center=meanXtrain, scale=FALSE )
+	          
+	     }
+	     
+	     ## store scaled matrices
+	     assign(paste0("sXtrain_", k, "_", run), sXtrain)
+	     assign(paste0("sXtest_", k, "_", run), sXtest)
+	     
+	     assign(paste0("sYtrain_", k, "_", run), sYtrain)
+	     assign(paste0("sYtest_", k, "_", run), sYtest)
+	     
+	     ntrain_values[k,run] <- ntrain
+	     ntest_values[k,run] <- ntest
+	     
+	     meanXtrain_values[[k + (run-1)*nfolds]] <- meanXtrain
+	     sigmaXtrain_values[[k + (run-1)*nfolds]] <- sigmaXtrain
+	     
+	     meanYtrain_values[[k + (run-1)*nfolds]] <- meanYtrain
+	     sigmaYtrain_values[[k + (run-1)*nfolds]] <- sigmaYtrain
 	
-	cv.grid.allfolds <- data.frame(cv.grid.allfolds)
-	colnames(cv.grid.allfolds) <- c("lambda.l1", "ncomp", "run", "fold", "error")
+	}
+	
+	### K-fold cross-validation grid (fold x run x parameters)
+	paramGrid <- expand.grid(fold=1:nfolds, run=1:nrun, lambdaL1=lambda.l1.range, ncomp=ncomp.range, KEEP.OUT.ATTRS=FALSE)
+	
+	## computations
+	res_cv <- Reduce("rbind", mclapply(1:nrow(paramGrid), function(gridRow) {
+	     
+	     ## GRID: fold, run, lambdaL1, lambdaL2, ncomp
+	     k <- paramGrid$fold[gridRow]
+	     run <- paramGrid$run[gridRow]
+	     
+	     ntrain <- ntrain_values[k,run]
+	     ntest <- ntest_values[k,run]
+	     
+	     #### train and test variable
+	     Xtrain <- subset(X, folds.obs[,run] != k)
+	     Ytrain <- subset(Y, folds.obs[,run] != k)
+	     
+	     Xtest <- subset(X, folds.obs[,run] == k)
+	     Ytest <- subset(Y, folds.obs[,run] == k)
+	     
+	     V <- Vfull[folds.obs != k, folds.obs != k]
+          
+	     ### computations
+	     model <- tryCatch( spls.aux(Xtrain=Xtrain,
+	                                 sXtrain=get(paste0("sXtrain_", k, "_", run)),
+	                                 Ytrain=Ytrain,
+	                                 sYtrain=get(paste0("sYtrain_", k, "_", run)),
+	                                 lambda.l1=paramGrid$lambdaL1[gridRow],
+	                                 ncomp=paramGrid$ncomp[gridRow],
+	                                 weight.mat=V,
+	                                 Xtest=Xtest,
+	                                 sXtest=get(paste0("sXtest_", k, "_", run)),
+	                                 adapt=adapt,
+	                                 meanXtrain=meanXtrain_values[[k + (run-1)*nfolds]],
+	                                 meanYtrain=meanYtrain_values[[k + (run-1)*nfolds]],
+	                                 sigmaXtrain=sigmaXtrain_values[[k + (run-1)*nfolds]],
+	                                 sigmaYtrain=sigmaYtrain_values[[k + (run-1)*nfolds]],
+	                                 center.X=center.X, center.Y=center.Y,
+	                                 scale.X=scale.X, scale.Y=scale.Y,
+	                                 weighted.center=weighted.center),
+	                        error = function(e) { warnings("Message from spls.adapt.cv: error when fitting a model in crossvalidation"); return(NULL);} )
+	     
+	     ## results
+	     res = numeric(6)
+	     
+	     if(!is.null(model)) {
+	          res = c(k, run, paramGrid$lambdaL1[gridRow], paramGrid$ncomp[gridRow], model$lenA, sum((model$hatYtest - sYtest)^2) / ntest)
+	     } else {
+	          res = c(k, run, paramGrid$lambdaL1[gridRow], paramGrid$ncomp[gridRow], 0, NA)
+	     }
+	     
+	     return(res)
+	     
+	}, mc.cores=ncores, mc.silent=!verbose))
+	rownames(res_cv) <- paste(1:nrow(res_cv))
+	res_cv = data.frame(res_cv)
+	colnames(res_cv) = c("nfold", "nrun", "lambda.l1", "ncomp", "lenA", "error")
+	
 	
 	#####################################################################
 	#### Find the optimal point in the grid
 	#####################################################################
 	
+	## compute the number of NAs (=fails)
+	cv.grid.fails <- data.frame( as.matrix( with( res_cv, aggregate(error, list(lambda.l1, ncomp), function(x) {sum(is.na(x))}))))
+	colnames(cv.grid.fails) <- c("lambda.l1", "ncomp", "nb.fail")
+	
+	## check number of NAs (=fails)
+	if(sum(cv.grid.fails$nb.fail>0.8*nrun*nfolds) > (0.8*nrow(paramGrid))) {
+	     warnings("Message from spls.cv: too many errors during the cross-validation process, the grid is not enough filled")
+	}     
 	
 	## compute the mean error over the folds for each point of the grid
-	cv.grid <- data.frame( as.matrix( with( cv.grid.allfolds, aggregate(error, list(lambda.l1, ncomp), function(x) c(mean(x, na.rm=TRUE), sd(x, na.rm=TRUE)) ))))
-	colnames(cv.grid) <- c("lambda.l1", "ncomp", "error", "error.sd")
+	cv.grid.error <- data.frame( as.matrix( with( res_cv, aggregate(error, list(lambda.l1, ncomp), function(x) c(mean(x, na.rm=TRUE), sd(x, na.rm=TRUE)) ))))
+	colnames(cv.grid.error) <- c("lambda.l1", "ncomp", "error", "error.sd")
 	
+	## merge the three tables
+	cv.grid <- merge(cv.grid.error, cv.grid.fails, by = c("lambda.l1", "ncomp"))
+	
+	index_min <- which.min(cv.grid$error)
+	lambdaL1.opt <- cv.grid$lambda.l1[index_min]
+	ncomp.opt <- cv.grid$ncomp[index_min]
 	
 	##### return
 	if(return.grid) {
-		
-		return( list(lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], cv.grid=cv.grid) )
-		
+	     
+	     return( list(lambda.l1.opt=lambdaL1.opt, ncomp.opt=ncomp.opt, cv.grid=cv.grid) )
+	     
 	} else {
-		
-		return( list(lambda.l1.opt = cv.grid$lambda.l1[which.min(cv.grid$error)], ncomp.opt = cv.grid$ncomp[which.min(cv.grid$error)], cv.grid=NULL) )
-		
+	     
+	     return( list(lambda.l1.opt=lambdaL1.opt, ncomp.opt=ncomp.opt, cv.grid=NULL) )
+	     
 	}
-	
 	
 }

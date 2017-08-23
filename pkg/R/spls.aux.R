@@ -186,7 +186,7 @@ spls.aux <- function(Xtrain, sXtrain, Ytrain, sYtrain, lambda.l1, ncomp,
 	result <- list( Xtrain=Xtrain, Ytrain=Ytrain, sXtrain=sXtrain, sYtrain=sYtrain, Xtest, sXtest,
 				 betahat=betahat, betahat.nc=betahat.nc,
 				 meanXtrain=meanXtrain, meanYtrain=meanYtrain, sigmaXtrain=sigmaXtrain, sigmaYtrain=sigmaYtrain,
-				 hatYtest=hatYtest, hatYtest.nc=hatYtest.nc
+				 hatYtest=hatYtest, hatYtest.nc=hatYtest.nc, A=A, lenA=length(A)
 				 )
 	
 	class(result) <- "spls.aux"
