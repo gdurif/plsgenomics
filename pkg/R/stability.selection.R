@@ -142,7 +142,7 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
 #' described in Durif et al. (2017).
 #' 
 #' 
-#' @details#' 
+#' @details
 #' The procedure is described in Durif et al. (2017). The stability selection 
 #' procedure can be summarize as follow (c.f. Meinshausen and Buhlmann, 2010).
 #' 
@@ -165,8 +165,12 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
 #' step (i) of the stability selection by the functions
 #' \code{\link{logit.spls.stab}} or \code{\link{multinom.spls.stab}}.
 #' 
-#' #' @param stab.out the output of the functions \code{\link{logit.spls.stab}}
-#' or \code{\link{multinom.spls.stab}}
+#' This function use the function \code{\link{matrix.heatmap}}.
+#' 
+#' @param stab.out the output of the functions \code{\link{logit.spls.stab}}
+#' or \code{\link{multinom.spls.stab}}.
+#' @param ... any argument that could be pass to the functions 
+#' \code{\link[fields]{image.plot}} or \code{\link[graphics]{image}}.
 #' 
 #' @return No return, just plot the heatmap in the current graphic window.
 #' 
