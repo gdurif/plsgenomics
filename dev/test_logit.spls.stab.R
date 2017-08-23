@@ -94,7 +94,7 @@ str(stab1)
 time1
 
 ### heatmap of estimated probabilities
-# stability.selection.heatmap(stab1)
+stability.selection.heatmap(stab1)
 
 ### selected covariates
 stability.selection(stab1, piThreshold=0.75, rhoError=10)
