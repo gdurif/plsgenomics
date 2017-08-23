@@ -301,28 +301,19 @@ multinom.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range,
           
           #### train and test variable
           ntrain = floor(0.5*n)
-          ntest = n - ntrain
           
           index.train = sort(sample(1:n, size=ntrain))
-          index.test = (1:n)[-index.train]
           
           Xtrain = X[index.train,]
           Ytrain = Y[index.train]
-          
-          Xtest = X[index.test,]
-          Ytest = Y[index.test]
           
           condition = length(table(Ytrain))<nclass
           test = 0
           while(condition & test<100) {
                index.train = sort(sample(1:n, size=ntrain))
-               index.test = (1:n)[-index.train]
                
                Xtrain = X[index.train,]
                Ytrain = Y[index.train]
-               
-               Xtest = X[index.test,]
-               Ytest = Y[index.test]
                
                condition = length(table(Ytrain))<nclass
                test = test+1
@@ -335,13 +326,8 @@ multinom.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range,
                })
                index.train = c(index.train, sample((1:n)[which(!(1:n) %in% index.train)], size=ntrain-nclass))
                
-               index.test = (1:n)[-index.train]
-               
                Xtrain = X[index.train,]
                Ytrain = Y[index.train]
-               
-               Xtest = X[index.test,]
-               Ytest = Y[index.test]
           }
           
           #### hyper-parameter grid
@@ -360,7 +346,7 @@ multinom.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range,
                fit_out <- multinom.spls(Xtrain=Xtrain, Ytrain=Ytrain, 
                                         lambda.ridge=lambdaL2, 
                                         lambda.l1=lambdaL1, 
-                                        ncomp=ncomp, Xtest=Xtest, adapt=adapt, 
+                                        ncomp=ncomp, Xtest=NULL, adapt=adapt, 
                                         maxIter=maxIter, svd.decompose=svd.decompose, 
                                         center.X=center.X, scale.X=scale.X, 
                                         weighted.center=weighted.center)
