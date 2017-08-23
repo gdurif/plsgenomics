@@ -21,27 +21,26 @@
 ### MA 02111-1307, USA
 
 #' @title
-#' Stability selection procedure to select covariates for the LOGIT-SPLS 
-#' and multinomial-SPLS methods
+#' Stability selection procedure to select covariates for the sparse PLS, 
+#' LOGIT-SPLS and multinomial-SPLS methods
 #' @aliases stability.selection
 #' 
 #' @description 
 #' The function \code{stability.selection} returns the list of selected 
 #' covariates, when following the stability selection procedure described in 
 #' Durif et al. (2017). In particular, it selects covariates that are selected 
-#' by most of the logit-SPLS or multinomial-SPLS models when exploring the  
-#' grid of hyper-parameter candidate values.
+#' by most of the sparse PLS, the logit-SPLS or the multinomial-SPLS models 
+#' when exploring the grid of hyper-parameter candidate values.
 #' 
 #' 
 #' @details
 #' The procedure is described in Durif et al. (2017). The stability selection 
 #' procedure can be summarize as follow (c.f. Meinshausen and Buhlmann, 2010).
 #' 
-#' (i) For each candidate values \code{(ncomp, lambda.l1, lambda.ridge)} of 
-#' hyper-parameters, a logit-SPLS is trained on \code{nresamp} resamplings 
-#' of the data. Then, for each triplet \code{(ncomp, lambda.l1, lambda.ridge)}, 
-#' the probability that a covariate (i.e. a column in \code{X}) is selected is 
-#' computed among the resamplings.
+#' (i) For each candidate values of hyper-parameters, a model is trained 
+#' on \code{nresamp} resamplings of the data. Then, for each candidate value of
+#' the hyper-parameters, the probability that a covariate 
+#' (i.e. a column in \code{X}) is selected is computed among the resamplings.
 #' 
 #' The estimated probabilities can be visualized as a heatmap with the 
 #' function \code{\link{stability.selection.heatmap}}.
@@ -53,11 +52,12 @@
 #' on \code{rhoError} (c.f. Durif et al., 2017, for details).
 #' 
 #' This function achieves the second step (ii) of the stability selection 
-#' procedure. The first step (i) is achieved by the functions
-#' \code{\link{logit.spls.stab}} or \code{\link{multinom.spls.stab}}.
-#' 
-#' @param stab.out the output of the functions \code{\link{logit.spls.stab}}
+#' procedure. The first step (i) is achieved by the functions 
+#' \code{\link{spls.stab}}, \code{\link{logit.spls.stab}} 
 #' or \code{\link{multinom.spls.stab}}.
+#' 
+#' @param stab.out the output of the functions \code{\link{spls.stab}}, 
+#' \code{\link{logit.spls.stab}} or \code{\link{multinom.spls.stab}}.
 #' @param piThreshold a value in (0,1], corresponding to the threshold 
 #' probability used to select covariate (c.f. Durif et al., 2017).
 #' @param rhoError a positive value used to restrict the grid of 
@@ -68,8 +68,8 @@
 #' @author
 #' Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}).
 #' 
-#' @seealso \code{\link{logit.spls.stab}}, \code{\link{multinom.spls.stab}}, 
-#' \code{\link{stability.selection.heatmap}}
+#' @seealso \code{\link{spls.stab}}, \code{\link{logit.spls.stab}}, 
+#' \code{\link{multinom.spls.stab}}, \code{\link{stability.selection.heatmap}}
 #' 
 #' @examples
 #' ### load plsgenomics library
@@ -78,29 +78,23 @@
 #' ### generating data
 #' n <- 100
 #' p <- 100
-#' sample1 <- sample.bin(n=n, p=p, kstar=10, lstar=2, 
-#'                       beta.min=0.25, beta.max=0.75, mean.H=0.2, 
-#'                       sigma.H=10, sigma.F=5)
-#' 
+#' sample1 <- sample.cont(n=n, p=p, kstar=10, lstar=2, 
+#'                        beta.min=0.25, beta.max=0.75, mean.H=0.2, 
+#'                        sigma.H=10, sigma.F=5, sigma.E=5)
+#'                        
 #' X <- sample1$X
 #' Y <- sample1$Y
-#' 
-#' ### pertinent covariates id
-#' sample1$sel
 #' 
 #' ### hyper-parameters values to test
 #' lambda.l1.range <- seq(0.05,0.95,by=0.1) # between 0 and 1
 #' ncomp.range <- 1:10
-#' # log-linear range between 0.01 a,d 1000 for lambda.ridge.range
-#' logspace <- function( d1, d2, n) exp(log(10)*seq(d1, d2, length.out=n))
-#' lambda.ridge.range <- signif(logspace(d1 <- -2, d2 <- 3, n=21), digits=3)
 #' 
 #' ### tuning the hyper-parameters
-#' stab1 <- logit.spls.stab(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
-#'                          lambda.l1.range=lambda.l1.range, 
-#'                          ncomp.range=ncomp.range, 
-#'                          adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-#'                          ncores=1, nresamp=100)
+#' stab1 <- spls.stab(X=X, Y=Y, lambda.l1.range=lambda.l1.range, 
+#'                    ncomp.range=ncomp.range, weight.mat=NULL, 
+#'                    adapt=FALSE, center.X=TRUE, center.Y=TRUE, 
+#'                    scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
+#'                    ncores=1, nresamp=100)
 #'                        
 #' str(stab1)
 #' 
@@ -137,7 +131,7 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
 #' @description 
 #' The function \code{stability.selection.heatmap} allows to visualize 
 #' estimated probabilities to be selected for each covariate depending on the
-#' value of hyper-parameters in the logit-spls or multinomial-spls model. 
+#' value of hyper-parameters in the spls, logit-spls or multinomial-spls models. 
 #' These estimated probabilities are used in the stability selection procedure 
 #' described in Durif et al. (2017).
 #' 
@@ -146,11 +140,10 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
 #' The procedure is described in Durif et al. (2017). The stability selection 
 #' procedure can be summarize as follow (c.f. Meinshausen and Buhlmann, 2010).
 #' 
-#' (i) For each candidate values \code{(ncomp, lambda.l1, lambda.ridge)} of 
-#' hyper-parameters, a logit-SPLS is trained on \code{nresamp} resamplings 
-#' of the data. Then, for each triplet \code{(ncomp, lambda.l1, lambda.ridge)}, 
-#' the probability that a covariate (i.e. a column in \code{X}) is selected is 
-#' computed among the resamplings.
+#' (i) For each candidate values of hyper-parameters, a model is trained 
+#' on \code{nresamp} resamplings of the data. Then, for each candidate value of
+#' the hyper-parameters, the probability that a covariate 
+#' (i.e. a column in \code{X}) is selected is computed among the resamplings.
 #' 
 #' The estimated probabilities can be visualized as a heatmap with the 
 #' function \code{\link{stability.selection.heatmap}}.
@@ -162,13 +155,13 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
 #' on \code{rhoError} (c.f. Durif et al., 2017, for details).
 #' 
 #' This function allows to visualize probabalities estimated at the first 
-#' step (i) of the stability selection by the functions
+#' step (i) of the stability selection by the functions \code{\link{spls.stab}},
 #' \code{\link{logit.spls.stab}} or \code{\link{multinom.spls.stab}}.
 #' 
 #' This function use the function \code{\link{matrix.heatmap}}.
 #' 
-#' @param stab.out the output of the functions \code{\link{logit.spls.stab}}
-#' or \code{\link{multinom.spls.stab}}.
+#' @param stab.out the output of the functions \code{\link{spls.stab}},
+#' \code{\link{logit.spls.stab}} or \code{\link{multinom.spls.stab}}.
 #' @param ... any argument that could be pass to the functions 
 #' \code{\link[fields]{image.plot}} or \code{\link[graphics]{image}}.
 #' 
@@ -187,29 +180,23 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
 #' ### generating data
 #' n <- 100
 #' p <- 100
-#' sample1 <- sample.bin(n=n, p=p, kstar=10, lstar=2, 
-#'                       beta.min=0.25, beta.max=0.75, mean.H=0.2, 
-#'                       sigma.H=10, sigma.F=5)
-#' 
+#' sample1 <- sample.cont(n=n, p=p, kstar=10, lstar=2, 
+#'                        beta.min=0.25, beta.max=0.75, mean.H=0.2, 
+#'                        sigma.H=10, sigma.F=5, sigma.E=5)
+#'                        
 #' X <- sample1$X
 #' Y <- sample1$Y
-#' 
-#' ### pertinent covariates id
-#' sample1$sel
 #' 
 #' ### hyper-parameters values to test
 #' lambda.l1.range <- seq(0.05,0.95,by=0.1) # between 0 and 1
 #' ncomp.range <- 1:10
-#' # log-linear range between 0.01 a,d 1000 for lambda.ridge.range
-#' logspace <- function( d1, d2, n) exp(log(10)*seq(d1, d2, length.out=n))
-#' lambda.ridge.range <- signif(logspace(d1 <- -2, d2 <- 3, n=21), digits=3)
 #' 
 #' ### tuning the hyper-parameters
-#' stab1 <- logit.spls.stab(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, 
-#'                          lambda.l1.range=lambda.l1.range, 
-#'                          ncomp.range=ncomp.range, 
-#'                          adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-#'                          ncores=1, nresamp=100)
+#' stab1 <- spls.stab(X=X, Y=Y, lambda.l1.range=lambda.l1.range, 
+#'                    ncomp.range=ncomp.range, weight.mat=NULL, 
+#'                    adapt=FALSE, center.X=TRUE, center.Y=TRUE, 
+#'                    scale.X=TRUE, scale.Y=TRUE, weighted.center=FALSE, 
+#'                    ncores=1, nresamp=100)
 #'                        
 #' str(stab1)
 #' 
