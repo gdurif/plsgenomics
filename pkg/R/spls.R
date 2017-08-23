@@ -226,6 +226,13 @@ spls <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL,
 		ntest <- nrow(Xtest)
 	}
 	
+	cnames <- NULL
+	if(!is.null(colnames(Xtrain))) {
+	     cnames <- colnames(Xtrain)
+	} else {
+	     cnames <- paste0(1:p)
+	}
+	
 	
 	#####################################################################
 	#### Tests on type input
@@ -529,10 +536,9 @@ spls <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL,
 		hatYtest.nc <- NULL
 	}
 	
+	rownames(betahat) <- cnames
 	
-	if ( !is.null(colnames(Xtrain)) ) {
-		rownames(betahat) <- colnames(Xtrain)
-	}
+	Anames <- cnames[A]
 	
 	
 	#### return object
@@ -543,7 +549,7 @@ spls <- function(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat=NULL, Xtest=NULL,
 				 residuals=residuals, residuals.nc=residuals.nc,
 				 hatY=hatY, hatY.nc=hatY.nc,
 				 hatYtest=hatYtest, hatYtest.nc=hatYtest.nc,
-				 A=A, betamat=betamat, new2As=new2As,
+				 A=A, Anames=Anames, betamat=betamat, new2As=new2As,
 				 lambda.l1=lambda.l1, ncomp=ncomp,
 				 V=V, adapt=adapt)
 	
