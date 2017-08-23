@@ -372,9 +372,9 @@ logit.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range,
      colnames(grid.resampling) <- c("lambdaL1", "lambdaL2", "ncomp", 
                                     "id", "nbVar", cnames)
      
-     grid.resampling$point = paste0(grid.resampling$lambdaL1, "_",
-                                    grid.resampling$lambdaL2, "_",
-                                    grid.resampling$ncomp)
+     grid.resampling$point <- paste0(grid.resampling$lambdaL1, "_",
+                                     grid.resampling$lambdaL2, "_",
+                                     grid.resampling$ncomp)
      
      o.grid <- order(grid.resampling$nbVar)
      grid.resampling <- grid.resampling[o.grid,]
@@ -391,7 +391,7 @@ logit.spls.stab <- function(X, Y, lambda.ridge.range, lambda.l1.range,
      ## increasing value of q_lambda
      tmp_qLambda <- as.matrix( Reduce("rbind", mclapply(1:nresamp, function(id.samp) {
           
-          tmp1 <- subset(grid.resampling, id==id.samp)
+          tmp1 <- subset(grid.resampling, grid.resampling$id==id.samp)
           tmp2 <- apply(t(tmp1)[-c(1:5,tail(1:ncol(grid.resampling), 1)),],1,cumsum) # cumsum by genes
           tmp3 <- apply(t(tmp2), 2, function(x) return(sum(x!=0)))
           
