@@ -1,5 +1,6 @@
 \name{rpls}
 \alias{rpls}
+\alias{logit.pls}
 
 \title{Ridge Partial Least Square for binary data}
 \usage{

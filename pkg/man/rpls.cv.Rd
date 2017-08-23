@@ -1,5 +1,6 @@
 \name{rpls.cv}
 \alias{rpls.cv}
+\alias{logit.pls.cv}
 
 \title{Determination of the ridge regularization parameter and the number of PLS 
 components to be used for classification with RPLS for binary data}

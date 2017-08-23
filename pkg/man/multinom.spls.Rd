@@ -32,6 +32,11 @@ sparse penalty parameter for the dimension reduction step by sparse PLS
 PLS components. If \code{ncomp=0},then the Ridge regression is performed 
 without any dimension reduction (no SPLS step).}
 
+\item{Xtest}{a (ntest x p) matrix containing the predictor values for the 
+test data set. \code{Xtest} may also be a vector of length p 
+(corresponding to only one test observation). Default value is NULL, 
+meaning that no prediction is performed.}
+
 \item{adapt}{a boolean value, indicating whether the sparse PLS selection 
 step sould be adaptive or not (see details).}
 

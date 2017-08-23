@@ -8,7 +8,7 @@ of the Adaptive Sparse PLS regression}
 spls.cv(X, Y, lambda.l1.range, ncomp.range, weight.mat = NULL, adapt = TRUE,
   center.X = TRUE, center.Y = TRUE, scale.X = TRUE, scale.Y = TRUE,
   weighted.center = FALSE, return.grid = FALSE, ncores = 1, nfolds = 10,
-  nrun = 1)
+  nrun = 1, verbose = FALSE)
 }
 \arguments{
 \item{X}{a (n x p) data matrix of predictors. \code{X} must be a matrix. 
@@ -65,6 +65,8 @@ to the leave-one-out cross-validation, default is 10.}
 \item{nrun}{a positive integer indicating how many times the K-folds cross-
 validation procedure should be repeated, default is 1.}
 
+\item{verbose}{a boolean value indicating verbosity.}
+
 \item{scale.X}{aa}{boolean value indicating whether the data matrices 
 \code{Xtrain} and \code{Xtest} (if provided) should be scaled or not 
 (\code{scale.X=TRUE} implies \code{center.X=TRUE}).}
@@ -107,7 +109,7 @@ library(plsgenomics)
 ### generating data
 n <- 100
 p <- 100
-sample1 <- sample.cont(n=100, p=1000, kstar=10, lstar=2, 
+sample1 <- sample.cont(n=n, p=p, kstar=10, lstar=2, 
                        beta.min=0.25, beta.max=0.75, mean.H=0.2, 
                        sigma.H=10, sigma.F=5, sigma.E=5)
                        
