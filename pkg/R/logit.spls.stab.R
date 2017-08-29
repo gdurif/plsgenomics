@@ -119,7 +119,7 @@
 #' 
 #' Meinshausen, N., Buhlmann P. (2010). Stability Selection. Journal of the 
 #' Royal Statistical Society: Series B (Statistical Methodology) 
-#' 72, no. 4, 417–473.
+#' 72, no. 4, 417-473.
 #' 
 #' @author
 #' Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}).
