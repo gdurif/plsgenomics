@@ -72,6 +72,7 @@
 #' \code{\link{multinom.spls.stab}}, \code{\link{stability.selection.heatmap}}
 #' 
 #' @examples
+#' \dontrun{
 #' ### load plsgenomics library
 #' library(plsgenomics)
 #' 
@@ -100,6 +101,7 @@
 #' 
 #' ### selected covariates
 #' stability.selection(stab1, piThreshold=0.6, rhoError=10)
+#' }
 #' 
 #' @export
 stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
@@ -174,6 +176,7 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
 #' \code{\link{stability.selection.heatmap}}
 #' 
 #' @examples
+#' \dontrun{
 #' ### load plsgenomics library
 #' library(plsgenomics)
 #' 
@@ -202,6 +205,7 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
 #' 
 #' ### heatmap of estimated probabilities
 #' stability.selection.heatmap(stab1)
+#' }
 #' 
 #' @export
 stability.selection.heatmap <- function(stab.out, ...) {

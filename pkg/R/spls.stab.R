@@ -129,6 +129,7 @@
 #' \code{\link{stability.selection.heatmap}}
 #' 
 #' @examples
+#' \dontrun{
 #' ### load plsgenomics library
 #' library(plsgenomics)
 #' 
@@ -159,6 +160,7 @@
 #' 
 #' ### selected covariates
 #' stability.selection(stab1, piThreshold=0.6, rhoError=10)
+#' }
 #' 
 #' @export
 spls.stab <- function(X, Y, lambda.l1.range, ncomp.range, 

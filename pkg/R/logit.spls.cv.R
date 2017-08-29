@@ -118,6 +118,7 @@
 #' @seealso \code{\link{logit.spls}}, \code{\link{logit.spls.stab}}
 #' 
 #' @examples
+#' \dontrun{
 #' ### load plsgenomics library
 #' library(plsgenomics)
 #' 
@@ -146,6 +147,7 @@
 #'                      return.grid=TRUE, ncores=1, nfolds=10)
 #'                        
 #' str(cv1)
+#' }
 #' 
 #' @export
 logit.spls.cv <- function(X, Y, lambda.ridge.range, lambda.l1.range, 

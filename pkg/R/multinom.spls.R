@@ -143,6 +143,7 @@
 #' \code{\link{multinom.spls.cv}}
 #' 
 #' @examples
+#' \dontrun{
 #' ### load plsgenomics library
 #' library(plsgenomics)
 #' 
@@ -174,6 +175,7 @@
 #' 
 #' ### prediction error rate
 #' sum(model1$hatYtest!=Ytest) / length(index.test)
+#' }
 #' 
 #' @export
 multinom.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, 

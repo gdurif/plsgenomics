@@ -119,6 +119,7 @@
 #' @seealso \code{\link{multinom.spls}}, \code{\link{multinom.spls.stab}}
 #' 
 #' @examples
+#' \dontrun{
 #' ### load plsgenomics library
 #' library(plsgenomics)
 #' 
@@ -148,6 +149,7 @@
 #'                         return.grid=TRUE, ncores=1, nfolds=10)
 #'                        
 #' str(cv1)
+#' }
 #' 
 #' @export
 multinom.spls.cv <- function(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range, adapt=TRUE, maxIter=100, svd.decompose=TRUE, 

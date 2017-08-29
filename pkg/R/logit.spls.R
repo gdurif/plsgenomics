@@ -128,6 +128,7 @@
 #' @seealso \code{\link{spls}}, \code{\link{logit.spls.cv}}
 #' 
 #' @examples
+#' \dontrun{
 #' ### load plsgenomics library
 #' library(plsgenomics)
 #' 
@@ -158,6 +159,7 @@
 #' 
 #' ### prediction error rate
 #' sum(model1$hatYtest!=Ytest) / length(index.test)
+#' }
 #' 
 #' @export
 logit.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, 
