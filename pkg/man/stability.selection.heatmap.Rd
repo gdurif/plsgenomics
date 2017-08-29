@@ -49,6 +49,7 @@ step (i) of the stability selection by the functions \code{\link{spls.stab}},
 This function use the function \code{\link{matrix.heatmap}}.
 }
 \examples{
+\dontrun{
 ### load plsgenomics library
 library(plsgenomics)
 
@@ -77,6 +78,7 @@ str(stab1)
 
 ### heatmap of estimated probabilities
 stability.selection.heatmap(stab1)
+}
 
 }
 \seealso{

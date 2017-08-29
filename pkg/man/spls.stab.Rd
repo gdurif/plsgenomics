@@ -112,6 +112,7 @@ available on GNU/Linux and MacOS. Users of Microsoft Windows can refer to
 the README file in the source to be able to use a mclapply type function.
 }
 \examples{
+\dontrun{
 ### load plsgenomics library
 library(plsgenomics)
 
@@ -142,6 +143,7 @@ stability.selection.heatmap(stab1)
 
 ### selected covariates
 stability.selection(stab1, piThreshold=0.6, rhoError=10)
+}
 
 }
 \references{
@@ -152,7 +154,7 @@ available on (\url{http://arxiv.org/abs/1502.05933}).
 
 Meinshausen, N., Buhlmann P. (2010). Stability Selection. Journal of the 
 Royal Statistical Society: Series B (Statistical Methodology) 
-72, no. 4, 417â473.
+72, no. 4, 417-473.
 }
 \seealso{
 \code{\link{spls}}, \code{\link{stability.selection}}, 

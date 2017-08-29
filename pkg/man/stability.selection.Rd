@@ -51,6 +51,7 @@ procedure. The first step (i) is achieved by the functions
 or \code{\link{multinom.spls.stab}}.
 }
 \examples{
+\dontrun{
 ### load plsgenomics library
 library(plsgenomics)
 
@@ -79,6 +80,7 @@ str(stab1)
 
 ### selected covariates
 stability.selection(stab1, piThreshold=0.6, rhoError=10)
+}
 
 }
 \seealso{

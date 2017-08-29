@@ -13,6 +13,8 @@ sample.multinom(n, p, nb.class = 2, kstar, lstar, beta.min, beta.max,
 
 \item{p}{the number of covariates in the sample.}
 
+\item{nb.class}{the number of groups in the data.}
+
 \item{kstar}{the number of underlying latent variables used to generates 
 the covariate matrix \code{X}, \code{kstar <= p}. \code{kstar} is also the 
 number of blocks in the covariate matrix (see details).}
@@ -103,9 +105,11 @@ library(plsgenomics)
 ### generating data
 n <- 100
 p <- 1000
-sample1 <- sample.multinom(n=n, p=p, kstar=20, lstar=2, beta.min=0.25, 
-                      beta.max=0.75, mean.H=0.2, 
-                      sigma.H=10, sigma.F=5)
+nclass <- 3
+sample1 <- sample.multinom(n=n, p=p, nb.class=nclass,
+                           kstar=20, lstar=2, beta.min=0.25, 
+                           beta.max=0.75, mean.H=0.2, 
+                           sigma.H=10, sigma.F=5)
 
 str(sample1)
 

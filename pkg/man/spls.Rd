@@ -136,6 +136,7 @@ predicts the response associated to these new values of the predictors.
 \examples{
 ### load plsgenomics library
 library(plsgenomics)
+
 ### generating data
 n <- 100
 p <- 100

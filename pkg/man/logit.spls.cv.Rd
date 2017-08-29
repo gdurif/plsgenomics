@@ -108,6 +108,7 @@ available on GNU/Linux and MacOS. Users of Microsoft Windows can refer to
 the README file in the source to be able to use a mclapply type function.
 }
 \examples{
+\dontrun{
 ### load plsgenomics library
 library(plsgenomics)
 
@@ -136,6 +137,7 @@ cv1 <- logit.spls.cv(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range,
                      return.grid=TRUE, ncores=1, nfolds=10)
                        
 str(cv1)
+}
 
 }
 \references{
