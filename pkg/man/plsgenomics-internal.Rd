@@ -22,6 +22,9 @@
 \alias{spls.in}
 \alias{logit.spls.aux}
 \alias{multinom.spls.aux}
+\alias{safeExp}
+\alias{safeSum}
+\alias{softMax}
 \alias{plsgenomics-internal-package}
 \title{Internal Functions for the 'plsgenomics' package}
 \description{
