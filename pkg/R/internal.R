@@ -50,6 +50,10 @@
 #' @export logit.spls.aux
 #' @export multinom.spls.aux
 #' 
+#' @export safeExp
+#' @export safeSum
+#' @export softMax
+#' 
 #' @aliases 
 #' standard.simpls
 #' unitr.simpls
@@ -70,5 +74,9 @@
 #' spls.in
 #' logit.spls.aux
 #' multinom.spls.aux
+#' safeExp
+#' safeSum
+#' softMax
+#' 
 #' 
 NULL
