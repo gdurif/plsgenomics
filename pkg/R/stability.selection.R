@@ -63,7 +63,12 @@
 #' @param rhoError a positive value used to restrict the grid of 
 #' hyper-parameter candidate values (c.f. Durif et al., 2017).
 #' 
-#' @return the list of the name of covariates that are selected.
+#' @return An object with the following attributes:
+#' \item{selected.predictors}{The list of the name of covariates that 
+#' are selected.}
+#' \item{max.probs}{The corresponding estimated probabilities of selection for 
+#' each covariate, i.e. the maximal values on the reduced grid of 
+#' hyper-parameters.}
 #' 
 #' @author
 #' Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}).
@@ -124,7 +129,7 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
      
      selected_variables <- colnames(probs_lambda[,tail(1:ncol(probs_lambda), p)])[which_var]
      
-     return(list(selected.variables=selected_variables, max.probs=max_probs))
+     return(list(selected.predictors=selected_variables, max.probs=max_probs))
 }
 
 #' @title
