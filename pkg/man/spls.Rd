@@ -200,5 +200,5 @@ doi:10.1111/j.1467-9868.2009.00723.x
 Ghislain Durif (\url{http://thoth.inrialpes.fr/people/gdurif/}). 
 
 Adapted in part from spls code by H. Chun, D. Chung and S.Keles 
-(\url{http://cran.r-project.org/web/packages/spls/index.html}).
+(\url{https://CRAN.R-project.org/package=spls}).
 }
