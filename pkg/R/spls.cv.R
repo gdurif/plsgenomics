@@ -114,6 +114,7 @@
 #' @seealso \code{\link{spls}}
 #' 
 #' @examples
+#' \dontrun{
 #' ### load plsgenomics library
 #' library(plsgenomics)
 #' 
@@ -142,6 +143,7 @@
 #' ### otpimal values
 #' cv1$lambda.l1.opt
 #' cv1$ncomp.opt
+#' }
 #' 
 #' @export
 spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL, 
