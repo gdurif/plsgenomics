@@ -3,6 +3,7 @@ library(boot)
 library(plyr)
 library(fields)
 library(RhpcBLASctl)
+library(MASS)
 blas_set_num_threads(1)
 omp_set_num_threads(1)
 
