@@ -20,7 +20,7 @@ Description: Routines for PLS-based genomic analyses,
         versions include two new classification methods for microarray
         data: GSIM and Ridge PLS. The >=1.3 versions includes a
         new classification method combining variable selection and
-        compression in logistic regression context: RIRLS-SPLS; and
+        compression in logistic regression context: logit-SPLS; and
         an adaptive version of the sparse PLS.
 License: GPL (>= 2)
 URL: https://CRAN.R-project.org/package=plsgenomics
