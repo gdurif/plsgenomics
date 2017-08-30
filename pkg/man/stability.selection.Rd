@@ -18,7 +18,12 @@ probability used to select covariate (c.f. Durif et al., 2017).}
 hyper-parameter candidate values (c.f. Durif et al., 2017).}
 }
 \value{
-the list of the name of covariates that are selected.
+An object with the following attributes:
+\item{selected.predictors}{The list of the name of covariates that 
+are selected.}
+\item{max.probs}{The corresponding estimated probabilities of selection for 
+each covariate, i.e. the maximal values on the reduced grid of 
+hyper-parameters.}
 }
 \description{
 The function \code{stability.selection} returns the list of selected 

@@ -72,6 +72,8 @@ selected among the entire grid of hyper-parameters candidates values,
 for increasing size of hyper-parameter grid.}
 \item{probs.lambda}{A table with estimated probability of selection for each 
 covariates depending on the candidates values for hyper-parameters.}
+\item{p}{An integer values indicating the number of covariates in the 
+model.}
 }
 \description{
 The function \code{logit.spls.stab} train a logit-spls model for each 
