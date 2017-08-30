@@ -125,8 +125,8 @@
 #' p <- 1000
 #' nclass <- 3
 #' sample1 <- sample.multinom(n=n, p=p, nb.class=nclass,
-#'                            kstar=20, lstar=2, beta.min=0.25, 
-#'                            beta.max=0.75, mean.H=0.2, 
+#'                            kstar=20, lstar=2, beta.min=0.25,
+#'                            beta.max=0.75, mean.H=0.2,
 #'                            sigma.H=10, sigma.F=5)
 #' 
 #' str(sample1)
@@ -238,7 +238,7 @@ sample.multinom = function(n, p, nb.class=2, kstar, lstar, beta.min, beta.max, m
      }
      
      eta <- cbind(rep(0, n), X %*% B)
-     proba <- t(apply(exp(eta), 1, function(x) x/sum(x)))
+     proba <- softMax(eta)
      
      for(i in 1:n) {
           

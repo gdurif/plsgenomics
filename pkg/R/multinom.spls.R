@@ -546,7 +546,7 @@ multinom.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp,
      proba <- matrix(0, nrow=ntrain, ncol=G+1)
      
      Eta <- cbind(rep(0,ntrain),matrix(Zbloc%*%BETA,nrow=ntrain,byrow=TRUE))
-     proba <- t(apply(exp(Eta), 1, function(x) x/sum(x)))
+     proba <- softMax(Eta)
      hatY <- as.matrix(apply(proba,1,which.max)-1)
      
      if (!is.null(Xtest)) {
@@ -556,7 +556,7 @@ multinom.spls <- function(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp,
           proba.test <- matrix(0, nrow=ntest, ncol=G+1)
           
           Eta.test <- cbind(rep(0,ntest),matrix(Ztestbloc%*%BETA,nrow=ntest,byrow=TRUE))
-          proba.test <- t(apply(exp(Eta.test), 1, function(x) x/sum(x)))
+          proba.test <- softMax(Eta.test)
           hatYtest <- as.matrix(apply(proba.test,1,which.max)-1)
           
      } else {
