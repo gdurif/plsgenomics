@@ -11,7 +11,7 @@ source("env.R")
 ### full example
 ### generating data
 n <- 100
-p <- 100
+p <- 50
 nb.class <- 3
 sample1 <- sample.multinom(n=n, p=p, nb.class=nb.class, kstar=10, lstar=2,
                            beta.min=0.25, beta.max=0.75, mean.H=0.2,
@@ -33,7 +33,7 @@ lambda.ridge.range <- signif(logspace(d1 <- -2, d2 <- 3, n=21), digits=3)
 time1 <- system.time( stab1 <- multinom.spls.stab(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, lambda.l1.range=lambda.l1.range, 
                                                   ncomp.range=ncomp.range, 
                                                   adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-                                                  ncores=8, nresamp=100, 
+                                                  ncores=12, nresamp=100, 
                                                   center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
                                                   seed=NULL, verbose=TRUE))
 

@@ -64,7 +64,7 @@ source("env.R")
 ### full example
 ### generating data
 n <- 100
-p <- 1000
+p <- 50
 sample1 <- sample.bin(n=n, p=p, kstar=10, lstar=2,
                       beta.min=0.25, beta.max=0.75, mean.H=0.2,
                       sigma.H=10, sigma.F=5)
@@ -85,7 +85,7 @@ lambda.ridge.range <- signif(logspace(d1 <- -2, d2 <- 3, n=21), digits=3)
 time1 <- system.time( stab1 <- logit.spls.stab(X=X, Y=Y, lambda.ridge.range=lambda.ridge.range, lambda.l1.range=lambda.l1.range, 
                                                ncomp.range=ncomp.range, 
                                                adapt=TRUE, maxIter=100, svd.decompose=TRUE, 
-                                               ncores=8, nresamp=50, 
+                                               ncores=12, nresamp=50, 
                                                center.X=TRUE, scale.X=FALSE, weighted.center=TRUE, 
                                                seed=NULL, verbose=TRUE))
 
@@ -97,4 +97,5 @@ time1
 stability.selection.heatmap(stab1)
 
 ### selected covariates
-stability.selection(stab1, piThreshold=0.75, rhoError=10)
+tmp <- stability.selection(stab1, piThreshold=0.75, rhoError=10)
+tmp
