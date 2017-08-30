@@ -12,14 +12,14 @@ source("env.R")
 n = 100
 p = 50
 nb.class=3
-kstar = 12
-lstar = 3
-beta.min = 0.05
-beta.max = 0.1
-mean.H=0
-sigma.H=3
+kstar = 20
+lstar = 2
+beta.min = 0.25
+beta.max = 0.75
+mean.H=0.2
+sigma.H=10
 mean.F=0
-sigma.F=1
+sigma.F=5
 
 sample1 = sample.multinom(n, p, nb.class, kstar, lstar, beta.min, beta.max, mean.H, sigma.H, mean.F, sigma.F)
 
