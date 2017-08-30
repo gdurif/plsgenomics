@@ -111,6 +111,8 @@
 #' for increasing size of hyper-parameter grid.}
 #' \item{probs.lambda}{A table with estimated probability of selection for each 
 #' covariates depending on the candidates values for hyper-parameters.}
+#' \item{p}{An integer values indicating the number of covariates in the 
+#' model.}
 #' 
 #' @references 
 #' Durif G., Modolo L., Michaelsson J., Mold J. E., Lambert-Lacroix S., 
@@ -364,7 +366,7 @@ spls.stab <- function(X, Y, lambda.l1.range, ncomp.range,
      
      
      ##### return
-     return(list(q.Lambda=qLambda, probs.lambda=probs_lambda))
+     return(list(q.Lambda=qLambda, probs.lambda=probs_lambda, p=p))
      
 }
 
