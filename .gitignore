@@ -4,3 +4,4 @@
 log
 *.Rcheck
 *.out
+.Rhistory
