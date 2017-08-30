@@ -109,20 +109,22 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
      q_Lambda <- stab.out$q.Lambda
      probs_lambda <- stab.out$probs.lambda
      
-     p <- ncol(probs_lambda[,-c(1:3)])
+     p <- stab.out$p
      
      ## select variables
      q_LambdaMax <- sqrt((2*piThreshold-1) * p * rhoError)
      
      lambda_ok <- (1:nrow(q_Lambda))[which(q_Lambda$qLambda <= q_LambdaMax)]
      
-     tmp_probs <- as.matrix(probs_lambda[lambda_ok,-c(1:3)])
+     tmp_probs <- as.matrix(probs_lambda[lambda_ok,tail(1:ncol(probs_lambda), p)])
      
-     which_var <- apply(tmp_probs, 2, function(x) max(x) >= piThreshold)
+     max_probs <- apply(tmp_probs, 2, function(x) max(x))
      
-     selected.variables <- colnames(probs_lambda[,-1])[which_var]
+     which_var <- which(unname(max_probs) >= piThreshold)
      
-     return(selected.variables)
+     selected_variables <- colnames(probs_lambda[,tail(1:ncol(probs_lambda), p)])[which_var]
+     
+     return(list(selected.variables=selected_variables, max.probs=max_probs))
 }
 
 #' @title
@@ -209,7 +211,7 @@ stability.selection <- function(stab.out, piThreshold=0.9, rhoError=10) {
 #' 
 #' @export
 stability.selection.heatmap <- function(stab.out, ...) {
-     matrix.heatmap(as.matrix(stab.out$probs.lambda[,-c(1:3)]),
+     matrix.heatmap(as.matrix(stab.out$probs.lambda[,tail(1:ncol(stab.out$probs.lambda), stab.out$p)]),
                     xlab="covariates", ylab="selection sharpness",
                     ...)
 }
