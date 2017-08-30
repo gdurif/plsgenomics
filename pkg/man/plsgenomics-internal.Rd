@@ -23,6 +23,7 @@
 \alias{logit.spls.aux}
 \alias{multinom.spls.aux}
 \alias{safeExp}
+\alias{safeExpMat}
 \alias{safeSum}
 \alias{softMax}
 \alias{plsgenomics-internal-package}

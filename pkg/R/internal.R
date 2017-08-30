@@ -51,6 +51,7 @@
 #' @export multinom.spls.aux
 #' 
 #' @export safeExp
+#' @export safeExpMat
 #' @export safeSum
 #' @export softMax
 #' 
@@ -75,6 +76,7 @@
 #' logit.spls.aux
 #' multinom.spls.aux
 #' safeExp
+#' safeExpMat
 #' safeSum
 #' softMax
 #' 
