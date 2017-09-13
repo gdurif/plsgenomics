@@ -7,9 +7,9 @@ source("env.R")
 
 # sample
 n = 100
-p = 1000
-kstar = 500
-lstar = 250
+p = 100
+kstar = 50
+lstar = 10
 beta.min = 0.5
 beta.max = 1
 mean.H=0

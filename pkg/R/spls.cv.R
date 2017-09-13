@@ -443,7 +443,8 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	     res = numeric(6)
 	     
 	     if(!is.null(model)) {
-	          res = c(k, run, paramGrid$lambdaL1[gridRow], paramGrid$ncomp[gridRow], model$lenA, sum((model$hatYtest - sYtest)^2) / ntest)
+	          res = c(k, run, paramGrid$lambdaL1[gridRow], paramGrid$ncomp[gridRow], 
+	                  model$lenA, sum((model$hatYtest - get(paste0("sYtest_", k, "_", run)))^2) / ntest)
 	     } else {
 	          res = c(k, run, paramGrid$lambdaL1[gridRow], paramGrid$ncomp[gridRow], 0, NA)
 	     }
