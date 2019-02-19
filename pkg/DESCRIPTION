@@ -23,7 +23,7 @@ Description: Routines for PLS-based genomic analyses,
         compression in logistic regression context: logit-SPLS; and
         an adaptive version of the sparse PLS.
 License: GPL (>= 2)
-URL: https://CRAN.R-project.org/package=plsgenomics
+URL: https://github.com/gdurif/plsgenomics
 Packaged: 2012-10-29 08:59:27 UTC; ripley
 Repository: CRAN
 Date/Publication: 2012-10-29 08:59:27
