@@ -13,10 +13,10 @@ beta.min = 5
 beta.max = 10
 mean.H=0
 sigma.H=10
-mean.F=0
 sigma.F=5
 
-sample1 = sample.bin(n, p, kstar, lstar, beta.min, beta.max, mean.H, sigma.H, mean.F, sigma.F)
+sample1 = sample.bin(n, p, kstar, lstar, beta.min, beta.max, 
+                     mean.H, sigma.H, sigma.F, seed = NULL)
 
 X = sample1$X
 Y = sample1$Y

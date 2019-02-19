@@ -97,8 +97,6 @@
 #' \item{mean.H}{the mean of latent variables used to generates \code{X}.}
 #' \item{sigma.H}{the standard deviation of latent variables used to 
 #' generates \code{X}.}
-#' \item{sigma.F}{the mean of the noise added to latent 
-#' variables used to generates \code{X}.}
 #' \item{sigma.F}{the standard deviation of the noise added to latent 
 #' variables used to generates \code{X}.}
 #' \item{seed}{an positive integer, if non NULL it fix the seed 
@@ -125,13 +123,13 @@
 #' p <- 1000
 #' sample1 <- sample.bin(n=n, p=p, kstar=20, lstar=2, beta.min=0.25, 
 #'                       beta.max=0.75, mean.H=0.2, 
-#'                       sigma.H=10, mean.F=0, sigma.F=5)
+#'                       sigma.H=10, sigma.F=5)
 #' 
 #' str(sample1)
 #' 
 #' @export
 sample.bin = function(n, p, kstar, lstar, beta.min, beta.max, 
-                      mean.H=0, sigma.H=1, mean.F=0, sigma.F=1, seed=NULL) {
+                      mean.H=0, sigma.H=1, sigma.F=1, seed=NULL) {
 	
 	### input
 	# n : sample size

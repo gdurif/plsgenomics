@@ -133,7 +133,8 @@
 #' str(sample1)
 #' 
 #' @export
-sample.multinom = function(n, p, nb.class=2, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, seed=NULL) {
+sample.multinom = function(n, p, nb.class=2, kstar, lstar, beta.min, beta.max, 
+                           mean.H=0, sigma.H=1, sigma.F=1, seed=NULL) {
      
      ### input
      # n : sample size
