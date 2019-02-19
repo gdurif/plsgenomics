@@ -145,7 +145,7 @@
 #' Durif, G., Modolo, L., Michaelsson, J., Mold, J.E., Lambert-Lacroix, S., 
 #' Picard, F., 2018. High dimensional classification with combined 
 #' adaptive sparse PLS and logistic regression. Bioinformatics 34, 
-#' 485–493. \url{https://doi.org/10.1093/bioinformatics/btx571}.
+#' 485--493. \url{https://doi.org/10.1093/bioinformatics/btx571}.
 #' Available at \url{http://arxiv.org/abs/1502.05933}.
 #' 
 #' Chun, H., & Keles, S. (2010). Sparse partial least squares regression for 
