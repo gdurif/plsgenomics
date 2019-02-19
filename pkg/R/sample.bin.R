@@ -97,6 +97,8 @@
 #' \item{mean.H}{the mean of latent variables used to generates \code{X}.}
 #' \item{sigma.H}{the standard deviation of latent variables used to 
 #' generates \code{X}.}
+#' \item{sigma.F}{the mean of the noise added to latent 
+#' variables used to generates \code{X}.}
 #' \item{sigma.F}{the standard deviation of the noise added to latent 
 #' variables used to generates \code{X}.}
 #' \item{seed}{an positive integer, if non NULL it fix the seed 
@@ -106,7 +108,7 @@
 #' Durif, G., Modolo, L., Michaelsson, J., Mold, J.E., Lambert-Lacroix, S., 
 #' Picard, F., 2018. High dimensional classification with combined 
 #' adaptive sparse PLS and logistic regression. Bioinformatics 34, 
-#' 485–493. \url{https://doi.org/10.1093/bioinformatics/btx571}.
+#' 485--493. \url{https://doi.org/10.1093/bioinformatics/btx571}.
 #' Available at \url{http://arxiv.org/abs/1502.05933}.
 #' 
 #' @author
@@ -123,12 +125,13 @@
 #' p <- 1000
 #' sample1 <- sample.bin(n=n, p=p, kstar=20, lstar=2, beta.min=0.25, 
 #'                       beta.max=0.75, mean.H=0.2, 
-#'                       sigma.H=10, sigma.F=5)
+#'                       sigma.H=10, mean.F=0, sigma.F=5)
 #' 
 #' str(sample1)
 #' 
 #' @export
-sample.bin = function(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H, sigma.F, seed=NULL) {
+sample.bin = function(n, p, kstar, lstar, beta.min, beta.max, 
+                      mean.H=0, sigma.H=1, mean.F=0, sigma.F=1, seed=NULL) {
 	
 	### input
 	# n : sample size
@@ -147,12 +150,12 @@ sample.bin = function(n, p, kstar, lstar, beta.min, beta.max, mean.H=0, sigma.H,
 		stop("Message from sample.cont: n, p, kstar, lstar must be integer")
 	}
 	
-	if((!is.numeric(mean.H)) || (!is.numeric(sigma.H)) || (!is.numeric(sigma.F)) ) {
-		stop("Message from sample.cont: mean.H, sigma.H, sigma.F, sigma.E are not of valid type")
+	if((!is.numeric(mean.H)) || (!is.numeric(sigma.H)) || (!is.numeric(mean.F)) || (!is.numeric(sigma.F)) ) {
+		stop("Message from sample.cont: mean.H, sigma.H, mean.F, sigma.F are not of valid type")
 	}
 	
 	if((sigma.H<0) || (sigma.F<0)) {
-		stop("Message from sample.cont: sigma.H, sigma.F, sigma.E are not of valid type")
+		stop("Message from sample.cont: sigma.H, sigma.F are not of valid type")
 	}
 	
 	if(n<1) {
