@@ -6,7 +6,7 @@
 a multi-label random reponse depening on X through a multinomial model}
 \usage{
 sample.multinom(n, p, nb.class = 2, kstar, lstar, beta.min, beta.max,
-  mean.H = 0, sigma.H, sigma.F, seed = NULL)
+  mean.H = 0, sigma.H = 1, sigma.F = 1, seed = NULL)
 }
 \arguments{
 \item{n}{the number of observations in the sample.}
@@ -96,7 +96,7 @@ the ones with null coefficients are not.
 The response is generated as by drawing one observation of n different 
 Bernoulli random variables of parameters logit^\{-1\}(XB).
 
-The details of the procedure are developped by Durif et al. (2017).
+The details of the procedure are developped by Durif et al. (2018).
 }
 \examples{
 ### load plsgenomics library
@@ -115,10 +115,11 @@ str(sample1)
 
 }
 \references{
-Durif G., Modolo L., Michaelsson J., Mold J. E., Lambert-Lacroix S., 
-Picard F. (2017). High Dimensional Classification with combined Adaptive 
-Sparse PLS and Logistic Regression, (in prep), 
-available on (\url{http://arxiv.org/abs/1502.05933}).
+Durif, G., Modolo, L., Michaelsson, J., Mold, J.E., Lambert-Lacroix, S., 
+Picard, F., 2018. High dimensional classification with combined 
+adaptive sparse PLS and logistic regression. Bioinformatics 34, 
+485--493. \url{https://doi.org/10.1093/bioinformatics/btx571}.
+Available at \url{http://arxiv.org/abs/1502.05933}.
 }
 \seealso{
 \code{\link{sample.cont}}
