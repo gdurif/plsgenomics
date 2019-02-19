@@ -26,7 +26,7 @@ install.packages("plsgenomics")
 or
 
 ```R
-devtools::install_git("https://gitlab.inria.fr/gdurif/pCMF", subdir="pkg")
+devtools::install_git("https://gitlab.inria.fr/gdurif/plsgenomics", subdir="pkg")
 ```
 
 To install the `devtools` package, you can run:
