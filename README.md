@@ -26,7 +26,7 @@ install.packages("plsgenomics")
 or
 
 ```R
-devtools::install_git("https://gitlab.inria.fr/gdurif/plsgenomics", subdir="pkg")
+devtools::install_github("gdurif/plsgenomics", subdir="pkg", ref="prod")
 ```
 
 To install the `devtools` package, you can run:
@@ -35,9 +35,8 @@ To install the `devtools` package, you can run:
 install.packages("devtools")
 ```
 
-You can also use the git repository available at <https://gitlab.inria.fr/gdurif/plsgenomics>, 
-then build and install the package with Rstudio (the [project file](./plsgenomics.Rproj) 
-is set accordingly) or with the R command line tools.
+You can also use the git repository available at <https://gitlab.inria.fr/gdurif/plsgenomics>
+or <https://github.com/gdurif/plsgenomics>, then build and install the package with Rstudio (the [project file](./plsgenomics.Rproj) is set accordingly) or with the R command line tools.
 
 Once you cloned the git repository, you can also run:
 
