@@ -99,5 +99,22 @@ stability.selection.heatmap(stab1)
 tmp <- stability.selection(stab1, piThreshold=0.75, rhoError=10)
 tmp
 
-### "true" pertinent covariates
+### "true" pertinent covariates vs selected ones
 sample1$sel
+tmp$selected.predictors
+
+# effect of probability threshold
+tmp <- sapply(seq(0.55,0.95,0.05), function(prob) {
+     return(length(stability.selection(stab1, piThreshold=prob, rhoError=10)$selected.predictors))
+})
+plot(seq(0.55,0.95,0.05), tmp)
+
+# effect of restricting hyper-paramter grid
+tmp <- sapply(seq(1,100,1), function(r) {
+     return(length(stability.selection(stab1, piThreshold=0.75, rhoError=r)$selected.predictors))
+})
+plot(seq(1,100,1), tmp)
+
+# number of selected variables
+length(sample1$sel)
+tmp
