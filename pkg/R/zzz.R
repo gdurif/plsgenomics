@@ -1,5 +1,5 @@
 .onAttach <- function(libname, pkgname) {
-     packageStartupMessage("For any news related to the 'plsgenomics' package (update, corrected bugs), please check https://gitlab.inria.fr/gdurif/plsgenomics")
+     packageStartupMessage("For any news related to the 'plsgenomics' package (update, corrected bugs), please check https://github.com/gdurif/plsgenomics")
      packageStartupMessage("C++ based sparse PLS routines will soon be available on the CRAN in the new 'fastPLS' package.")
 }
 
