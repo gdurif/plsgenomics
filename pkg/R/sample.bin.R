@@ -148,8 +148,8 @@ sample.bin = function(n, p, kstar, lstar, beta.min, beta.max,
 		stop("Message from sample.cont: n, p, kstar, lstar must be integer")
 	}
 	
-	if((!is.numeric(mean.H)) || (!is.numeric(sigma.H)) || (!is.numeric(mean.F)) || (!is.numeric(sigma.F)) ) {
-		stop("Message from sample.cont: mean.H, sigma.H, mean.F, sigma.F are not of valid type")
+	if((!is.numeric(mean.H)) || (!is.numeric(sigma.H)) || (!is.numeric(sigma.F)) ) {
+		stop("Message from sample.cont: mean.H, sigma.H, sigma.F are not of valid type")
 	}
 	
 	if((sigma.H<0) || (sigma.F<0)) {
