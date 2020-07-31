@@ -17,29 +17,24 @@ Routines for PLS-based genomic analyses, implementing PLS methods for classifica
 
 ## Installation
 
-You can install the `plsgenomics` R package with the following R commands:
-
+You can install the CRAN version of the `plsgenomics` R package with the following R commands:
 ```R
 install.packages("plsgenomics")
 ```
 
-or
-
+To get the latest development version, you can install the github version:
 ```R
 devtools::install_github("gdurif/plsgenomics", subdir="pkg", ref="prod")
 ```
 
 To install the `devtools` package, you can run:
-
 ```R
 install.packages("devtools")
 ```
 
-You can also use the git repository available at <https://gitlab.inria.fr/gdurif/plsgenomics>
-or <https://github.com/gdurif/plsgenomics>, then build and install the package with Rstudio (the [project file](./plsgenomics.Rproj) is set accordingly) or with the R command line tools.
+You can also use the git repository available at <https://github.com/gdurif/plsgenomics>, then build and install the package with Rstudio (the [project file](./plsgenomics.Rproj) is set accordingly) or with the R command line tools.
 
-Once you cloned the git repository, you can also run:
-
+Or, once you cloned the git repository, you can run:
 ```R
 devtools::install("/path/to/plsgenomics/pkg") # you should edit the path
 ```
