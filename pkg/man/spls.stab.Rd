@@ -5,10 +5,23 @@
 \title{Stability selection procedure to estimate probabilities of selection of 
 covariates for the sparse PLS method}
 \usage{
-spls.stab(X, Y, lambda.l1.range, ncomp.range, weight.mat = NULL,
-  adapt = TRUE, center.X = TRUE, center.Y = TRUE, scale.X = TRUE,
-  scale.Y = TRUE, weighted.center = FALSE, ncores = 1, nresamp = 100,
-  seed = NULL, verbose = TRUE)
+spls.stab(
+  X,
+  Y,
+  lambda.l1.range,
+  ncomp.range,
+  weight.mat = NULL,
+  adapt = TRUE,
+  center.X = TRUE,
+  center.Y = TRUE,
+  scale.X = TRUE,
+  scale.Y = TRUE,
+  weighted.center = FALSE,
+  ncores = 1,
+  nresamp = 100,
+  seed = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{X}{a (n x p) data matrix of predictors. \code{X} must be a matrix. 

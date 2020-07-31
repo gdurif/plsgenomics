@@ -5,8 +5,19 @@
 \title{Generates covariate matrix X with correlated block of covariates and 
 a multi-label random reponse depening on X through a multinomial model}
 \usage{
-sample.multinom(n, p, nb.class = 2, kstar, lstar, beta.min, beta.max,
-  mean.H = 0, sigma.H = 1, sigma.F = 1, seed = NULL)
+sample.multinom(
+  n,
+  p,
+  nb.class = 2,
+  kstar,
+  lstar,
+  beta.min,
+  beta.max,
+  mean.H = 0,
+  sigma.H = 1,
+  sigma.F = 1,
+  seed = NULL
+)
 }
 \arguments{
 \item{n}{the number of observations in the sample.}

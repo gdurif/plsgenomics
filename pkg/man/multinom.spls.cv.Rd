@@ -5,11 +5,25 @@
 \title{Cross-validation procedure to calibrate the parameters (ncomp, lambda.l1, 
 lambda.ridge) for the multinomial-SPLS method}
 \usage{
-multinom.spls.cv(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range,
-  adapt = TRUE, maxIter = 100, svd.decompose = TRUE,
-  return.grid = FALSE, ncores = 1, nfolds = 10, nrun = 1,
-  center.X = TRUE, scale.X = FALSE, weighted.center = TRUE, seed = NULL,
-  verbose = TRUE)
+multinom.spls.cv(
+  X,
+  Y,
+  lambda.ridge.range,
+  lambda.l1.range,
+  ncomp.range,
+  adapt = TRUE,
+  maxIter = 100,
+  svd.decompose = TRUE,
+  return.grid = FALSE,
+  ncores = 1,
+  nfolds = 10,
+  nrun = 1,
+  center.X = TRUE,
+  scale.X = FALSE,
+  weighted.center = TRUE,
+  seed = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{X}{a (n x p) data matrix of predictors. \code{X} must be a matrix. 

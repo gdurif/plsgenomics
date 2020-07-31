@@ -5,10 +5,23 @@
 \title{Stability selection procedure to estimate probabilities of selection of 
 covariates for the LOGIT-SPLS method}
 \usage{
-logit.spls.stab(X, Y, lambda.ridge.range, lambda.l1.range, ncomp.range,
-  adapt = TRUE, maxIter = 100, svd.decompose = TRUE, ncores = 1,
-  nresamp = 100, center.X = TRUE, scale.X = FALSE,
-  weighted.center = TRUE, seed = NULL, verbose = TRUE)
+logit.spls.stab(
+  X,
+  Y,
+  lambda.ridge.range,
+  lambda.l1.range,
+  ncomp.range,
+  adapt = TRUE,
+  maxIter = 100,
+  svd.decompose = TRUE,
+  ncores = 1,
+  nresamp = 100,
+  center.X = TRUE,
+  scale.X = FALSE,
+  weighted.center = TRUE,
+  seed = NULL,
+  verbose = TRUE
+)
 }
 \arguments{
 \item{X}{a (n x p) data matrix of predictors. \code{X} must be a matrix. 

@@ -26,7 +26,6 @@
 \alias{safeExpMat}
 \alias{safeSum}
 \alias{softMax}
-\alias{plsgenomics-internal-package}
 \title{Internal Functions for the 'plsgenomics' package}
 \description{
 These are not to be called by the user.

@@ -6,9 +6,20 @@
 solved by a combination of the Ridge Iteratively Reweighted Least Squares 
 (RIRLS) algorithm and the Adaptive Sparse PLS (SPLS) regression}
 \usage{
-logit.spls(Xtrain, Ytrain, lambda.ridge, lambda.l1, ncomp, Xtest = NULL,
-  adapt = TRUE, maxIter = 100, svd.decompose = TRUE, center.X = TRUE,
-  scale.X = FALSE, weighted.center = TRUE)
+logit.spls(
+  Xtrain,
+  Ytrain,
+  lambda.ridge,
+  lambda.l1,
+  ncomp,
+  Xtest = NULL,
+  adapt = TRUE,
+  maxIter = 100,
+  svd.decompose = TRUE,
+  center.X = TRUE,
+  scale.X = FALSE,
+  weighted.center = TRUE
+)
 }
 \arguments{
 \item{Xtrain}{a (ntrain x p) data matrix of predictor values. 

@@ -4,9 +4,20 @@
 \alias{spls}
 \title{Adaptive Sparse Partial Least Squares (SPLS) regression}
 \usage{
-spls(Xtrain, Ytrain, lambda.l1, ncomp, weight.mat = NULL, Xtest = NULL,
-  adapt = TRUE, center.X = TRUE, center.Y = TRUE, scale.X = TRUE,
-  scale.Y = TRUE, weighted.center = FALSE)
+spls(
+  Xtrain,
+  Ytrain,
+  lambda.l1,
+  ncomp,
+  weight.mat = NULL,
+  Xtest = NULL,
+  adapt = TRUE,
+  center.X = TRUE,
+  center.Y = TRUE,
+  scale.X = TRUE,
+  scale.Y = TRUE,
+  weighted.center = FALSE
+)
 }
 \arguments{
 \item{Xtrain}{a (ntrain x p) data matrix of predictor values. 

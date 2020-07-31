@@ -11,7 +11,6 @@
 \alias{m.rirls.spls.stab}
 \alias{spls.adapt}
 \alias{spls.adapt.tune}
-\alias{plsgenomics-deprecated-package}
 \title{Deprecated function(s) in the 'plsgenomics' package}
 \usage{
 m.rirls.spls(...)

@@ -5,10 +5,24 @@
 \title{Cross-validation procedure to calibrate the parameters (ncomp, lambda.l1) 
 of the Adaptive Sparse PLS regression}
 \usage{
-spls.cv(X, Y, lambda.l1.range, ncomp.range, weight.mat = NULL, adapt = TRUE,
-  center.X = TRUE, center.Y = TRUE, scale.X = TRUE, scale.Y = TRUE,
-  weighted.center = FALSE, return.grid = FALSE, ncores = 1, nfolds = 10,
-  nrun = 1, verbose = FALSE)
+spls.cv(
+  X,
+  Y,
+  lambda.l1.range,
+  ncomp.range,
+  weight.mat = NULL,
+  adapt = TRUE,
+  center.X = TRUE,
+  center.Y = TRUE,
+  scale.X = TRUE,
+  scale.Y = TRUE,
+  weighted.center = FALSE,
+  return.grid = FALSE,
+  ncores = 1,
+  nfolds = 10,
+  nrun = 1,
+  verbose = FALSE
+)
 }
 \arguments{
 \item{X}{a (n x p) data matrix of predictors. \code{X} must be a matrix. 
