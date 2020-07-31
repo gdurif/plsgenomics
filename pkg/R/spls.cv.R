@@ -276,7 +276,7 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	     
 	     ntest <- nrow(Xtest)
 	     
-	     V <- Vfull[folds.obs != k, folds.obs != k]
+	     V <- Vfull[folds.obs[,run] != k, folds.obs[,run] != k]
 	     
 	     if (is.vector(Xtest)==TRUE) {
 	          Xtest <- matrix(Xtest,nrow=1)
@@ -452,7 +452,7 @@ spls.cv <- function(X, Y, lambda.l1.range, ncomp.range, weight.mat=NULL,
 	     Xtest <- subset(X, folds.obs[,run] == k)
 	     Ytest <- subset(Y, folds.obs[,run] == k)
 	     
-	     V <- Vfull[folds.obs != k, folds.obs != k]
+	     V <- Vfull[folds.obs[,run] != k, folds.obs[,run] != k]
 	     
 	     if(!is.null(get(paste0("DeletedCol_", k, "_", run)))) {
 	          Xtrain <- Xtrain[,-get(paste0("DeletedCol_", k, "_", run))]
