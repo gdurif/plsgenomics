@@ -1,6 +1,6 @@
 Package: plsgenomics
-Version: 1.5-2
-Date: 2018-08-23
+Version: 1.5-3
+Date: 2020-07-31
 Title: PLS Analyses for Genomics
 Author: Anne-Laure Boulesteix <boulesteix@ibe.med.uni-muenchen.de>,
         Ghislain Durif <gd.dev@libertymail.net>,
@@ -27,4 +27,4 @@ URL: https://github.com/gdurif/plsgenomics
 Packaged: 2012-10-29 08:59:27 UTC; ripley
 Repository: CRAN
 Date/Publication: 2012-10-29 08:59:27
-RoxygenNote: 6.0.1
+RoxygenNote: 7.1.0
