@@ -1,5 +1,10 @@
 # R-package plsgenomics
 
+<!-- badges: start -->
+[![](https://www.r-pkg.org/badges/version/plsgenomics)](https://CRAN.R-project.org/package=plsgenomics)
+[![](http://cranlogs.r-pkg.org/badges/grand-total/plsgenomics?color=green)](https://cran.r-project.org/package=plsgenomics)
+<!-- badges: end -->
+
 PLS Analyses for Genomics
 
 
