@@ -24,7 +24,5 @@ Description: Routines for PLS-based genomic analyses,
         an adaptive version of the sparse PLS.
 License: GPL (>= 2)
 URL: https://github.com/gdurif/plsgenomics
-Packaged: 2012-10-29 08:59:27 UTC; ripley
-Repository: CRAN
-Date/Publication: 2012-10-29 08:59:27
+BugReports: https://github.com/gdurif/plsgenomics/issues
 RoxygenNote: 7.1.0
